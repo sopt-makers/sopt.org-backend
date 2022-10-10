@@ -7,6 +7,7 @@ import { AppService } from './app.service';
 import { PartnersModule } from './partners/partners.module';
 import { LogosModule } from './logos/logos.module';
 import { CooperationProjectsModule } from './cooperation-projects/cooperation-projects.module';
+import { ProjectsModule } from './projects/projects.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { CooperationProjectsModule } from './cooperation-projects/cooperation-pr
     PartnersModule,
     LogosModule,
     CooperationProjectsModule,
+    ProjectsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
