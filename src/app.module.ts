@@ -6,6 +6,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PartnersModule } from './partners/partners.module';
 import { LogosModule } from './logos/logos.module';
+import { CooperationProjectsModule } from './cooperation-projects/cooperation-projects.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { LogosModule } from './logos/logos.module';
     TypeOrmModule.forRootAsync(typeORMFactory),
     PartnersModule,
     LogosModule,
+    CooperationProjectsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
