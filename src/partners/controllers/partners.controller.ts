@@ -8,7 +8,7 @@ import { PartnersResponseDto } from 'src/partners/dtos/partners-response.dto';
 export class PartnersController {
   @Get('')
   @GetPartnersDocs()
-  async getPartners(): Promise<[PartnersResponseDto]> {
+  async getPartners(): Promise<Array<PartnersResponseDto>> {
     const mockPartner: PartnersResponseDto = {
       id: 1,
       name: 'Naver D2',

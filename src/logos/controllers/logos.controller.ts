@@ -7,7 +7,7 @@ import { LogosResponseDto } from 'src/logos/dtos/logos-response.dto';
 export class LogosController {
   @Get('')
   @GetLogosDocs()
-  async getLogos(): Promise<[LogosResponseDto]> {
+  async getLogos(): Promise<Array<LogosResponseDto>> {
     const mockLogo: LogosResponseDto = {
       id: 1,
       image:

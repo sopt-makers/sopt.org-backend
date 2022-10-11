@@ -8,7 +8,9 @@ import { CooperationProjectsResponseDto } from 'src/cooperation-projects/dtos/co
 export class CooperationProjectsController {
   @Get()
   @GetCooperationProjectsDocs()
-  async getCooperationProjects(): Promise<[CooperationProjectsResponseDto]> {
+  async getCooperationProjects(): Promise<
+    Array<CooperationProjectsResponseDto>
+  > {
     const mockCooperationProject: CooperationProjectsResponseDto = {
       id: 11,
       year: 2022,
