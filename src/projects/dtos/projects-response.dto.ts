@@ -39,25 +39,25 @@ export class ProjectsResponseDto {
   isBusinessing: boolean;
 
   @ApiProperty({
-    type: [ProjectsTeamMember],
+    type: Array<ProjectsTeamMember>,
     required: false,
     description: '프로젝트의 팀원',
   })
-  teamMembers?: [ProjectsTeamMember];
+  teamMembers?: Array<ProjectsTeamMember>;
 
   @ApiProperty({
-    type: [ProjectsTeamMember],
+    type: Array<ProjectsTeamMember>,
     required: false,
     description: '추가 합류한 팀원',
   })
-  afterJoinedTeamMembers?: [ProjectsTeamMember];
+  afterJoinedTeamMembers?: Array<ProjectsTeamMember>;
 
   @ApiProperty({
-    type: [String],
+    type: Array<string>,
     required: true,
     description: '서비스 형태',
   })
-  serviceType: [string];
+  serviceType: Array<string>;
 
   @ApiProperty({
     type: Date,
@@ -116,9 +116,9 @@ export class ProjectsResponseDto {
   projectImageUrl?: string;
 
   @ApiProperty({
-    type: [Link],
+    type: Array<Link>,
     required: true,
     description: '프로젝트 링크',
   })
-  link?: [Link];
+  link?: Array<Link>;
 }
