@@ -14,5 +14,5 @@ export class ProjectsListResponseDto {
     description:
       '추가 정보 유무. 더 가져올 데이터가 있으면 true, 더 가져올 데이터가 없는 경우 false',
   })
-  hasMore: boolean;
+  isEnd: boolean;
 }

@@ -58,7 +58,7 @@ export class ProjectsController {
   async getProjects(): Promise<ProjectsListResponseDto> {
     const mockProjectsListResponse: ProjectsListResponseDto = {
       projects: [this.mockProjectsResponseDto, this.mockProjectsResponseDto],
-      hasMore: false,
+      isEnd: false,
     };
     return mockProjectsListResponse;
   }
