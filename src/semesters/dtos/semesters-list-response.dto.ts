@@ -17,7 +17,7 @@ export class SemestersListResponseDto {
   limit: number;
 
   @ApiProperty({
-    type: String,
+    type: Number,
     required: true,
     description: '조회한 기수 리스트 수',
   })
