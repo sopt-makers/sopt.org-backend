@@ -10,7 +10,7 @@ export class SemestersListResponseDto {
   page: number;
 
   @ApiProperty({
-    type: String,
+    type: Number,
     required: true,
     description: '페이지네이션 조회로 기수 정보 가져올 갯수',
   })
