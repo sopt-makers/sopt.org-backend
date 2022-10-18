@@ -9,8 +9,8 @@ function getPartnersResponseDto(partners: Partner[]): PartnersResponseDto[] {
   return partners.map((partner: Partner) => {
     return {
       id: partner.id,
-      name: partner.name,
-      image: partner.image,
+      name: partner.name ? partner.name : '',
+      image: partner.image ? partner.image : '',
     };
   });
 }

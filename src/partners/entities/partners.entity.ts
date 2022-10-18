@@ -1,17 +1,15 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity()
+@Index('partner_pk', ['id'], { unique: true })
+@Index('partner_id_uindex', ['id'], { unique: true })
+@Entity('Partner', { schema: 'public' })
 export class Partner {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({ type: 'integer', name: 'id' })
   id: number;
 
-  @Column({
-    length: 50,
-  })
-  name: string;
+  @Column('character varying', { name: 'name', nullable: true, length: 50 })
+  name?: string | null;
 
-  @Column({
-    length: 500,
-  })
-  image: string;
+  @Column('character varying', { name: 'image', nullable: true, length: 500 })
+  image?: string | null;
 }
