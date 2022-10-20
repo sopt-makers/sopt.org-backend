@@ -7,9 +7,9 @@ export class Partner {
   @PrimaryGeneratedColumn({ type: 'integer', name: 'id' })
   id: number;
 
-  @Column('character varying', { name: 'name', nullable: true, length: 50 })
+  @Column('varchar', { name: 'name', nullable: true, length: 50 })
   name?: string | null;
 
-  @Column('character varying', { name: 'image', nullable: true, length: 500 })
+  @Column('varchar', { name: 'image', nullable: true, length: 500 })
   image?: string | null;
 }
