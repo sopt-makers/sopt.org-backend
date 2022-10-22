@@ -31,7 +31,7 @@ export class CooperationProjectsResponseDto {
 
   @ApiProperty({
     type: String,
-    required: false,
+    required: true,
     description: '프로젝트에 대한 추가 정보',
   })
   subContent?: string;
