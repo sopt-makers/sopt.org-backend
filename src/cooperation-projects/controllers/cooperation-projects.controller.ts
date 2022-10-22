@@ -32,7 +32,6 @@ export class CooperationProjectsController {
     Array<CooperationProjectsResponseDto>
   > {
     const cooperationProjects = await this.cooperationProjectsService.findAll();
-    console.log(cooperationProjects);
     return getCooperationProjectsResponseDto(cooperationProjects);
   }
 }
