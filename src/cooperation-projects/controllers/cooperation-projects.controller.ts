@@ -11,15 +11,11 @@ function getCooperationProjectsResponseDto(
   return cooperationProjects.map((cooperationProject: CooperationProject) => {
     return {
       id: cooperationProject.id,
-      year: cooperationProject.year ? cooperationProject.year : 0,
-      title: cooperationProject.title ? cooperationProject.title : '',
-      content: cooperationProject.content ? cooperationProject.content : '',
-      subContent: cooperationProject.subContent
-        ? cooperationProject.subContent
-        : '',
-      posterImage: cooperationProject.posterImage
-        ? cooperationProject.posterImage
-        : '',
+      year: cooperationProject.year,
+      title: cooperationProject.title,
+      content: cooperationProject.content,
+      subContent: cooperationProject.subContent,
+      posterImage: cooperationProject.posterImage,
     };
   });
 }
@@ -36,6 +32,7 @@ export class CooperationProjectsController {
     Array<CooperationProjectsResponseDto>
   > {
     const cooperationProjects = await this.cooperationProjectsService.findAll();
+    console.log(cooperationProjects);
     return getCooperationProjectsResponseDto(cooperationProjects);
   }
 }

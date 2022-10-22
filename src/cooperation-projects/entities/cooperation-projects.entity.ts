@@ -8,25 +8,25 @@ export class CooperationProject {
   id: number;
 
   @Column('integer', { name: 'year', nullable: true })
-  year?: number | null;
+  year: number | null;
 
   @Column('varchar', { name: 'title', nullable: true, length: 50 })
-  title?: string | null;
+  title: string | null;
 
   @Column('varchar', { name: 'content', nullable: true, length: 300 })
-  content?: string | null;
+  content: string | null;
 
   @Column('varchar', {
     name: 'subContent',
     nullable: true,
     length: 300,
   })
-  subContent?: string | null;
+  subContent: string | null;
 
   @Column('varchar', {
     name: 'posterImage',
     nullable: true,
     length: 500,
   })
-  posterImage?: string | null;
+  posterImage: string | null;
 }

@@ -13,33 +13,33 @@ export class CooperationProjectsResponseDto {
     required: true,
     description: '프로젝트를 진행한 연도',
   })
-  year: number;
+  year: number | null;
 
   @ApiProperty({
     type: String,
     required: true,
     description: '프로젝트의 이름',
   })
-  title: string;
+  title: string | null;
 
   @ApiProperty({
     type: String,
     required: true,
     description: '프로젝트에 대한 설명',
   })
-  content: string;
+  content: string | null;
 
   @ApiProperty({
     type: String,
     required: true,
     description: '프로젝트에 대한 추가 정보',
   })
-  subContent?: string;
+  subContent?: string | null;
 
   @ApiProperty({
     type: String,
     required: true,
     description: '협력사와 진행한 프로젝트의 포스터 이미지',
   })
-  posterImage: string;
+  posterImage: string | null;
 }
