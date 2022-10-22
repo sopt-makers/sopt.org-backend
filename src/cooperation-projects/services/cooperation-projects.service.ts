@@ -11,6 +11,6 @@ export class CooperationProjectsService {
   ) {}
 
   findAll(): Promise<CooperationProject[]> {
-    return this.cooperationProjectsRepository.find();
+    return this.cooperationProjectsRepository.find({ order: { year: 'DESC' } });
   }
 }
