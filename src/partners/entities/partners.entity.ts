@@ -8,8 +8,8 @@ export class Partner {
   id: number;
 
   @Column('varchar', { name: 'name', nullable: true, length: 50 })
-  name?: string | null;
+  name: string | null;
 
   @Column('varchar', { name: 'image', nullable: true, length: 500 })
-  image?: string | null;
+  image: string | null;
 }
