@@ -4,7 +4,7 @@ import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 @Index('partner_id_uindex', ['id'], { unique: true })
 @Entity('Partner', { schema: 'public' })
 export class Partner {
-  @PrimaryGeneratedColumn({ type: 'integer', name: 'id' })
+  @PrimaryGeneratedColumn('increment', { type: 'integer', name: 'id' })
   id: number;
 
   @Column('varchar', { name: 'name', nullable: true, length: 50 })
