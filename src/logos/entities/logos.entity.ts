@@ -4,7 +4,7 @@ import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 @Index('logo_pk', ['id'], { unique: true })
 @Entity('Logo', { schema: 'public' })
 export class Logo {
-  @PrimaryGeneratedColumn({ type: 'integer', name: 'id' })
+  @PrimaryGeneratedColumn('increment', { type: 'integer', name: 'id' })
   id: number;
 
   @Column('varchar', { name: 'image', nullable: true, length: 500 })
