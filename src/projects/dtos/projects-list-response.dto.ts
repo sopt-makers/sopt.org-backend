@@ -3,7 +3,7 @@ import { ProjectsResponseDto } from 'src/projects/dtos/projects-response.dto';
 
 export class ProjectsListResponseDto {
   @ApiProperty({
-    type: Array<ProjectsResponseDto>,
+    type: [ProjectsResponseDto],
     required: true,
   })
   projects: Array<ProjectsResponseDto>;
