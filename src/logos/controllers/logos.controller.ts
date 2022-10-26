@@ -9,7 +9,7 @@ function getLogosResponseDto(logos: Logo[]): LogosResponseDto[] {
   return logos.map((logo: Logo) => {
     return {
       id: logo.id,
-      image: logo.image ? logo.image : '',
+      image: logo.image,
     };
   });
 }

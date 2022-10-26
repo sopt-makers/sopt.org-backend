@@ -11,7 +11,8 @@ export class LogosResponseDto {
   @ApiProperty({
     type: String,
     required: true,
+    nullable: true,
     description: 'logo 이미지의 url 주소',
   })
-  image: string;
+  image: string | null;
 }
