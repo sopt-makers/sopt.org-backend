@@ -1,6 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Link } from 'src/projects/dtos/link';
-import { ProjectsTeamMember } from 'src/projects/dtos/projects-team-member';
+import { Member } from 'src/projects/dtos/member';
+import { Category } from 'src/projects/dtos/category';
+
+export enum ServiceType {
+  WEB = 'WEB',
+  APP = 'APP',
+}
 
 export class ProjectsResponseDto {
   @ApiProperty({
@@ -22,70 +28,59 @@ export class ProjectsResponseDto {
     required: true,
     description: '프로젝트가 진행된 기수',
   })
-  semester: number;
+  generation: number;
 
   @ApiProperty({
-    type: Boolean,
+    type: Category,
     required: true,
-    description: '프로젝트의 서비스 진행 여부',
+    description: '프로젝트의 카테고리',
   })
-  isProvidingService: boolean;
-
-  @ApiProperty({
-    type: Boolean,
-    required: true,
-    description: '프로젝트의 창업 여부',
-  })
-  isBusinessing: boolean;
-
-  @ApiProperty({
-    type: Array<ProjectsTeamMember>,
-    required: false,
-    description: '프로젝트의 팀원',
-  })
-  teamMembers?: Array<ProjectsTeamMember>;
-
-  @ApiProperty({
-    type: Array<ProjectsTeamMember>,
-    required: false,
-    description: '추가 합류한 팀원',
-  })
-  afterJoinedTeamMembers?: Array<ProjectsTeamMember>;
-
-  @ApiProperty({
-    type: Array<string>,
-    required: true,
-    description: '서비스 형태',
-  })
-  serviceType: Array<string>;
+  category: Category;
 
   @ApiProperty({
     type: Date,
     required: true,
     description: '프로젝트 시작 날짜',
   })
-  startDate: Date;
+  startAt: Date;
 
   @ApiProperty({
     type: Date,
     required: false,
+    nullable: true,
     description: '프로젝트 종료 날짜. 프로젝트가 진행중 일 경우 값 없음',
   })
-  endDate?: Date;
+  endAt?: Date;
+
+  @ApiProperty({
+    enum: ServiceType,
+    required: true,
+    isArray: true,
+    example: [ServiceType.APP, ServiceType.WEB],
+    description: '서비스 형태',
+  })
+  serviceType: Array<ServiceType>;
 
   @ApiProperty({
     type: Boolean,
     required: true,
-    description: '프로젝트의 진행중 여부',
+    description: '프로젝트의 서비스 진행 여부',
   })
-  inProgress: boolean;
+  isAvailable: boolean;
+
+  @ApiProperty({
+    type: Boolean,
+    required: true,
+    description: '프로젝트의 창업 여부',
+  })
+  isFounding: boolean;
 
   @ApiProperty({
     type: String,
     required: true,
     description: '프로젝트 한줄소개',
   })
-  shortIntroduction: string;
+  summary: string;
 
   @ApiProperty({
     type: String,
@@ -99,26 +94,49 @@ export class ProjectsResponseDto {
     required: true,
     description: '프로젝트 로고 이미지 URL',
   })
-  logoImageUrl: string;
-
-  @ApiProperty({
-    type: String,
-    required: false,
-    description: '프로젝트 썸네일 이미지 URL',
-  })
-  thumbnailImageUrl?: string;
+  logoImage: string;
 
   @ApiProperty({
     type: String,
     required: true,
-    description: '프로젝트 이미지 URL',
+    nullable: true,
+    description: '프로젝트 썸네일 이미지 URL',
   })
-  projectImageUrl?: string;
+  thumbnailImage: string | null;
 
   @ApiProperty({
-    type: Array<Link>,
+    type: String,
+    required: true,
+    nullable: true,
+    description: '프로젝트 이미지 URL',
+  })
+  projectImage: string | null;
+
+  @ApiProperty({
+    type: Date,
+    required: true,
+    description: '프로젝트를 등록한 시간',
+  })
+  createdAt: Date;
+
+  @ApiProperty({
+    type: Date,
+    required: true,
+    description: '프로젝트를 수정한 시간',
+  })
+  updatedAt: Date;
+
+  @ApiProperty({
+    type: [Link],
     required: true,
     description: '프로젝트 링크',
   })
-  link?: Array<Link>;
+  link: Array<Link>;
+
+  @ApiProperty({
+    type: [Member],
+    required: true,
+    description: '프로젝트 팀원',
+  })
+  members: Array<Member>;
 }
