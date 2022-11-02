@@ -7,6 +7,6 @@ export function GetCooperationProjectsDocs() {
     ApiOperation({
       summary: '협력사와 진행한 프로젝트 조회',
     }),
-    ApiOkResponse({ type: Array<CooperationProjectsResponseDto> }),
+    ApiOkResponse({ type: [CooperationProjectsResponseDto] }),
   );
 }
