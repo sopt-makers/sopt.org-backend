@@ -7,6 +7,6 @@ export function GetPartnersDocs() {
     ApiOperation({
       summary: '협력사 정보 가져오기',
     }),
-    ApiOkResponse({ type: Array<PartnersResponseDto> }),
+    ApiOkResponse({ type: [PartnersResponseDto] }),
   );
 }
