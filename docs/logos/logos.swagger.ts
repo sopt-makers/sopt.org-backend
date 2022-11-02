@@ -7,6 +7,6 @@ export function GetLogosDocs() {
     ApiOperation({
       summary: '프로젝트 로고 조회',
     }),
-    ApiOkResponse({ type: Array<LogosResponseDto> }),
+    ApiOkResponse({ type: [LogosResponseDto] }),
   );
 }
