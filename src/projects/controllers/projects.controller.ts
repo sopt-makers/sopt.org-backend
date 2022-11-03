@@ -55,7 +55,7 @@ export class ProjectsController {
     category: { project: ProjectType.APPJAM },
     thumbnailImage: null,
     projectImage: null,
-    createdAt: new Date(),
+    uploadedAt: new Date(),
     updatedAt: new Date(),
   };
 

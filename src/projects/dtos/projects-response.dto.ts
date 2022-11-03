@@ -117,7 +117,7 @@ export class ProjectsResponseDto {
     required: true,
     description: '프로젝트를 등록한 시간',
   })
-  createdAt: Date;
+  uploadedAt: Date;
 
   @ApiProperty({
     type: Date,
