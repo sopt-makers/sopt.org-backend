@@ -4,7 +4,6 @@ import {
   GetProjectDocs,
   GetProjectsDocs,
 } from 'docs/projects/projects.swagger';
-import { ProjectsListResponseDto } from 'src/projects/dtos/projects-list-response.dto';
 import { ProjectsResponseDto } from 'src/projects/dtos/projects-response.dto';
 import { projectsService } from 'src/projects/services/projects.service';
 
@@ -17,7 +16,7 @@ export class ProjectsController {
   @GetProjectsDocs()
   async getProjects(
     @Query('filter') filter: string,
-  ): Promise<ProjectsListResponseDto> {
+  ): Promise<ProjectsResponseDto[]> {
     const projects = await this.projectsService.findAll(filter);
 
     projects.sort((a, b) => {
@@ -34,7 +33,7 @@ export class ProjectsController {
       }
     });
 
-    return { projects: projects, isEnd: true };
+    return projects;
   }
 
   @Get('/:projectId')

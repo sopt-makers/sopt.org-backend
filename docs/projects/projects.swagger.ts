@@ -6,7 +6,6 @@ import {
   ApiQuery,
 } from '@nestjs/swagger';
 import { ProjectType } from 'src/projects/dtos/category';
-import { ProjectsListResponseDto } from 'src/projects/dtos/projects-list-response.dto';
 import { ProjectsResponseDto } from 'src/projects/dtos/projects-response.dto';
 
 export function GetProjectsDocs() {
@@ -21,7 +20,7 @@ export function GetProjectsDocs() {
       description: '필터링 키워드',
       enum: ProjectType,
     }),
-    ApiOkResponse({ type: ProjectsListResponseDto }),
+    ApiOkResponse({ type: [ProjectsResponseDto] }),
   );
 }
 
