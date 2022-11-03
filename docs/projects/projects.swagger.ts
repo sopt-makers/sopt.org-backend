@@ -16,13 +16,13 @@ export function GetProjectsDocs() {
     ApiQuery({
       name: 'limit',
       type: Number,
-      required: true,
+      required: false,
       description: '한번에 가져올 데이터',
     }),
     ApiQuery({
       name: 'page',
       type: Number,
-      required: true,
+      required: false,
       description: '가져올 페이지 수',
     }),
     ApiOkResponse({ type: ProjectsListResponseDto }),
