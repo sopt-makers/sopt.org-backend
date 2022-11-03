@@ -16,20 +16,14 @@ export function GetProjectsDocs() {
     ApiQuery({
       name: 'limit',
       type: Number,
-      required: true,
+      required: false,
       description: '한번에 가져올 데이터',
     }),
     ApiQuery({
       name: 'page',
       type: Number,
-      required: true,
-      description: '가져올 페이지 수',
-    }),
-    ApiQuery({
-      name: 'filter',
-      type: String,
       required: false,
-      description: '필터 유형. 추후 다중 필터 설정 가능 예정',
+      description: '가져올 페이지 수',
     }),
     ApiOkResponse({ type: ProjectsListResponseDto }),
   );
