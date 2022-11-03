@@ -25,6 +25,12 @@ export function GetProjectsDocs() {
       required: false,
       description: '가져올 페이지 수',
     }),
+    ApiQuery({
+      name: 'filter',
+      type: String,
+      required: false,
+      description: '필터링 키워드',
+    }),
     ApiOkResponse({ type: ProjectsListResponseDto }),
   );
 }
