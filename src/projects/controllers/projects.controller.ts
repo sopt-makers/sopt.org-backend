@@ -1,10 +1,4 @@
-import {
-  Controller,
-  Get,
-  InternalServerErrorException,
-  NotFoundException,
-  Param,
-} from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import {
   GetProjectDocs,
@@ -12,23 +6,35 @@ import {
 } from 'docs/projects/projects.swagger';
 import { ProjectsListResponseDto } from 'src/projects/dtos/projects-list-response.dto';
 import { ProjectsResponseDto } from 'src/projects/dtos/projects-response.dto';
-
-import * as fs from 'fs';
+import { projectsService } from 'src/projects/services/projects.service';
 
 @ApiTags('Project')
 @Controller('projects')
 export class ProjectsController {
-  mockData: Array<ProjectsResponseDto> = JSON.parse(
-    fs.readFileSync('src/mock/projects.json').toString(),
-  );
+  constructor(private readonly projectsService: projectsService) {}
 
   @Get('')
   @GetProjectsDocs()
-  async getProjects(): Promise<ProjectsListResponseDto> {
-    if (!this.mockData)
-      throw new InternalServerErrorException('mock 데이터가 없습니다.');
+  async getProjects(
+    @Query('filter') filter: string,
+  ): Promise<ProjectsListResponseDto> {
+    const projects = await this.projectsService.findAll(filter);
 
-    return { projects: this.mockData, isEnd: false };
+    projects.sort((a, b) => {
+      if (a.generation > b.generation) return 1;
+      else if (a.generation < b.generation) return -1;
+      else {
+        if (a.name > b.name) return 1;
+        else if (a.name < b.name) return -1;
+        else {
+          if (a.uploadedAt > b.uploadedAt) return 1;
+          else if (a.uploadedAt < b.uploadedAt) return -1;
+          else return 0;
+        }
+      }
+    });
+
+    return { projects: projects, isEnd: true };
   }
 
   @Get('/:projectId')
@@ -36,13 +42,6 @@ export class ProjectsController {
   async getProject(
     @Param('projectId') projectId: number,
   ): Promise<ProjectsResponseDto> {
-    if (!this.mockData)
-      throw new InternalServerErrorException('mock 데이터가 없습니다.');
-
-    const result = this.mockData.find((element) => element.id == projectId);
-    if (!result)
-      throw new NotFoundException('해당 id의 데이터를 찾을 수 없습니다.');
-
-    return result;
+    return this.projectsService.findOne(projectId);
   }
 }
