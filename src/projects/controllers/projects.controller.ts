@@ -6,6 +6,7 @@ import {
 } from 'docs/projects/projects.swagger';
 import { ProjectsResponseDto } from 'src/projects/dtos/projects-response.dto';
 import { projectsService } from 'src/projects/services/projects.service';
+import { compareProjects } from 'src/utils/compare';
 
 @ApiTags('Project')
 @Controller('projects')
@@ -18,20 +19,7 @@ export class ProjectsController {
     @Query('filter') filter: string,
   ): Promise<ProjectsResponseDto[]> {
     const projects = await this.projectsService.findAll(filter);
-
-    projects.sort((a, b) => {
-      if (a.generation > b.generation) return 1;
-      else if (a.generation < b.generation) return -1;
-      else {
-        if (a.name > b.name) return 1;
-        else if (a.name < b.name) return -1;
-        else {
-          if (a.uploadedAt > b.uploadedAt) return 1;
-          else if (a.uploadedAt < b.uploadedAt) return -1;
-          else return 0;
-        }
-      }
-    });
+    projects.sort(compareProjects);
 
     return projects;
   }
