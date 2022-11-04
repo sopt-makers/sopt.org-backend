@@ -5,7 +5,7 @@ import {
   ApiParam,
   ApiQuery,
 } from '@nestjs/swagger';
-import { ProjectsListResponseDto } from 'src/projects/dtos/projects-list-response.dto';
+import { ProjectType } from 'src/projects/dtos/category';
 import { ProjectsResponseDto } from 'src/projects/dtos/projects-response.dto';
 
 export function GetProjectsDocs() {
@@ -14,18 +14,13 @@ export function GetProjectsDocs() {
       summary: '프로젝트 정보 전부 가져오기',
     }),
     ApiQuery({
-      name: 'limit',
-      type: Number,
+      name: 'filter',
+      type: String,
       required: false,
-      description: '한번에 가져올 데이터',
+      description: '필터링 키워드',
+      enum: ProjectType,
     }),
-    ApiQuery({
-      name: 'page',
-      type: Number,
-      required: false,
-      description: '가져올 페이지 수',
-    }),
-    ApiOkResponse({ type: ProjectsListResponseDto }),
+    ApiOkResponse({ type: [ProjectsResponseDto] }),
   );
 }
 
