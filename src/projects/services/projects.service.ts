@@ -12,6 +12,7 @@ import { Link } from 'src/projects/dtos/link';
 import { Member } from 'src/projects/dtos/member';
 import { firstValueFrom } from 'rxjs';
 import { ConfigService } from '@nestjs/config';
+import { env } from 'src/utils/constants';
 
 @Injectable()
 export class projectsService {
@@ -68,12 +69,13 @@ export class projectsService {
 
   async findAll(project: string): Promise<ProjectsResponseDto[]> {
     const res: ProjectsResponseDto[] = [];
-    const apiUrl =
-      this.configService.get('NODE_ENV') == 'production'
-        ? this.configService.get('PLAYGROUND_API_PROD_URL')
-        : this.configService.get('PLAYGROUND_API_DEV_URL');
     const projectApiPath = 'v1/projects';
-    const jwtToken = this.configService.get('PLAYGROUND_API_JWT_TOKEN');
+
+    const apiUrl =
+      this.configService.get(env.NODE_ENV) == env.production
+        ? this.configService.get(env.PLAYGROUND_API_PROD_URL)
+        : this.configService.get(env.PLAYGROUND_API_DEV_URL);
+    const jwtToken = this.configService.get(env.PLAYGROUND_API_JWT_TOKEN);
 
     const response = await firstValueFrom(
       this.httpService.get(apiUrl + projectApiPath, {
