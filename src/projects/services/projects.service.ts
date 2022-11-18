@@ -6,24 +6,97 @@ import {
 import { ProjectsResponseDto } from 'src/projects/dtos/projects-response.dto';
 
 import * as fs from 'fs';
+import { HttpService } from '@nestjs/axios';
+import { PlaygroundProjectResponseDto } from 'src/projects/dtos/playground-project-response.dto';
+import { Link } from 'src/projects/dtos/link';
+import { Member } from 'src/projects/dtos/member';
+import { firstValueFrom } from 'rxjs';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class projectsService {
+  constructor(
+    private readonly httpService: HttpService,
+    private readonly configService: ConfigService,
+  ) {}
+
   mockData: ProjectsResponseDto[] = JSON.parse(
     fs.readFileSync('src/mock/projects.json').toString(),
   );
 
-  async findAll(project: string): Promise<ProjectsResponseDto[]> {
-    if (!this.mockData)
-      throw new InternalServerErrorException('mock 데이터가 없습니다.');
+  getProjectResponseDto(
+    response: PlaygroundProjectResponseDto,
+  ): ProjectsResponseDto {
+    const links: Array<Link> = response.links.map((data) => {
+      const link: Link = {
+        title: data.linkTitle,
+        url: data.linkUrl,
+      };
+      return link;
+    });
 
-    if (project) {
-      return this.mockData.filter(
-        (element) => element.category.project == project,
-      );
+    const members: Array<Member> = response.members.map((data) => {
+      const member: Member = {
+        name: data.memberName,
+        role: data.memberRole,
+        description: data.memberDescription,
+      };
+      return member;
+    });
+
+    return {
+      id: response.id,
+      name: response.name,
+      generation: response.generation,
+      category: { project: response.category },
+      startAt: response.startAt,
+      endAt: response.endAt,
+      serviceType: response.serviceType,
+      isAvailable: response.isAvailable,
+      isFounding: response.isFounding,
+      summary: response.summary,
+      detail: response.detail,
+      logoImage: response.logoImage,
+      thumbnailImage: response.thumbnailImage,
+      projectImage: response.images ? response.images[0] : '',
+      uploadedAt: new Date(response.createdAt),
+      updatedAt: new Date(response.updateAt),
+      link: links,
+      members: members,
+    };
+  }
+
+  async findAll(project: string): Promise<ProjectsResponseDto[]> {
+    const res: ProjectsResponseDto[] = [];
+    const apiUrl =
+      this.configService.get('NODE_ENV') == 'production'
+        ? this.configService.get('PLAYGROUND_API_PROD_URL')
+        : this.configService.get('PLAYGROUND_API_DEV_URL');
+    const projectApiPath = 'v1/projects';
+    const jwtToken = this.configService.get('PLAYGROUND_API_JWT_TOKEN');
+
+    const response = await firstValueFrom(
+      this.httpService.get(apiUrl + projectApiPath, {
+        headers: {
+          Authorization: jwtToken,
+        },
+      }),
+    );
+
+    if (!response) {
+      return [];
     }
 
-    return this.mockData;
+    for (let i = 0; i < response.data.length; i++) {
+      const data: PlaygroundProjectResponseDto = response.data[i];
+      res.push(this.getProjectResponseDto(data));
+    }
+
+    if (project) {
+      return res.filter((element) => element.category.project == project);
+    }
+
+    return res;
   }
 
   async findOne(projectId: number): Promise<ProjectsResponseDto> {
