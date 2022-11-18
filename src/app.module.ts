@@ -9,10 +9,15 @@ import { LogosModule } from './logos/logos.module';
 import { CooperationProjectsModule } from './cooperation-projects/cooperation-projects.module';
 import { ProjectsModule } from './projects/projects.module';
 import { SemestersModule } from './semesters/semesters.module';
+import { envValidationSchema } from 'src/configs/env.config';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({
+      validationSchema: envValidationSchema,
+      envFilePath: '.env',
+      isGlobal: true,
+    }),
     TypeOrmModule.forRootAsync(typeORMFactory),
     PartnersModule,
     LogosModule,
