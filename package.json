@@ -28,6 +28,7 @@
     "@nestjs/platform-express": "^9.0.0",
     "@nestjs/swagger": "^6.1.2",
     "@nestjs/typeorm": "^9.0.1",
+    "joi": "^17.7.0",
     "pg": "^8.8.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
