@@ -10,7 +10,7 @@ import { HttpService } from '@nestjs/axios';
 import { PlaygroundProjectResponseDto } from 'src/projects/dtos/playground-project-response.dto';
 import { Link } from 'src/projects/dtos/link';
 import { Member } from 'src/projects/dtos/member';
-import { catchError, firstValueFrom, lastValueFrom, map } from 'rxjs';
+import { catchError, lastValueFrom, map } from 'rxjs';
 import { ConfigService } from '@nestjs/config';
 import { env } from 'src/utils/constants';
 
@@ -89,27 +89,27 @@ export class projectsService {
     const apiUrl = this.getApiUrl();
     const jwtToken = this.configService.get(env.PLAYGROUND_API_JWT_TOKEN);
 
-    const response = await firstValueFrom(
-      this.httpService.get(apiUrl + projectApiPath, {
-        headers: {
-          Authorization: jwtToken,
-        },
-      }),
+    const response = await lastValueFrom(
+      this.httpService
+        .get<PlaygroundProjectResponseDto[]>(apiUrl + projectApiPath, {
+          headers: {
+            Authorization: jwtToken,
+          },
+        })
+        .pipe(map((res) => res.data)),
     );
 
     if (!response) {
       return [];
     }
 
-    for (let i = 0; i < response.data.length; i++) {
-      const data: PlaygroundProjectResponseDto = response.data[i];
+    for (const data of response) {
       res.push(this.getProjectResponseDto(data));
     }
 
     if (project) {
       return res.filter((element) => element.category.project == project);
     }
-
     return res;
   }
 
