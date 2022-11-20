@@ -1,7 +1,7 @@
 import {
+  HttpException,
   Injectable,
   InternalServerErrorException,
-  NotFoundException,
 } from '@nestjs/common';
 import { ProjectsResponseDto } from 'src/projects/dtos/projects-response.dto';
 
@@ -10,7 +10,7 @@ import { HttpService } from '@nestjs/axios';
 import { PlaygroundProjectResponseDto } from 'src/projects/dtos/playground-project-response.dto';
 import { Link } from 'src/projects/dtos/link';
 import { Member } from 'src/projects/dtos/member';
-import { firstValueFrom } from 'rxjs';
+import { catchError, firstValueFrom, lastValueFrom, map } from 'rxjs';
 import { ConfigService } from '@nestjs/config';
 import { env } from 'src/utils/constants';
 
@@ -114,13 +114,33 @@ export class projectsService {
   }
 
   async findOne(projectId: number): Promise<ProjectsResponseDto> {
-    if (!this.mockData)
-      throw new InternalServerErrorException('mock 데이터가 없습니다.');
+    const apiUrl = this.getApiUrl();
+    const projectDetailApiPath = `v1/projects/${projectId}`;
+    const jwtToken = this.configService.get(env.PLAYGROUND_API_JWT_TOKEN);
 
-    const result = this.mockData.find((element) => element.id == projectId);
-    if (!result)
-      throw new NotFoundException('해당 id의 데이터를 찾을 수 없습니다.');
+    const response: PlaygroundProjectResponseDto = await lastValueFrom(
+      this.httpService
+        .get<PlaygroundProjectResponseDto>(apiUrl + projectDetailApiPath, {
+          headers: {
+            Authorization: jwtToken,
+          },
+        })
+        .pipe(map((res) => res.data))
+        .pipe(
+          catchError((error) => {
+            throw new HttpException(
+              'API ' + error.response.data.error,
+              error.response.data.status,
+            );
+          }),
+        ),
+    );
 
-    return result;
+    if (!response) {
+      throw new InternalServerErrorException(
+        `프로젝트 데이터를 가져오지 못했습니다.`,
+      );
+    }
+    return this.getProjectResponseDto(response);
   }
 }
