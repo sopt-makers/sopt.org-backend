@@ -11,5 +11,6 @@ export const envValidationSchema = Joi.object({
   DB_DATABASE: Joi.string().required(),
   PLAYGROUND_API_DEV_URL: Joi.string().required(),
   PLAYGROUND_API_PROD_URL: Joi.string().required(),
-  PLAYGROUND_API_JWT_TOKEN: Joi.string().required(),
+  PLAYGROUND_API_DEV_JWT_TOKEN: Joi.string().required(),
+  PLAYGROUND_API_PROD_JWT_TOKEN: Joi.string().required(),
 });
