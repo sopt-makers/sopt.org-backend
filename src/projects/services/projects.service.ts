@@ -35,6 +35,21 @@ export class projectsService {
     return apiUrl;
   }
 
+  getJwtToken(): string {
+    const jwtToken =
+      this.configService.get(env.NODE_ENV) == env.production
+        ? this.configService.get(env.PLAYGROUND_API_PROD_JWT_TOKEN)
+        : this.configService.get(env.PLAYGROUND_API_DEV_JWT_TOKEN);
+
+    if (!jwtToken) {
+      throw new InternalServerErrorException(
+        `JWT Token을 가져오는데 문제가 발생했습니다.`,
+      );
+    }
+
+    return jwtToken;
+  }
+
   getProjectResponseDto(
     response: PlaygroundProjectResponseDto,
   ): ProjectsResponseDto {
@@ -82,7 +97,7 @@ export class projectsService {
     const projectApiPath = 'v1/projects';
 
     const apiUrl = this.getApiUrl();
-    const jwtToken = this.configService.get(env.PLAYGROUND_API_JWT_TOKEN);
+    const jwtToken = this.getJwtToken();
 
     const response = await lastValueFrom(
       this.httpService
@@ -111,7 +126,7 @@ export class projectsService {
   async findOne(projectId: number): Promise<ProjectsResponseDto> {
     const apiUrl = this.getApiUrl();
     const projectDetailApiPath = `v1/projects/${projectId}`;
-    const jwtToken = this.configService.get(env.PLAYGROUND_API_JWT_TOKEN);
+    const jwtToken = this.getJwtToken();
 
     const response: PlaygroundProjectResponseDto = await lastValueFrom(
       this.httpService
