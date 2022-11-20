@@ -5,7 +5,6 @@ import {
 } from '@nestjs/common';
 import { ProjectsResponseDto } from 'src/projects/dtos/projects-response.dto';
 
-import * as fs from 'fs';
 import { HttpService } from '@nestjs/axios';
 import { PlaygroundProjectResponseDto } from 'src/projects/dtos/playground-project-response.dto';
 import { Link } from 'src/projects/dtos/link';
@@ -20,10 +19,6 @@ export class projectsService {
     private readonly httpService: HttpService,
     private readonly configService: ConfigService,
   ) {}
-
-  mockData: ProjectsResponseDto[] = JSON.parse(
-    fs.readFileSync('src/mock/projects.json').toString(),
-  );
 
   getApiUrl(): string {
     const apiUrl =
