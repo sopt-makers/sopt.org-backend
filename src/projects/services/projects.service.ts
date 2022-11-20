@@ -25,6 +25,21 @@ export class projectsService {
     fs.readFileSync('src/mock/projects.json').toString(),
   );
 
+  getApiUrl(): string {
+    const apiUrl =
+      this.configService.get(env.NODE_ENV) == env.production
+        ? this.configService.get(env.PLAYGROUND_API_PROD_URL)
+        : this.configService.get(env.PLAYGROUND_API_DEV_URL);
+
+    if (!apiUrl) {
+      throw new InternalServerErrorException(
+        `API URL을 가져오는데 문제가 발생했습니다.`,
+      );
+    }
+
+    return apiUrl;
+  }
+
   getProjectResponseDto(
     response: PlaygroundProjectResponseDto,
   ): ProjectsResponseDto {
@@ -71,10 +86,7 @@ export class projectsService {
     const res: ProjectsResponseDto[] = [];
     const projectApiPath = 'v1/projects';
 
-    const apiUrl =
-      this.configService.get(env.NODE_ENV) == env.production
-        ? this.configService.get(env.PLAYGROUND_API_PROD_URL)
-        : this.configService.get(env.PLAYGROUND_API_DEV_URL);
+    const apiUrl = this.getApiUrl();
     const jwtToken = this.configService.get(env.PLAYGROUND_API_JWT_TOKEN);
 
     const response = await firstValueFrom(
