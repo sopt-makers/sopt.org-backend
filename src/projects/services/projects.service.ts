@@ -86,7 +86,7 @@ export class projectsService {
       thumbnailImage: response.thumbnailImage,
       projectImage: response.images ? response.images[0] : '',
       uploadedAt: new Date(response.createdAt),
-      updatedAt: new Date(response.updateAt),
+      updatedAt: new Date(response.updatedAt),
       link: links,
       members: members,
     };
