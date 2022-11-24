@@ -22,7 +22,7 @@ export class PlaygroundProjectResponseDto {
   thumbnailImage: string;
   images: Array<string>;
   createdAt: string;
-  updateAt: string;
+  updatedAt: string;
   members: Array<PlaygroundMember>;
   links: Array<PlaygroundLink>;
 }
