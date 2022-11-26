@@ -12,6 +12,7 @@ import { Member } from 'src/projects/dtos/member';
 import { catchError, lastValueFrom, map } from 'rxjs';
 import { ConfigService } from '@nestjs/config';
 import { env } from 'src/utils/constants';
+import { dropDuplication } from 'src/utils/helper';
 
 @Injectable()
 export class projectsService {
@@ -109,11 +110,21 @@ export class projectsService {
         .pipe(map((res) => res.data)),
     );
 
-    if (!response) {
+    // 중복제거 로직 : 추후 제거 예정
+    const uniqueResponse: PlaygroundProjectResponseDto[] = dropDuplication(
+      response,
+      'name',
+    );
+    uniqueResponse.forEach((response) => {
+      response.links = dropDuplication(response.links, 'linkId');
+      response.members = dropDuplication(response.members, 'memberId');
+    });
+
+    if (!uniqueResponse) {
       return [];
     }
 
-    for (const data of response) {
+    for (const data of uniqueResponse) {
       res.push(this.getProjectResponseDto(data));
     }
 
