@@ -1,4 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Semester } from 'src/semesters/entities/semesters.entity';
+import { formatSemesterYear } from 'src/semesters/utils/formatter';
+import { DEFAULT_SEMESTER_LOGO } from 'src/utils/constants';
 
 export class SemestersInfoResponseDto {
   @ApiProperty({
@@ -42,4 +45,13 @@ export class SemestersInfoResponseDto {
     description: '기수 활동 기간',
   })
   year: string;
+
+  constructor(semester: Semester) {
+    this.id = semester.id;
+    this.color = semester.color;
+    this.logo = semester.logo ? semester.logo : DEFAULT_SEMESTER_LOGO;
+    this.background = semester.background;
+    this.name = semester.name;
+    this.year = formatSemesterYear(semester.year);
+  }
 }
