@@ -1,13 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export enum LinkType {
-  WEBSITE = '웹사이트',
-  GOOGLE_PLAYSTORE = '구글 플레이스토어',
-  APP_STORE = '앱 스토어',
-  GITHUB = 'Github',
-  PRESENTATION_VIDEO = '발표영상',
+  WEBSITE = 'website',
+  GOOGLE_PLAYSTORE = 'googlePlay',
+  APP_STORE = 'appStore',
+  GITHUB = 'github',
+  MEDIA = 'media',
   INSTAGRAM = 'instagram',
-  ETC = '기타 관련자료',
 }
 
 export class Link {
