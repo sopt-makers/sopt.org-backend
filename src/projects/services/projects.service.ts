@@ -62,14 +62,18 @@ export class projectsService {
       return link;
     });
 
-    const members: Array<Member> = response.members.map((data) => {
-      const member: Member = {
-        name: data.memberName,
-        role: data.memberRole,
-        description: data.memberDescription,
-      };
-      return member;
-    });
+    let members: Array<Member> = [];
+
+    if (response.members) {
+      members = response.members.map((data) => {
+        const member: Member = {
+          name: data.memberName,
+          role: data.memberRole,
+          description: data.memberDescription,
+        };
+        return member;
+      });
+    }
 
     return {
       id: response.id,
@@ -117,14 +121,13 @@ export class projectsService {
     );
     uniqueResponse.forEach((response) => {
       response.links = dropDuplication(response.links, 'linkId');
-      response.members = dropDuplication(response.members, 'memberId');
     });
 
     if (!uniqueResponse) {
       return [];
     }
 
-    for (const data of uniqueResponse) {
+    for (const data of response) {
       res.push(this.getProjectResponseDto(data));
     }
 
