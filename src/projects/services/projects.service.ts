@@ -62,15 +62,18 @@ export class projectsService {
       return link;
     });
 
-    const members: Array<Member> = [];
-    // const members: Array<Member> = response.members.map((data) => {
-    //   const member: Member = {
-    //     name: data.memberName,
-    //     role: data.memberRole,
-    //     description: data.memberDescription,
-    //   };
-    //   return member;
-    // });
+    let members: Array<Member> = [];
+
+    if (response.members) {
+      members = response.members.map((data) => {
+        const member: Member = {
+          name: data.memberName,
+          role: data.memberRole,
+          description: data.memberDescription,
+        };
+        return member;
+      });
+    }
 
     return {
       id: response.id,
@@ -110,6 +113,19 @@ export class projectsService {
         })
         .pipe(map((res) => res.data)),
     );
+
+    // 중복제거 로직 : 추후 제거 예정
+    const uniqueResponse: PlaygroundProjectResponseDto[] = dropDuplication(
+      response,
+      'name',
+    );
+    uniqueResponse.forEach((response) => {
+      response.links = dropDuplication(response.links, 'linkId');
+    });
+
+    if (!uniqueResponse) {
+      return [];
+    }
 
     for (const data of response) {
       res.push(this.getProjectResponseDto(data));
