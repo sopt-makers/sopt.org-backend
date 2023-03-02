@@ -24,7 +24,8 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "deploy:commit": "printf '\n' >> .env && echo PACKAGE_VER=$npm_package_version >> .env && echo COMMIT=`git rev-parse HEAD` >> .env && echo DEPLOY_DATE=`git log -1 --pretty=format:\"%ci\"` >> .env"
   },
   "dependencies": {
     "@nestjs/axios": "^1.0.0",
