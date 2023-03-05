@@ -15,8 +15,8 @@ describe('AppController', () => {
   });
 
   describe('root', () => {
-    it('should return "Hello World!"', () => {
-      expect(appController.getHello()).toBe('Hello World!');
+    it('should return "sopt.org backend server started"', () => {
+      expect(appController.getHello()).toBe("<h1> sopt.org backend server started </h1>");
     });
   });
 });
