@@ -22,6 +22,7 @@ jobs:
       - run: yarn run test
 
   build:
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -51,15 +52,18 @@ jobs:
           push: true
           tags: latest
 
-      - name: ssh command deploy
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.HOST }}
-          username: ubuntu
-          key: ${{ secrets.PEM_KEY }}
-          script: |
-            sudo docker stop dev-server
-            sudo docker rm dev-server
-            sudo docker rm -f $(docker ps -qa)
-            sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:latest
-            sudo docker run --name dev-server --env-file .env -d -p 3000:3000 -t ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:latest
+  deploy:
+    needs: build
+    steps:
+    - name: ssh command deploy
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ubuntu
+        key: ${{ secrets.PEM_KEY }}
+        script: |
+          sudo docker stop dev-server
+          sudo docker rm dev-server
+          sudo docker rm -f $(docker ps -qa)
+          sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:latest
+          sudo docker run --name dev-server --env-file .env -d -p 3000:3000 -t ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:latest
