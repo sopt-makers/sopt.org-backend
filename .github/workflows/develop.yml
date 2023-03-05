@@ -62,4 +62,4 @@ jobs:
             sudo docker rm dev-server
             sudo docker rm -f $(docker ps -qa)
             sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:latest
-            sudo docker run --name dev-server -d -p 3000:3000 -t ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:latest
+            sudo docker run --name dev-server --env-file .env -d -p 3000:3000 -t ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:latest
