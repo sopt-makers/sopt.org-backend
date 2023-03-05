@@ -1,18 +1,29 @@
-# install stage
-FROM docker.io/node:16.13-slim as install
+# Stage 1: Build the application
+FROM node:16-alpine AS build
 
-WORKDIR /root
-COPY package.json .
-COPY yarn.lock .
+WORKDIR /app
+
+COPY package*.json ./
+COPY yarn.lock ./
+
 RUN yarn install
 
-# final stage
-FROM docker.io/node:16.13-slim
-WORKDIR /root
-COPY --from=install /root /root
 COPY . .
-RUN apt-get update && apt-get -y install git
-#RUN apk add --no-cache git
-RUN yarn build && yarn deploy:commit && yarn cache clean
+
+RUN yarn build
+
+# Stage 2: Create the production image
+FROM node:16-alpine AS production
+
+WORKDIR /app
+
+COPY package*.json ./
+COPY yarn.lock ./
+
+RUN yarn install --production
+
+COPY --from=build /app/dist ./dist
+
 EXPOSE 3000
-CMD ["node", "dist/main"]
+
+CMD ["yarn", "run", "start"]
