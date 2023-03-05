@@ -50,7 +50,7 @@ jobs:
           file: ./dockerfile
           platforms: linux/amd64
           push: true
-          tags: latest
+
 
   deploy:
     needs: build
