@@ -36,3 +36,6 @@ lerna-debug.log*
 
 # .env
 *.env
+
+# pg local
+docker-compose/pgdata
