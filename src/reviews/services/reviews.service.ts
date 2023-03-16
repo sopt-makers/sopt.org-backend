@@ -7,7 +7,10 @@ import { Repository } from 'typeorm';
 export class ReviewsService {
   constructor(
     @InjectRepository(Review) 
-    private ReviewsRepository: Repository<Review>,
+    private reviewsRepository: Repository<Review>,
   ) {}
+  findAll(): Promise<Review[]> {
+    return this.reviewsRepository.find();
+  }
 
 }

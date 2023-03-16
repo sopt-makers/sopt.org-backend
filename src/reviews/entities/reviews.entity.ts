@@ -21,6 +21,9 @@ export class Review {
   @Column('varchar', { name: 'subject', nullable: false, length: 20 })
   subject: string;
 
+  @Column('varchar', { name: 'thumbnail', nullable: true, length: 500 })
+  thumbnail: string;
+
   @Column('varchar', { name: 'platform', nullable: false, length: 50 })
   platform: string;
 
