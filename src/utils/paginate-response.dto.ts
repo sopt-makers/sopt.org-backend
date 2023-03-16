@@ -1,11 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export class PaginateResponseDto<T> {
-  @ApiProperty({
-    type: Array,
-    nullable: false,
-    description: 'item',
-  })
   data: T[];
 
   @ApiProperty({

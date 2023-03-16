@@ -4,6 +4,7 @@ export abstract class PageRequest {
   @ApiProperty({
     type: Number,
     default: 1,
+    required: false,
   })
   @IsNumber()
   pageNo: number | 1;
@@ -11,6 +12,7 @@ export abstract class PageRequest {
   @ApiProperty({
     type: Number,
     default: 10,
+    required: false,
   })
   @IsNumber()
   limit: number | 10;
