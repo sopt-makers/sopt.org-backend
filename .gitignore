@@ -39,3 +39,4 @@ lerna-debug.log*
 
 # pg local
 docker-compose/pgdata
+docker-compose/doc

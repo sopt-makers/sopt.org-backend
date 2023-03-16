@@ -10,6 +10,7 @@ import { CooperationProjectsModule } from './cooperation-projects/cooperation-pr
 import { ProjectsModule } from './projects/projects.module';
 import { SemestersModule } from './semesters/semesters.module';
 import { envValidationSchema } from 'src/configs/env.config';
+import { ReviewsModule } from './reviews/reviews.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { envValidationSchema } from 'src/configs/env.config';
     CooperationProjectsModule,
     ProjectsModule,
     SemestersModule,
+    ReviewsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

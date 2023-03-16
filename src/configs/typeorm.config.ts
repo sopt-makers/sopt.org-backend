@@ -11,7 +11,7 @@ export const typeORMFactory = {
     password: configService.get('DB_PASSWORD'),
     database: configService.get('DB_DATABASE'),
     entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-    synchronize: false,
+    synchronize: true,
   }),
   inject: [ConfigService],
 };
