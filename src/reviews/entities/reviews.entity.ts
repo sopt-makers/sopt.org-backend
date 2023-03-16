@@ -1,5 +1,14 @@
 import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 
+export enum Part {
+  iOS = 'iOS',
+  PLAN = 'PLAN',
+  DESIGN = 'DESIGN',
+  SERVER = 'SERVER',
+  ANDROID = 'ANDROID',
+  WEB = 'WEB',
+}
+
 @Index('review_pk', ['id'], { unique: true })
 @Entity('Review', { schema: 'public' })
 export class Review {
@@ -15,8 +24,8 @@ export class Review {
   @Column('integer', { name: 'semester', nullable: false })
   semester: number;
 
-  @Column('varchar', { name: 'part', nullable: false , length: 10})
-  part: string;
+  @Column('varchar', { name: 'part', nullable: false, length: 10 })
+  part: Part;
 
   @Column('varchar', { name: 'subject', nullable: false, length: 20 })
   subject: string;
