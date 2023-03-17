@@ -13,18 +13,22 @@ import { ReviewsResponseDto } from '../dtos/reviews-response.dto';
 export class ReviewsController {
   constructor(private readonly reviewsService: ReviewsService) {}
 
+  // @Get()
+  // @GetReviewsDocs()
+  // async getReviews(
+  //   @Query() filter: ReviewsRequestDto
+  // ):
+  // Promise<Review[]> {
+  //   const reviews = await this.reviewsService.findAll(filter);
+  //   return reviews;
+  // }
+
   @Get()
   @GetReviewsDocs()
   async getReviews(
+    @Query() page: PageRequest,
     @Query() filter: ReviewsRequestDto
-  ):
-  Promise<Review[]> {
-    const reviews = await this.reviewsService.findAll(filter);
-    return reviews;
-  }
-
-  @Get('/page')
-  async getPages(@Query() page: PageRequest) {
-    return this.reviewsService.getPage(page);
+    ) {
+    return this.reviewsService.getReviews(filter, page);
   }
 }
