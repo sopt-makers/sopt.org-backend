@@ -25,15 +25,15 @@ export class ReviewsService {
     })
     return review_part;
   }
-  // async getPage(page: PageRequest): Promise<PaginateResponseDto<ReviewsResponseDto>> {
-  //   const total = await this.reviewsRepository.count();
-  //   const pages = await this.reviewsRepository.find({
-  //     take: page.getLimit(),
-  //     skip: page.getOffset(),
-  //     order: {semester: 'DESC'}
-  //   });
+  async getPage(page: PageRequest): Promise<PaginateResponseDto<ReviewsResponseDto>> {
+    const total = await this.reviewsRepository.count();
+    const pages = await this.reviewsRepository.find({
+      take: page.getLimit(),
+      skip: page.getOffset(),
+      order: {semester: 'DESC'}
+    });
 
-  //   return new PaginateResponseDto(pages, total, pages.length, page.pageNo)
-  // }
+    return new PaginateResponseDto(pages, total, pages.length, page.pageNo)
+  }
 
 }

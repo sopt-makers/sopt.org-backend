@@ -1,6 +1,8 @@
 import { IsNumber } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 export abstract class PageRequest {
+  @Type(() => Number)
   @ApiProperty({
     type: Number,
     default: 1,
@@ -9,6 +11,7 @@ export abstract class PageRequest {
   @IsNumber()
   pageNo: number | 1;
 
+  @Type(() => Number)
   @ApiProperty({
     type: Number,
     default: 10,
