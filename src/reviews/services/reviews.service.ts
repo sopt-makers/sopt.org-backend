@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Review } from 'src/reviews/entities/reviews.entity';
+import { Part, Review } from 'src/reviews/entities/reviews.entity';
 import { Repository } from 'typeorm';
 import { ReviewsResponseDto } from '../dtos/reviews-response.dto';
 import { ReviewsRequestDto } from '../dtos/reviews-request.dto';
@@ -35,5 +35,21 @@ export class ReviewsService {
       reviewsRequestDto.getLimit(),
       reviewsRequestDto.pageNo,
     );
+  }
+
+  getRandomReviewByPart(): Promise<Review[]> {
+    const parts: Part[] = Object.values(Part);
+    return Promise.all(
+      parts
+        .map((part: Part) => this.findRandomReview(part))
+        .filter((review: Promise<Review | null>) => review !== null),
+    ) as Promise<Review[]>;
+  }
+  private async findRandomReview(part: Part): Promise<Review | null> {
+    return this.reviewsRepository
+      .createQueryBuilder('Review')
+      .where('Review.part = :part', { part: part })
+      .orderBy('RANDOM()')
+      .getOne();
   }
 }
