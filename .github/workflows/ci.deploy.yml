@@ -1,4 +1,4 @@
-name: Develop workflow
+name: Develop test workflow
 
 on:
   pull_request:
