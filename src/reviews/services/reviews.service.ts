@@ -3,7 +3,7 @@ import { PaginateResponseDto } from './../../utils/paginate-response.dto';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Review } from 'src/reviews/entities/reviews.entity';
-import { Repository } from 'typeorm';
+import { Equal, Repository } from 'typeorm';
 import { ReviewsResponseDto } from '../dtos/reviews-response.dto';
 import { PageRequest } from 'src/utils/paginate-request.dto';
 
@@ -27,25 +27,21 @@ export class ReviewsService {
     }
 
     
-    const review_part = await this.reviewsRepository.findBy({
+    const part_reviews = await this.reviewsRepository.find({
+      where: {
+        part: reviewsRequestDto.part
+      },
+      take: page.getLimit(),
+      skip: page.getOffset(),
+      order: {semester: 'DESC'}
+      
+    });
+
+    const part_cnt = await this.reviewsRepository.findBy({
       part: reviewsRequestDto.part,
     });
 
-    const total = review_part.length;
-
-    return new PaginateResponseDto(review_part, total, review_part.length, page.pageNo)
+    return new PaginateResponseDto(part_reviews, part_cnt.length, part_reviews.length, page.pageNo);
 
   }
-
-  // async findAll(reviewsRequestDto:ReviewsRequestDto){
-  //   if (!reviewsRequestDto.part){
-  //     const reviews = await this.reviewsRepository.find();
-  //     return reviews;
-  //   }
-
-  //   const review_part = await this.reviewsRepository.findBy({
-  //     part: reviewsRequestDto.part,
-  //   })
-  //   return review_part;
-  // }
 }
