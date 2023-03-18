@@ -26,9 +26,9 @@ export class ReviewsService {
     reviewQueryBuilder.skip(reviewsRequestDto.getOffset());
     reviewQueryBuilder.orderBy({semester:'DESC'});
 
-    const reviews = await reviewQueryBuilder.getManyAndCount();
+    const [reviews, reviewsCount] = await reviewQueryBuilder.getManyAndCount();
 
-    return new PaginateResponseDto(reviews[0], reviews[1], page.getLimit(), page.pageNo);
+    return new PaginateResponseDto(reviews, reviewsCount, page.getLimit(), page.pageNo);
   }
   
 }
