@@ -13,35 +13,52 @@ export class ReviewsService {
     @InjectRepository(Review) 
     private reviewsRepository: Repository<Review>,
   ) {}
-
   async getReviews(reviewsRequestDto: ReviewsRequestDto, page: PageRequest): Promise<PaginateResponseDto<ReviewsResponseDto>> {
-    if (!reviewsRequestDto.part){
-      const total = await this.reviewsRepository.count();
-      const pages = await this.reviewsRepository.find({
-        take: page.getLimit(),
-        skip: page.getOffset(),
-        order: {semester: 'DESC'}
+    const reviewQueryBuilder = await this.reviewsRepository.createQueryBuilder(
+      'Review',
+    );
+    if (reviewsRequestDto.part){
+      reviewQueryBuilder.andWhere('Review.part= :part', {
+        part: reviewsRequestDto.part,
       });
-  
-      return new PaginateResponseDto(pages, total, pages.length, page.pageNo)
     }
+    reviewQueryBuilder.take(reviewsRequestDto.getLimit());
+    reviewQueryBuilder.skip(reviewsRequestDto.getOffset());
+    reviewQueryBuilder.orderBy({semester:'DESC'});
+
+    const reviews = await reviewQueryBuilder.getManyAndCount();
+
+    return new PaginateResponseDto(reviews[0], reviews[1], page.getLimit(), page.pageNo);
+  }
+  
+}
+  // async getReviews(reviewsRequestDto: ReviewsRequestDto, page: PageRequest): Promise<PaginateResponseDto<ReviewsResponseDto>> {
+  //   if (!reviewsRequestDto.part){
+  //     const total = await this.reviewsRepository.count();
+  //     const pages = await this.reviewsRepository.find({
+  //       take: page.getLimit(),
+  //       skip: page.getOffset(),
+  //       order: {semester: 'DESC'}
+  //     });
+  
+  //     return new PaginateResponseDto(pages, total, pages.length, page.pageNo)
+  //   }
 
     
-    const part_reviews = await this.reviewsRepository.find({
-      where: {
-        part: reviewsRequestDto.part
-      },
-      take: page.getLimit(),
-      skip: page.getOffset(),
-      order: {semester: 'DESC'}
+  //   const part_reviews = await this.reviewsRepository.find({
+  //     where: {
+  //       part: reviewsRequestDto.part
+  //     },
+  //     take: page.getLimit(),
+  //     skip: page.getOffset(),
+  //     order: {semester: 'DESC'}
       
-    });
+  //   });
 
-    const part_cnt = await this.reviewsRepository.findBy({
-      part: reviewsRequestDto.part,
-    });
+  //   const part_cnt = await this.reviewsRepository.findBy({
+  //     part: reviewsRequestDto.part,
+  //   });
 
-    return new PaginateResponseDto(part_reviews, part_cnt.length, part_reviews.length, page.pageNo);
+  //   return new PaginateResponseDto(part_reviews, part_cnt.length, part_reviews.length, page.pageNo);
 
-  }
-}
+  // }
