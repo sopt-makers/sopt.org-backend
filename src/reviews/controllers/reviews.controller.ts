@@ -7,7 +7,10 @@ import {
 } from '@nestjs/common';
 
 import { ReviewsService } from '../services/reviews.service';
-import { GetReviewsDocs } from '../../../docs/review/review.swagger';
+import {
+  GetRandomReviewByPart,
+  GetReviewsDocs,
+} from '../../../docs/review/review.swagger';
 import { PaginateResponseDto } from '../../utils/paginate-response.dto';
 import { ReviewsResponseDto } from '../dtos/reviews-response.dto';
 import { ReviewsRequestDto } from '../dtos/reviews-request.dto';
@@ -23,5 +26,11 @@ export class ReviewsController {
     @Query() reviewsRequestDto: ReviewsRequestDto,
   ): Promise<PaginateResponseDto<ReviewsResponseDto>> {
     return this.reviewsService.getReviews(reviewsRequestDto);
+  }
+
+  @Get('/random')
+  @GetRandomReviewByPart()
+  GetRandomReviewByPart(): Promise<ReviewsResponseDto[]> {
+    return this.reviewsService.getRandomReviewByPart();
   }
 }
