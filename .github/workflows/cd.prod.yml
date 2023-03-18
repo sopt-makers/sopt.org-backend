@@ -1,9 +1,9 @@
-name: Develop deploy workflow
+name: Production deploy workflow
 
 on:
   push:
     branches:
-      - 'develop'
+      - 'main'
 
 jobs:
   test:
@@ -29,7 +29,7 @@ jobs:
         id: docker_meta
         uses: crazy-max/ghaction-docker-meta@v3
         with:
-          images: ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_IMAGE }}
+          images: ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_PROD_IMAGE }}
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
@@ -47,7 +47,7 @@ jobs:
           file: ./dockerfile
           platforms: linux/amd64
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_PROD_IMAGE }}:latest
 
 
   deploy:
@@ -57,12 +57,12 @@ jobs:
     - name: ssh command deploy
       uses: appleboy/ssh-action@master
       with:
-        host: ${{ secrets.HOST }}
+        host: ${{ secrets.PROD_HOST }}
         username: ubuntu
         key: ${{ secrets.PEM_KEY }}
         script: |
-          sudo docker stop dev-server
-          sudo docker rm dev-server
+          sudo docker stop sopt.org-backend
+          sudo docker rm sopt.org-backend
           sudo docker rm -f $(docker ps -qa)
-          sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:latest
-          sudo docker run --name dev-server --env-file .env -d -p 3000:3000 -t ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:latest
+          sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_PROD_IMAGE }}:latest
+          sudo docker run --name sopt.org-backend --env-file .env -d -p 3000:3000 -t ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_PROD_IMAGE }}:latest
