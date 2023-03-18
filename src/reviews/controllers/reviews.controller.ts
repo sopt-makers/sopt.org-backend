@@ -1,12 +1,16 @@
-import { Part } from './../entities/reviews.entity';
-import { PaginateResponseDto } from './../../utils/paginate-response.dto';
-import { PageRequest } from 'src/utils/paginate-request.dto';
-import { Body, Controller, Get, Param, Query, UsePipes, ValidationPipe } from '@nestjs/common';
-import { Review } from '../entities/reviews.entity';
+import {
+  Controller,
+  Get,
+  Query,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
+
 import { ReviewsService } from '../services/reviews.service';
 import { GetReviewsDocs } from '../../../docs/review/review.swagger';
-import { ReviewsRequestDto } from '../dtos/reviews-request.dto';
+import { PaginateResponseDto } from '../../utils/paginate-response.dto';
 import { ReviewsResponseDto } from '../dtos/reviews-response.dto';
+import { ReviewsRequestDto } from '../dtos/reviews-request.dto';
 
 @UsePipes(new ValidationPipe({ transform: true }))
 @Controller('reviews')
@@ -16,9 +20,8 @@ export class ReviewsController {
   @Get()
   @GetReviewsDocs()
   async getReviews(
-    @Query() page: PageRequest,
-    @Query() filter: ReviewsRequestDto
-    ) {
-    return this.reviewsService.getReviews(filter, page);
+    @Query() reviewsRequestDto: ReviewsRequestDto,
+  ): Promise<PaginateResponseDto<ReviewsResponseDto>> {
+    return this.reviewsService.getReviews(reviewsRequestDto);
   }
 }
