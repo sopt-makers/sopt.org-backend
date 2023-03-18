@@ -9,7 +9,7 @@
     "prebuild": "rimraf dist",
     "config:local": "cp -av envs/local.develop.env .env",
     "config:develop": "cp -av envs/develop.env .env",
-    "config:prod": "cp -av envs/develop.env .env",
+    "config:prod": "cp -av envs/production.env .env",
     "db:load": "cd docker-compose && docker-compose down && docker-compose up -d",
     "start:local": "run-s db:load config:local start:dev",
     "start:develop": "run-s config:develop start:dev",
