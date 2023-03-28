@@ -27,6 +27,7 @@ export class ReviewsService {
     reviewQueryBuilder.skip(reviewsRequestDto.getOffset());
     reviewQueryBuilder.orderBy( 'semester', 'DESC' );
     reviewQueryBuilder.addOrderBy( 'reviewer', 'ASC' );
+    reviewQueryBuilder.addOrderBy( 'id', 'ASC' );
 
     const [reviews, reviewsCount] = await reviewQueryBuilder.getManyAndCount();
 
