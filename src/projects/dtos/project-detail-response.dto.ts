@@ -1,42 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Link } from 'src/projects/dtos/link';
 import { Member } from 'src/projects/dtos/member';
-import { Category } from 'src/projects/dtos/category';
+import { ProjectsResponseDto } from './projects-response.dto';
 
-export enum ServiceType {
-  WEB = 'WEB',
-  APP = 'APP',
-}
-
-export class ProjectDetailResponseDto {
-  @ApiProperty({
-    type: Number,
-    required: true,
-    description: '프로젝트의 Id',
-  })
-  id: number;
-
-  @ApiProperty({
-    type: String,
-    required: true,
-    description: '프로젝트의 이름',
-  })
-  name: string;
-
-  @ApiProperty({
-    type: Number,
-    required: true,
-    description: '프로젝트가 진행된 기수',
-  })
-  generation: number;
-
-  @ApiProperty({
-    type: Category,
-    required: true,
-    description: '프로젝트의 카테고리',
-  })
-  category: Category;
-
+export class ProjectDetailResponseDto extends ProjectsResponseDto {
   @ApiProperty({
     type: Date,
     required: true,
@@ -53,15 +19,6 @@ export class ProjectDetailResponseDto {
   endAt?: Date;
 
   @ApiProperty({
-    enum: ServiceType,
-    required: true,
-    isArray: true,
-    example: [ServiceType.APP, ServiceType.WEB],
-    description: '서비스 형태',
-  })
-  serviceType: Array<ServiceType>;
-
-  @ApiProperty({
     type: Boolean,
     required: true,
     description: '프로젝트의 서비스 진행 여부',
@@ -74,35 +31,6 @@ export class ProjectDetailResponseDto {
     description: '프로젝트의 창업 여부',
   })
   isFounding: boolean;
-
-  @ApiProperty({
-    type: String,
-    required: true,
-    description: '프로젝트 한줄소개',
-  })
-  summary: string;
-
-  @ApiProperty({
-    type: String,
-    required: true,
-    description: '프로젝트 설명',
-  })
-  detail: string;
-
-  @ApiProperty({
-    type: String,
-    required: true,
-    description: '프로젝트 로고 이미지 URL',
-  })
-  logoImage: string;
-
-  @ApiProperty({
-    type: String,
-    required: true,
-    nullable: true,
-    description: '프로젝트 썸네일 이미지 URL',
-  })
-  thumbnailImage: string | null;
 
   @ApiProperty({
     type: String,
@@ -125,13 +53,6 @@ export class ProjectDetailResponseDto {
     description: '프로젝트를 수정한 시간',
   })
   updatedAt: Date;
-
-  @ApiProperty({
-    type: [Link],
-    required: true,
-    description: '프로젝트 링크',
-  })
-  link: Array<Link>;
 
   @ApiProperty({
     type: [Member],

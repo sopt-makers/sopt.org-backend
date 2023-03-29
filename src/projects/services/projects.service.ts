@@ -23,7 +23,7 @@ export class projectsService {
     private readonly configService: ConfigService<EnvConfig>,
   ) {}
 
-  getProjectDetailResponseDto(
+  private getProjectDetailResponseDto(
     response: PlaygroundProjectDetailResponseDto,
   ): ProjectDetailResponseDto {
     const links: Array<Link> = response.links.map((data) => {
@@ -69,7 +69,7 @@ export class projectsService {
     };
   }
 
-  getProjectResponseDto(
+  private getProjectResponseDto(
     response: PlaygroundProjectResponseDto,
   ): ProjectsResponseDto {
     const links: Array<Link> = response.links.map((data) => {

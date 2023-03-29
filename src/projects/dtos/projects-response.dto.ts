@@ -1,7 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Category } from './category';
 import { Link } from './link';
-import { ServiceType } from './project-detail-response.dto';
+
+export enum ServiceType {
+  WEB = 'WEB',
+  APP = 'APP',
+}
 
 export class ProjectsResponseDto {
   @ApiProperty({
