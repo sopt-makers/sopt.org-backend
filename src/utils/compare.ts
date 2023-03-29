@@ -1,8 +1,8 @@
-import { ProjectsListResponseDto } from '../projects/dtos/projects-list-response.dto';
+import { ProjectsResponseDto } from '../projects/dtos/projects-response.dto';
 
 export function compareProjects(
-  a: ProjectsListResponseDto,
-  b: ProjectsListResponseDto,
+  a: ProjectsResponseDto,
+  b: ProjectsResponseDto,
 ) {
   if (a.generation > b.generation) return -1;
   else if (a.generation < b.generation) return 1;

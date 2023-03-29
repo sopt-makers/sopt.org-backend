@@ -7,7 +7,7 @@ import {
 } from '@nestjs/swagger';
 import { ProjectType } from 'src/projects/dtos/category';
 import { ProjectDetailResponseDto } from 'src/projects/dtos/project-detail-response.dto';
-import { ProjectsListResponseDto } from '../../src/projects/dtos/projects-list-response.dto';
+import { ProjectsResponseDto } from '../../src/projects/dtos/projects-response.dto';
 
 export function GetProjectsDocs() {
   return applyDecorators(
@@ -21,7 +21,7 @@ export function GetProjectsDocs() {
       description: '필터링 키워드',
       enum: ProjectType,
     }),
-    ApiOkResponse({ type: [ProjectsListResponseDto] }),
+    ApiOkResponse({ type: [ProjectsResponseDto] }),
   );
 }
 

@@ -3,7 +3,7 @@ import { Category } from './category';
 import { Link } from './link';
 import { ServiceType } from './project-detail-response.dto';
 
-export class ProjectsListResponseDto {
+export class ProjectsResponseDto {
   @ApiProperty({
     type: Number,
     required: true,

@@ -14,7 +14,7 @@ import { ConfigService } from '@nestjs/config';
 import { env } from 'src/utils/constants';
 import { dropDuplication } from 'src/utils/helper';
 import { PlaygroundProjectDetailResponseDto } from '../dtos/playground-project-detail-response.dto';
-import { ProjectsListResponseDto } from '../dtos/projects-list-response.dto';
+import { ProjectsResponseDto } from '../dtos/projects-response.dto';
 
 @Injectable()
 export class projectsService {
@@ -100,7 +100,7 @@ export class projectsService {
 
   getProjectResponseDto(
     response: PlaygroundProjectResponseDto,
-  ): ProjectsListResponseDto {
+  ): ProjectsResponseDto {
     const links: Array<Link> = response.links.map((data) => {
       const link: Link = {
         title: data.linkTitle,
@@ -123,8 +123,8 @@ export class projectsService {
     };
   }
 
-  async findAll(project?: string): Promise<ProjectsListResponseDto[]> {
-    const res: ProjectsListResponseDto[] = [];
+  async findAll(project?: string): Promise<ProjectsResponseDto[]> {
+    const res: ProjectsResponseDto[] = [];
     const projectApiPath = 'v1/projects';
 
     const apiUrl = this.getApiUrl();
