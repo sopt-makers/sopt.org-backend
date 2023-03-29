@@ -13,6 +13,8 @@ import { catchError, lastValueFrom, map } from 'rxjs';
 import { ConfigService } from '@nestjs/config';
 import { env } from 'src/utils/constants';
 import { dropDuplication } from 'src/utils/helper';
+import { PlaygroundProjectDetailResponseDto } from '../dtos/playground-project-detail-response.dto';
+import { ProjectsListResponseDto } from '../dtos/projects-list-response.dto';
 
 @Injectable()
 export class projectsService {
@@ -50,9 +52,8 @@ export class projectsService {
 
     return jwtToken;
   }
-
-  getProjectResponseDto(
-    response: PlaygroundProjectResponseDto,
+  getProjectDetailResponseDto(
+    response: PlaygroundProjectDetailResponseDto,
   ): ProjectsResponseDto {
     const links: Array<Link> = response.links.map((data) => {
       const link: Link = {
@@ -97,8 +98,35 @@ export class projectsService {
     };
   }
 
-  async findAll(project: string): Promise<ProjectsResponseDto[]> {
-    const res: ProjectsResponseDto[] = [];
+  getProjectResponseDto(
+    response: PlaygroundProjectResponseDto,
+  ): ProjectsListResponseDto {
+    const links: Array<Link> = response.links.map((data) => {
+      const link: Link = {
+        title: data.linkTitle,
+        url: data.linkUrl,
+      };
+      return link;
+    });
+
+    let members: Array<Member> = [];
+
+    return {
+      id: response.id,
+      name: response.name,
+      generation: response.generation,
+      category: { project: response.category },
+      serviceType: response.serviceType,
+      summary: response.summary,
+      detail: response.detail,
+      logoImage: response.logoImage,
+      thumbnailImage: response.thumbnailImage,
+      link: links,
+    };
+  }
+
+  async findAll(project?: string): Promise<ProjectsListResponseDto[]> {
+    const res: ProjectsListResponseDto[] = [];
     const projectApiPath = 'v1/projects';
 
     const apiUrl = this.getApiUrl();
@@ -142,13 +170,16 @@ export class projectsService {
     const projectDetailApiPath = `v1/projects/${projectId}`;
     const jwtToken = this.getJwtToken();
 
-    const response: PlaygroundProjectResponseDto = await lastValueFrom(
+    const response: PlaygroundProjectDetailResponseDto = await lastValueFrom(
       this.httpService
-        .get<PlaygroundProjectResponseDto>(apiUrl + projectDetailApiPath, {
-          headers: {
-            Authorization: jwtToken,
+        .get<PlaygroundProjectDetailResponseDto>(
+          apiUrl + projectDetailApiPath,
+          {
+            headers: {
+              Authorization: jwtToken,
+            },
           },
-        })
+        )
         .pipe(map((res) => res.data))
         .pipe(
           catchError((error) => {
@@ -165,6 +196,6 @@ export class projectsService {
         `프로젝트 데이터를 가져오지 못했습니다.`,
       );
     }
-    return this.getProjectResponseDto(response);
+    return this.getProjectDetailResponseDto(response);
   }
 }

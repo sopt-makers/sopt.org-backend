@@ -7,6 +7,7 @@ import {
 import { ProjectsResponseDto } from 'src/projects/dtos/projects-response.dto';
 import { projectsService } from 'src/projects/services/projects.service';
 import { compareProjects } from 'src/utils/compare';
+import { ProjectsListResponseDto } from '../dtos/projects-list-response.dto';
 
 @ApiTags('Project')
 @Controller('projects')
@@ -17,7 +18,7 @@ export class ProjectsController {
   @GetProjectsDocs()
   async getProjects(
     @Query('filter') filter: string,
-  ): Promise<ProjectsResponseDto[]> {
+  ): Promise<ProjectsListResponseDto[]> {
     const projects = await this.projectsService.findAll(filter);
     projects.sort(compareProjects);
 
