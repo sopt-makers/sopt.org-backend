@@ -17,7 +17,7 @@ import { ProjectsResponseDto } from '../dtos/projects-response.dto';
 import { EnvConfig } from '../../configs/env.config';
 
 @Injectable()
-export class projectsService {
+export class ProjectsService {
   constructor(
     private readonly httpService: HttpService,
     private readonly configService: ConfigService<EnvConfig>,
