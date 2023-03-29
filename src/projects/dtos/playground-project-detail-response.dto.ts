@@ -1,4 +1,4 @@
-import { ServiceType } from './projects-response.dto';
+import { ServiceType } from './project-detail-response.dto';
 import { PlaygroundMember } from './playground-member';
 import { PlaygroundLink } from './playground-link';
 import { ProjectType } from './category';

@@ -6,7 +6,7 @@ import {
   ApiQuery,
 } from '@nestjs/swagger';
 import { ProjectType } from 'src/projects/dtos/category';
-import { ProjectsResponseDto } from 'src/projects/dtos/projects-response.dto';
+import { ProjectDetailResponseDto } from 'src/projects/dtos/project-detail-response.dto';
 import { ProjectsListResponseDto } from '../../src/projects/dtos/projects-list-response.dto';
 
 export function GetProjectsDocs() {
@@ -35,6 +35,6 @@ export function GetProjectDocs() {
       type: Number,
       description: '가져올 프로젝트의 Id',
     }),
-    ApiOkResponse({ type: ProjectsResponseDto }),
+    ApiOkResponse({ type: ProjectDetailResponseDto }),
   );
 }

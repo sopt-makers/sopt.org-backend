@@ -3,7 +3,7 @@ import {
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
-import { ProjectsResponseDto } from 'src/projects/dtos/projects-response.dto';
+import { ProjectDetailResponseDto } from 'src/projects/dtos/project-detail-response.dto';
 
 import { HttpService } from '@nestjs/axios';
 import { PlaygroundProjectResponseDto } from 'src/projects/dtos/playground-project-response.dto';
@@ -54,7 +54,7 @@ export class projectsService {
   }
   getProjectDetailResponseDto(
     response: PlaygroundProjectDetailResponseDto,
-  ): ProjectsResponseDto {
+  ): ProjectDetailResponseDto {
     const links: Array<Link> = response.links.map((data) => {
       const link: Link = {
         title: data.linkTitle,
@@ -108,8 +108,6 @@ export class projectsService {
       };
       return link;
     });
-
-    let members: Array<Member> = [];
 
     return {
       id: response.id,
@@ -165,7 +163,7 @@ export class projectsService {
     return res;
   }
 
-  async findOne(projectId: number): Promise<ProjectsResponseDto> {
+  async findOne(projectId: number): Promise<ProjectDetailResponseDto> {
     const apiUrl = this.getApiUrl();
     const projectDetailApiPath = `v1/projects/${projectId}`;
     const jwtToken = this.getJwtToken();

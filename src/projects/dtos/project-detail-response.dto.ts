@@ -8,7 +8,7 @@ export enum ServiceType {
   APP = 'APP',
 }
 
-export class ProjectsResponseDto {
+export class ProjectDetailResponseDto {
   @ApiProperty({
     type: Number,
     required: true,

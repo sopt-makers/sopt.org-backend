@@ -4,7 +4,7 @@ import {
   GetProjectDocs,
   GetProjectsDocs,
 } from 'docs/projects/projects.swagger';
-import { ProjectsResponseDto } from 'src/projects/dtos/projects-response.dto';
+import { ProjectDetailResponseDto } from 'src/projects/dtos/project-detail-response.dto';
 import { projectsService } from 'src/projects/services/projects.service';
 import { compareProjects } from 'src/utils/compare';
 import { ProjectsListResponseDto } from '../dtos/projects-list-response.dto';
@@ -29,7 +29,7 @@ export class ProjectsController {
   @GetProjectDocs()
   async getProject(
     @Param('projectId') projectId: number,
-  ): Promise<ProjectsResponseDto> {
+  ): Promise<ProjectDetailResponseDto> {
     return this.projectsService.findOne(projectId);
   }
 }

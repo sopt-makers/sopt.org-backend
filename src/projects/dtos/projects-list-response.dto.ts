@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Category } from './category';
 import { Link } from './link';
-import { ServiceType } from './projects-response.dto';
+import { ServiceType } from './project-detail-response.dto';
 
 export class ProjectsListResponseDto {
   @ApiProperty({
