@@ -3,7 +3,7 @@ import {
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
-import { ProjectsResponseDto } from 'src/projects/dtos/projects-response.dto';
+import { ProjectDetailResponseDto } from 'src/projects/dtos/project-detail-response.dto';
 
 import { HttpService } from '@nestjs/axios';
 import { PlaygroundProjectResponseDto } from 'src/projects/dtos/playground-project-response.dto';
@@ -11,49 +11,21 @@ import { Link } from 'src/projects/dtos/link';
 import { Member } from 'src/projects/dtos/member';
 import { catchError, lastValueFrom, map } from 'rxjs';
 import { ConfigService } from '@nestjs/config';
-import { env } from 'src/utils/constants';
 import { dropDuplication } from 'src/utils/helper';
+import { PlaygroundProjectDetailResponseDto } from '../dtos/playground-project-detail-response.dto';
+import { ProjectsResponseDto } from '../dtos/projects-response.dto';
+import { EnvConfig } from '../../configs/env.config';
 
 @Injectable()
-export class projectsService {
+export class ProjectsService {
   constructor(
     private readonly httpService: HttpService,
-    private readonly configService: ConfigService,
+    private readonly configService: ConfigService<EnvConfig>,
   ) {}
 
-  getApiUrl(): string {
-    const apiUrl =
-      this.configService.get(env.NODE_ENV) == env.production
-        ? this.configService.get(env.PLAYGROUND_API_PROD_URL)
-        : this.configService.get(env.PLAYGROUND_API_DEV_URL);
-
-    if (!apiUrl) {
-      throw new InternalServerErrorException(
-        `API URL을 가져오는데 문제가 발생했습니다.`,
-      );
-    }
-
-    return apiUrl;
-  }
-
-  getJwtToken(): string {
-    const jwtToken =
-      this.configService.get(env.NODE_ENV) == env.production
-        ? this.configService.get(env.PLAYGROUND_API_PROD_JWT_TOKEN)
-        : this.configService.get(env.PLAYGROUND_API_DEV_JWT_TOKEN);
-
-    if (!jwtToken) {
-      throw new InternalServerErrorException(
-        `JWT Token을 가져오는데 문제가 발생했습니다.`,
-      );
-    }
-
-    return jwtToken;
-  }
-
-  getProjectResponseDto(
-    response: PlaygroundProjectResponseDto,
-  ): ProjectsResponseDto {
+  private getProjectDetailResponseDto(
+    response: PlaygroundProjectDetailResponseDto,
+  ): ProjectDetailResponseDto {
     const links: Array<Link> = response.links.map((data) => {
       const link: Link = {
         title: data.linkTitle,
@@ -97,12 +69,37 @@ export class projectsService {
     };
   }
 
-  async findAll(project: string): Promise<ProjectsResponseDto[]> {
-    const res: ProjectsResponseDto[] = [];
-    const projectApiPath = 'v1/projects';
+  private getProjectResponseDto(
+    response: PlaygroundProjectResponseDto,
+  ): ProjectsResponseDto {
+    const links: Array<Link> = response.links.map((data) => {
+      const link: Link = {
+        title: data.linkTitle,
+        url: data.linkUrl,
+      };
+      return link;
+    });
 
-    const apiUrl = this.getApiUrl();
-    const jwtToken = this.getJwtToken();
+    return {
+      id: response.id,
+      name: response.name,
+      generation: response.generation,
+      category: { project: response.category },
+      serviceType: response.serviceType,
+      summary: response.summary,
+      detail: response.detail,
+      logoImage: response.logoImage,
+      thumbnailImage: response.thumbnailImage,
+      link: links,
+    };
+  }
+
+  async findAll(project?: string): Promise<ProjectsResponseDto[]> {
+    const res: ProjectsResponseDto[] = [];
+    const projectApiPath = '/internal/api/v1/projects';
+
+    const apiUrl = this.configService.get('PLAYGROUND_API_URL');
+    const jwtToken = this.configService.get('PLAYGROUND_API_URL_JWT_TOKEN');
 
     const response = await lastValueFrom(
       this.httpService
@@ -137,18 +134,21 @@ export class projectsService {
     return res;
   }
 
-  async findOne(projectId: number): Promise<ProjectsResponseDto> {
-    const apiUrl = this.getApiUrl();
-    const projectDetailApiPath = `v1/projects/${projectId}`;
-    const jwtToken = this.getJwtToken();
+  async findOne(projectId: number): Promise<ProjectDetailResponseDto> {
+    const apiUrl = this.configService.get('PLAYGROUND_API_URL');
+    const projectDetailApiPath = `/internal/api/v1/projects/${projectId}`;
+    const jwtToken = this.configService.get('PLAYGROUND_API_URL_JWT_TOKEN');
 
-    const response: PlaygroundProjectResponseDto = await lastValueFrom(
+    const response: PlaygroundProjectDetailResponseDto = await lastValueFrom(
       this.httpService
-        .get<PlaygroundProjectResponseDto>(apiUrl + projectDetailApiPath, {
-          headers: {
-            Authorization: jwtToken,
+        .get<PlaygroundProjectDetailResponseDto>(
+          apiUrl + projectDetailApiPath,
+          {
+            headers: {
+              Authorization: jwtToken,
+            },
           },
-        })
+        )
         .pipe(map((res) => res.data))
         .pipe(
           catchError((error) => {
@@ -165,6 +165,6 @@ export class projectsService {
         `프로젝트 데이터를 가져오지 못했습니다.`,
       );
     }
-    return this.getProjectResponseDto(response);
+    return this.getProjectDetailResponseDto(response);
   }
 }

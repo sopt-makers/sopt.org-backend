@@ -1,4 +1,14 @@
 import * as Joi from 'joi';
+export interface EnvConfig {
+  NODE_ENV: 'development' | 'production' | 'local';
+  DB_HOST: string;
+  DB_PORT: string;
+  DB_USERNAME: string;
+  DB_PASSWORD: string;
+  DB_DATABASE: string;
+  PLAYGROUND_API_URL: string;
+  PLAYGROUND_API_URL_JWT_TOKEN: string;
+}
 
 export const envValidationSchema = Joi.object({
   NODE_ENV: Joi.string()
@@ -9,8 +19,6 @@ export const envValidationSchema = Joi.object({
   DB_USERNAME: Joi.string().required(),
   DB_PASSWORD: Joi.string().required(),
   DB_DATABASE: Joi.string().required(),
-  PLAYGROUND_API_DEV_URL: Joi.string().required(),
-  PLAYGROUND_API_PROD_URL: Joi.string().required(),
-  PLAYGROUND_API_DEV_JWT_TOKEN: Joi.string().required(),
-  PLAYGROUND_API_PROD_JWT_TOKEN: Joi.string().required(),
+  PLAYGROUND_API_URL: Joi.string().required(),
+  PLAYGROUND_API_URL_JWT_TOKEN: Joi.string().required(),
 });
