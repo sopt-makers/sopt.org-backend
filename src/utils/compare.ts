@@ -1,4 +1,4 @@
-import { ProjectsResponseDto } from 'src/projects/dtos/projects-response.dto';
+import { ProjectsResponseDto } from '../projects/dtos/projects-response.dto';
 
 export function compareProjects(
   a: ProjectsResponseDto,
@@ -9,10 +9,6 @@ export function compareProjects(
   else {
     if (a.name > b.name) return 1;
     else if (a.name < b.name) return -1;
-    else {
-      if (a.uploadedAt > b.uploadedAt) return 1;
-      else if (a.uploadedAt < b.uploadedAt) return -1;
-      else return 0;
-    }
+    else return 0;
   }
 }
