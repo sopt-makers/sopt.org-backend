@@ -14,10 +14,8 @@ import { S3Client } from '@aws-sdk/client-s3';
         return new S3Client({
           region: 'ap-northeast-2',
           credentials: {
-            accessKeyId: configService.get('AWS_ACCESS_KEY_ID') as string,
-            secretAccessKey: configService.get(
-              'AWS_SECRET_ACCESS_KEY',
-            ) as string,
+            accessKeyId: configService.get('AWS_ACCESS_KEY_ID') ?? '',
+            secretAccessKey: configService.get('AWS_SECRET_ACCESS_KEY') ?? '',
           },
         });
       },
