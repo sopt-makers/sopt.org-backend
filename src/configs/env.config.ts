@@ -11,6 +11,7 @@ export interface EnvConfig {
   PLAYGROUND_API_URL_JWT_TOKEN: string;
   AWS_ACCESS_KEY_ID: string;
   AWS_SECRET_ACCESS_KEY: string;
+  BUCKET_NAME: string;
 }
 
 export const envValidationSchema = Joi.object({
@@ -26,4 +27,5 @@ export const envValidationSchema = Joi.object({
   PLAYGROUND_API_URL_JWT_TOKEN: Joi.string().required(),
   AWS_ACCESS_KEY_ID: Joi.string().required(),
   AWS_SECRET_ACCESS_KEY: Joi.string().required(),
+  BUCKET_NAME: Joi.string().required(),
 });
