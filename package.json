@@ -28,6 +28,7 @@
     "deploy:commit": "printf '\n' >> .env && echo PACKAGE_VER=$npm_package_version >> .env && echo COMMIT=`git rev-parse HEAD` >> .env && echo DEPLOY_DATE=`git log -1 --pretty=format:\"%ci\"` >> .env"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.316.0",
     "@nestjs/axios": "^1.0.0",
     "@nestjs/common": "^9.0.0",
     "@nestjs/config": "^2.2.0",
@@ -35,7 +36,6 @@
     "@nestjs/platform-express": "^9.0.0",
     "@nestjs/swagger": "^6.1.2",
     "@nestjs/typeorm": "^9.0.1",
-    "aws-sdk": "^2.1359.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
     "joi": "^17.7.0",

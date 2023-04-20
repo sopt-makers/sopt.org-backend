@@ -11,6 +11,7 @@ import { ProjectsModule } from './projects/projects.module';
 import { SemestersModule } from './semesters/semesters.module';
 import { envValidationSchema } from 'src/configs/env.config';
 import { ReviewsModule } from './reviews/reviews.module';
+import { AwsModule } from './aws/aws.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { ReviewsModule } from './reviews/reviews.module';
     ProjectsModule,
     SemestersModule,
     ReviewsModule,
+    AwsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
