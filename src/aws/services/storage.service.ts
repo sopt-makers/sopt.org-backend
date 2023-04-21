@@ -17,6 +17,6 @@ export class StorageService {
       Bucket: this.configService.get('BUCKET_NAME'),
       Key: uuid(),
     });
-    return getSignedUrl(this.s3Client, command, { expiresIn: 10 });
+    return getSignedUrl(this.s3Client, command, { expiresIn: 60 * 30 });
   }
 }
