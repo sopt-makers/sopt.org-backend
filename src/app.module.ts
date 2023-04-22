@@ -1,3 +1,4 @@
+import { AboutSoptModule } from './aboutsopt/aboutsopt.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -26,6 +27,7 @@ import { ReviewsModule } from './reviews/reviews.module';
     ProjectsModule,
     SemestersModule,
     ReviewsModule,
+    AboutSoptModule,
   ],
   controllers: [AppController],
   providers: [AppService],
