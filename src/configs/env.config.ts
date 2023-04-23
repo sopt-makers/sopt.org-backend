@@ -8,6 +8,8 @@ export interface EnvConfig {
   DB_DATABASE: string;
   PLAYGROUND_API_URL: string;
   PLAYGROUND_API_URL_JWT_TOKEN: string;
+  ACCESS_TOKEN_SECRET: string;
+  REFRESH_TOKEN_SECRET: string;
 }
 
 export const envValidationSchema = Joi.object({
@@ -21,4 +23,6 @@ export const envValidationSchema = Joi.object({
   DB_DATABASE: Joi.string().required(),
   PLAYGROUND_API_URL: Joi.string().required(),
   PLAYGROUND_API_URL_JWT_TOKEN: Joi.string().required(),
+  ACCESS_TOKEN_SECRET: Joi.string().required(),
+  REFRESH_TOKEN_SECRET: Joi.string().required(),
 });
