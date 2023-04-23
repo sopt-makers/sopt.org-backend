@@ -20,6 +20,6 @@ export class Activity {
   image: string;
 
   @ManyToOne(() => AboutSopt, (aboutsopt) => aboutsopt.activities)
-  aboutsopt: AboutSopt;
+  aboutSopt: AboutSopt;
 
 }
