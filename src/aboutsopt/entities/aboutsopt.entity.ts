@@ -1,6 +1,5 @@
 import { Column, Entity, Index, OneToMany, PrimaryColumn } from 'typeorm';
 import { Activity } from './activity.entity';
-import { CoreValue } from './corevalue.entity';
 
 @Index('aboutsopt_pk', ['id'], { unique: true })
 @Entity('AboutSopt', { schema: 'public' })
@@ -13,9 +12,15 @@ export class AboutSopt {
   
   @Column('varchar', { name: 'coreDescription', nullable: true, length:400, comment: '핵심가치 설명'})
   coreDescription: string;
+  
+  @Column('varchar', { name: 'coreValue1', nullable: true, length:400, comment: '핵심가치 1'})
+  coreValue1: string;
 
-  @OneToMany(() => CoreValue, (corevalue) => corevalue.aboutsopt)
-  corevalues: CoreValue[];
+  @Column('varchar', { name: 'coreValue2', nullable: true, length:400, comment: '핵심가치 2'})
+  coreValue2: string;
+
+  @Column('varchar', { name: 'coreValue3', nullable: true, length:400, comment: '핵심가치 3'})
+  coreValue3: string;
 
   @Column('varchar', { name: 'planCurriculum', nullable: true, length: 400, comment: '기획 파트 커리큘럼' })
   planCurriculum: string;

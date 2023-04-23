@@ -11,7 +11,8 @@ import { AboutSoptService } from '../services/aboutsopt.service';
 @UsePipes(new ValidationPipe({ transform: true }))
 @Controller('aboutsopt')
 export class AboutSoptController {
-  constructor(private readonly aboutsoptService: AboutSoptService) {}
+  constructor(
+    private readonly aboutsoptService: AboutSoptService) {}
 
 }
   
