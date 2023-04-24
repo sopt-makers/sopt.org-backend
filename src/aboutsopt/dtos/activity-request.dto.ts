@@ -1,4 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
+import { IsNumber } from 'class-validator';
 import { Category } from '../entities/activity.entity';
 
 export class ActivityRequestDto {
@@ -7,6 +9,8 @@ export class ActivityRequestDto {
     required: true,
     description: '기수'
   })
+  @IsNumber()
+  @Transform(({value})=>parseInt(value), {toClassOnly: true})
   semester: number;
 
   @ApiProperty({

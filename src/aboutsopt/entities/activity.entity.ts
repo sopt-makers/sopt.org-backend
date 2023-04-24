@@ -17,7 +17,7 @@ export class Activity {
   @PrimaryGeneratedColumn('increment',{ type: 'integer', name: 'id' })
   id: number;
 
-  @Column('integer', { name: 'semester', nullable: false, comment: '기수' })
+  @Column('integer', { name: 'semester', nullable: true, comment: '기수' })
   semester: number;
 
   @Column('varchar', { name: 'category', nullable: true, length: 10, comment: '활동 카테고리' })
@@ -32,7 +32,7 @@ export class Activity {
   @Column('varchar', { name: 'image', nullable: true, length: 400, comment: '활동 관련 사진' })
   image: string;
 
-  @ManyToOne(() => AboutSopt, (aboutsopt) => aboutsopt.activities)
+  @ManyToOne(() => AboutSopt, (aboutsopt) => aboutsopt.activities, {cascade:true})
   aboutSopt: AboutSopt;
 
 }

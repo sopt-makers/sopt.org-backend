@@ -1,5 +1,7 @@
 import { ActivityResponseDto } from './activity-response.dto';
 import { ApiProperty } from '@nestjs/swagger';
+import { IsNumber } from 'class-validator';
+import { Transform } from 'class-transformer';
 
 export class AboutSoptResponseDto {
   @ApiProperty({
@@ -7,7 +9,16 @@ export class AboutSoptResponseDto {
     required: true,
     description: '기수'
   })
+  @IsNumber()
+  @Transform(({value})=>parseInt(value), {toClassOnly: true})
   id: number;
+
+  @ApiProperty({
+    type: Boolean,
+    required: true,
+    description: '배포 여부'
+  })
+  isPublished: boolean;
 
   @ApiProperty({
     type: String,

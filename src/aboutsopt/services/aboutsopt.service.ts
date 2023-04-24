@@ -19,7 +19,6 @@ export class AboutSoptService {
 
   ) {}
 
-
   async getAboutSopt(
     aboutSoptRequestDto: AboutSoptRequestDto | number,
   ): Promise<AboutSopt | null> {
@@ -31,33 +30,53 @@ export class AboutSoptService {
       id = aboutSoptRequestDto.id
     }
     const aboutsopt = await this.aboutSoptRepository
-    .createQueryBuilder(
-      'AboutSopt',
-    )
-    .where('AboutSopt.id = :id', { id: id })
-    .leftJoinAndSelect(
-      "AboutSopt.activities", "activity"
-    ) 
-    .getOne();
+    .findOne({
+      where: { id: id, isPublished:true },
+    })
     return aboutsopt
+  }
+
+  async getOrInit(
+    aboutSoptRequestDto: AboutSoptRequestDto | number,
+  ): Promise<AboutSopt | null> {
+    let id = 0;
+    if (typeof(aboutSoptRequestDto) === 'number') {
+      id = aboutSoptRequestDto
+    }
+    else{
+      id = aboutSoptRequestDto.id
+    }
+    const aboutsopt = await this.aboutSoptRepository
+    .findOne({
+      where: { id: id },
+    })
+
+    if(!aboutsopt){
+      return this.initializeAboutSoptById(id)
+    }
+
+    return aboutsopt
+  }
+
+  private async initializeAboutSoptById(id: number): Promise<AboutSopt | null> {
+    await this.aboutSoptRepository.save({id})
+    return this.aboutSoptRepository.findOne({where: { id: id }});
   }
 
   async postAboutSopt(
     aboutSoptPostDto: AboutSoptPostDto
   ):Promise<AboutSopt | null> {
-    await this.aboutSoptRepository.save(aboutSoptPostDto)
+    const aboutsopt = await this.aboutSoptRepository.save(aboutSoptPostDto)
+
+    const activities = aboutSoptPostDto.activities.map(async (activity)=>{
+      console.log(activity)
+      return this.activityRepository.save(activity)
+    })
+    const temp = await Promise.all(activities)
+    console.log(temp)
     const id = aboutSoptPostDto.id
-    const aboutsopt = await this.getAboutSopt(id)
-    
-    return aboutsopt
+    return await this.getOrInit(id)
+
   }
 
-  async postActivity(
-    activityRequestDto: ActivityRequestDto
-  ): Promise<AboutSopt | null>{
-    await this.activityRepository.save(activityRequestDto)
-    const id = activityRequestDto.semester
-    const aboutsopt = await this.getAboutSopt(id)
-    return aboutsopt
-  }
 }

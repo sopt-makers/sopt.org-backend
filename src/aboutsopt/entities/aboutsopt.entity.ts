@@ -43,7 +43,7 @@ export class AboutSopt {
   @Column('varchar', { name: 'serverCurriculum', nullable: true, length: 400, comment: '서버 파트 커리큘럼' })
   serverCurriculum: string;
 
-  @OneToMany(() => Activity, (activity) => activity.aboutSopt)
+  @OneToMany(() => Activity, (activity) => activity.aboutSopt, {eager: true})
   activities: Activity[];
 
 }

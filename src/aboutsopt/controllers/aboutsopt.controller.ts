@@ -14,6 +14,7 @@ import { AboutSoptRequestDto } from '../dtos/aboutsopt-request.dto';
   
 import { AboutSoptService } from '../services/aboutsopt.service';
 
+@UsePipes(new ValidationPipe({ transform: true }))
 @Controller('aboutsopt')
 export class AboutSoptController {
   constructor(private readonly aboutsoptService: AboutSoptService) {}
@@ -22,21 +23,17 @@ export class AboutSoptController {
   async getAboutSopt(
     @Query() aboutSoptRequestDto: AboutSoptRequestDto,
   ): Promise<AboutSoptResponseDto | null> {
-    return this.aboutsoptService.getAboutSopt(aboutSoptRequestDto);
+    console.log(aboutSoptRequestDto)
+    return this.aboutsoptService.getOrInit(aboutSoptRequestDto);
   }
 
   @Post()
   async postAboutSopt(
     @Body() aboutSoptPostDto: AboutSoptPostDto,
   ): Promise<AboutSoptResponseDto | null> {
+    console.log(aboutSoptPostDto)
     return this.aboutsoptService.postAboutSopt(aboutSoptPostDto);
   }
 
-  @Post('/activity')
-  async postActivity(
-    @Body() activityRequestDto: ActivityRequestDto,
-  ): Promise<AboutSoptResponseDto | null> {
-    return this.aboutsoptService.postActivity(activityRequestDto);
-  }
 }
   

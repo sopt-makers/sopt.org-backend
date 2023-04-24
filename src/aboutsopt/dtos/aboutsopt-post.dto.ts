@@ -1,4 +1,7 @@
+import { ActivityRequestDto } from './activity-request.dto';
 import { ApiProperty } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
+import { IsNumber, IsString, IsOptional } from 'class-validator';
 
 export class AboutSoptPostDto {
   @ApiProperty({
@@ -6,6 +9,8 @@ export class AboutSoptPostDto {
     required: true,
     description: '기수'
   })
+  @IsNumber()
+  @Transform(({value})=>parseInt(value), {toClassOnly: true})
   id: number;
 
   @ApiProperty({
@@ -13,75 +18,105 @@ export class AboutSoptPostDto {
     required: false,
     description: '배너 이미지 주소'
   })
-  bannerImage?: string;
+  @IsString()
+  @IsOptional()
+  bannerImage?: string = "";
 
   @ApiProperty({
     type: String,
     required: false,
     description: '핵심가치 설명'
   })
-  coreDescription?: string;
+  @IsString()
+  @IsOptional()
+  coreDescription?: string = "";
   
   @ApiProperty({
     type: String,
     required: false,
     description: '핵심가치 1 이미지 주소'
   })
-  coreValue1?: string;
+  @IsString()
+  @IsOptional()
+  coreValue1?: string = "";
 
   @ApiProperty({
     type: String,
     required: false,
     description: '핵심가치 2 이미지 주소'
   })
-  coreValue2?: string;
+  @IsString()
+  @IsOptional()
+  coreValue2?: string = "";
 
   @ApiProperty({
     type: String,
     required: false,
     description: '핵심가치 3 이미지 주소'
   })
-  coreValue3?: string;
+  @IsString()
+  @IsOptional()
+  coreValue3?: string = "";
 
   @ApiProperty({
     type: String,
     required: false,
     description: '기획파트 커리큘럼'
   })
-  planCurriculum?: string;
+  @IsString()
+  @IsOptional()
+  planCurriculum?: string = "";
 
   @ApiProperty({
     type: String,
     required: false,
     description: '디자인파트 커리큘럼'
   })
-  designCurriculum?: string;
+  @IsString()
+  @IsOptional()
+  designCurriculum?: string = "";
 
   @ApiProperty({
     type: String,
     required: false,
     description: '안드로이드 파트 커리큘럼'
   })
-  androidCurriculum?: string;
+  @IsString()
+  @IsOptional()
+  androidCurriculum?: string = "";
 
   @ApiProperty({
     type: String,
     required: false,
     description: 'ios 파트 커리큘럼'
   })
-  iosCurriculum?: string;
+  @IsString()
+  @IsOptional()
+  iosCurriculum?: string = "";
 
   @ApiProperty({
     type: String,
     required: false,
     description: '웹 파트 커리큘럼'
   })
-  webCurriculum?: string;
+  @IsString()
+  @IsOptional()
+  webCurriculum?: string = "";
 
   @ApiProperty({
     type: String,
     required: false,
     description: '서버 파트 커리큘럼'
   })
-  serverCurriculum?: string;
+  @IsString()
+  @IsOptional()
+  serverCurriculum?: string = "";
+
+  @ApiProperty({
+    type: [ActivityRequestDto],
+    required: false,
+    description: '활동 내용'
+  })
+  activities: ActivityRequestDto[];
+
 }
