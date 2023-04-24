@@ -17,8 +17,8 @@ export class Activity {
   @PrimaryGeneratedColumn('increment',{ type: 'integer', name: 'id' })
   id: number;
 
-  @Column('varchar', { name: 'semester', nullable: true, length: 400, comment: '기수' })
-  semester: string;
+  @Column('integer', { name: 'semester', nullable: false, comment: '기수' })
+  semester: number;
 
   @Column('varchar', { name: 'category', nullable: true, length: 10, comment: '활동 카테고리' })
   category: Category;

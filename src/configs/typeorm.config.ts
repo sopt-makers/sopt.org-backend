@@ -15,7 +15,7 @@ export const typeORMFactory = {
     database: configService.get('DB_DATABASE'),
     entities: [__dirname + '/../**/*.entity{.ts,.js}'],
     logging: configService.get('NODE_ENV') === 'development',
-    synchronize: false,
+    synchronize: true,
   }),
   inject: [ConfigService],
 };
