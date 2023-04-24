@@ -45,61 +45,11 @@ export class AboutSoptService {
   async postAboutSopt(
     aboutSoptPostDto: AboutSoptPostDto
   ):Promise<AboutSopt | null> {
-    const id = aboutSoptPostDto.id
-    const aboutsopt = await this.aboutSoptRepository
-    .createQueryBuilder(
-      'AboutSopt',
-    )
-    .where('AboutSopt.id = :id', { id: id })
-    .getOne();
-
-    if(aboutsopt){
-      return this.updateAboutSopt(aboutSoptPostDto)
-    }
-    else{
-      return this.createAboutSopt(aboutSoptPostDto)
-    }
-  }
-
-  private async createAboutSopt(
-    aboutSoptPostDto: AboutSoptPostDto
-  ): Promise<AboutSopt | null>{
     await this.aboutSoptRepository.save(aboutSoptPostDto)
     const id = aboutSoptPostDto.id
     const aboutsopt = await this.getAboutSopt(id)
     
     return aboutsopt
-  }
-
-  private async updateAboutSopt(
-    aboutSoptPostDto: AboutSoptPostDto
-  ): Promise<AboutSopt | null>{
-    const id = aboutSoptPostDto.id
-    const updateaboutsopt = await this.aboutSoptRepository
-    .createQueryBuilder(
-      'AboutSopt',
-    )
-    .update(AboutSopt)
-    .set({
-      bannerImage: aboutSoptPostDto.bannerImage,
-      coreDescription: aboutSoptPostDto.coreDescription,
-      coreValue1: aboutSoptPostDto.coreValue1,
-      coreValue2: aboutSoptPostDto.coreValue2,
-      coreValue3: aboutSoptPostDto.coreValue3,
-      planCurriculum: aboutSoptPostDto.planCurriculum,
-      designCurriculum: aboutSoptPostDto.designCurriculum,
-      androidCurriculum: aboutSoptPostDto.androidCurriculum,
-      iosCurriculum: aboutSoptPostDto.iosCurriculum,
-      webCurriculum: aboutSoptPostDto.webCurriculum,
-      serverCurriculum: aboutSoptPostDto.serverCurriculum,
-      
-    })
-    .where('AboutSopt.id = :id', { id: id })
-    .execute();
-
-    const aboutsopt = await this.getAboutSopt(id)
-    return aboutsopt
-    
   }
 
   async postActivity(

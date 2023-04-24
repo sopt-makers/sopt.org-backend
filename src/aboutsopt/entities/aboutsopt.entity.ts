@@ -7,6 +7,9 @@ export class AboutSopt {
   @PrimaryColumn({ type: 'integer', name: 'id', comment: '기수' })
   id: number;
 
+  @Column('boolean', {name: 'isPublished', nullable: false, default: false, comment: '배포 여부'})
+  isPublished: boolean;
+
   @Column('varchar', { name: 'bannerImage', nullable: true, length: 400, comment: '배너 이미지' })
   bannerImage: string;
   
