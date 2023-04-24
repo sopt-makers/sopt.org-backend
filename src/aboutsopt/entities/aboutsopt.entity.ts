@@ -7,8 +7,8 @@ export class AboutSopt {
   @PrimaryColumn({ type: 'integer', name: 'id', comment: '기수' })
   id: number;
 
-  @Column('varchar', { name: 'thumbnail', nullable: true, length: 400, comment: '배너 이미지' })
-  thumbnail: string;
+  @Column('varchar', { name: 'bannerImage', nullable: true, length: 400, comment: '배너 이미지' })
+  bannerImage: string;
   
   @Column('varchar', { name: 'coreDescription', nullable: true, length:400, comment: '핵심가치 설명'})
   coreDescription: string;
