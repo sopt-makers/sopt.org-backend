@@ -1,4 +1,5 @@
 import { Column, Entity, Index, OneToMany, PrimaryColumn } from 'typeorm';
+import { CoreValue } from './coreValue.entity';
 
 @Index('aboutsopt_pk', ['id'], { unique: true })
 @Entity('AboutSopt', { schema: 'public' })
@@ -26,33 +27,9 @@ export class AboutSopt {
     name: 'coreDescription',
     nullable: true,
     length: 400,
-    comment: '핵심가치 설명',
+    comment: '핵심가치 설명 (ex 브랜딩 메시지)',
   })
   coreDescription: string;
-
-  @Column('varchar', {
-    name: 'coreValue1',
-    nullable: true,
-    length: 400,
-    comment: '핵심가치 1',
-  })
-  coreValue1: string;
-
-  @Column('varchar', {
-    name: 'coreValue2',
-    nullable: true,
-    length: 400,
-    comment: '핵심가치 2',
-  })
-  coreValue2: string;
-
-  @Column('varchar', {
-    name: 'coreValue3',
-    nullable: true,
-    length: 400,
-    comment: '핵심가치 3',
-  })
-  coreValue3: string;
 
   @Column('varchar', {
     name: 'planCurriculum',
@@ -101,4 +78,9 @@ export class AboutSopt {
     comment: '서버 파트 커리큘럼',
   })
   serverCurriculum: string;
+
+  @OneToMany(() => CoreValue, (coreValue) => coreValue.aboutSopt, {
+    eager: true,
+  })
+  coreValues: CoreValue[];
 }

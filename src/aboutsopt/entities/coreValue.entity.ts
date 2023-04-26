@@ -3,9 +3,11 @@ import {
   CreateDateColumn,
   Entity,
   Index,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { AboutSopt } from './aboutsopt.entity';
 
 @Index('core_value_pk', ['id'], { unique: true })
 @Entity('CoreValue', { schema: 'public' })
@@ -27,4 +29,7 @@ export class CoreValue {
 
   @UpdateDateColumn({ name: 'updatedAt', comment: '수정일', nullable: false })
   updatedAt: Date;
+
+  @ManyToOne(() => AboutSopt, (aboutSopt: AboutSopt) => aboutSopt.coreValues)
+  aboutSopt: AboutSopt;
 }
