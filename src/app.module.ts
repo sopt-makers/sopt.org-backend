@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+
 import { typeORMFactory } from 'src/configs/typeorm.config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -11,6 +12,7 @@ import { ProjectsModule } from './projects/projects.module';
 import { SemestersModule } from './semesters/semesters.module';
 import { envValidationSchema } from 'src/configs/env.config';
 import { ReviewsModule } from './reviews/reviews.module';
+import { FileModule } from './file/file.module';
 
 @Module({
   imports: [
@@ -26,6 +28,7 @@ import { ReviewsModule } from './reviews/reviews.module';
     ProjectsModule,
     SemestersModule,
     ReviewsModule,
+    FileModule,
   ],
   controllers: [AppController],
   providers: [AppService],
