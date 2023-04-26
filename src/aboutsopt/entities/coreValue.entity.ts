@@ -32,4 +32,12 @@ export class CoreValue {
 
   @ManyToOne(() => AboutSopt, (aboutSopt: AboutSopt) => aboutSopt.coreValues)
   aboutSopt: AboutSopt;
+
+  static init(): CoreValue {
+    const coreValue = new CoreValue();
+    coreValue.title = '';
+    coreValue.subTitle = '';
+    coreValue.imageUrl = '';
+    return coreValue;
+  }
 }

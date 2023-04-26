@@ -3,53 +3,50 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { AboutSoptPostDto } from '../dtos/aboutsopt-post.dto';
-import { AboutSoptRequestDto } from '../dtos/aboutsopt-request.dto';
 import { AboutSopt } from '../entities/aboutsopt.entity';
+import { CoreValue } from '../entities/coreValue.entity';
 
 @Injectable()
 export class AboutSoptService {
   constructor(
     @InjectRepository(AboutSopt)
-    private aboutSoptRepository: Repository<AboutSopt>,
+    private readonly aboutSoptRepository: Repository<AboutSopt>,
+    @InjectRepository(CoreValue)
+    private readonly coreValueRepository: Repository<CoreValue>,
   ) {}
 
-  async getAboutSopt(
-    aboutSoptRequestDto: AboutSoptRequestDto | number,
-  ): Promise<AboutSopt | null> {
-    let id = 0;
-    if (typeof aboutSoptRequestDto === 'number') {
-      id = aboutSoptRequestDto;
-    } else {
-      id = aboutSoptRequestDto.id;
-    }
+  async getAboutSopt(id: number): Promise<AboutSopt | null> {
     const aboutsopt = await this.aboutSoptRepository.findOne({
       where: { id: id, isPublished: true },
     });
     return aboutsopt;
   }
 
-  async getOrInit(
-    aboutSoptRequestDto: AboutSoptRequestDto | number,
-  ): Promise<AboutSopt | null> {
-    let id = 0;
-    if (typeof aboutSoptRequestDto === 'number') {
-      id = aboutSoptRequestDto;
-    } else {
-      id = aboutSoptRequestDto.id;
-    }
-    const aboutsopt = await this.aboutSoptRepository.findOne({
+  async getOrInit(id: number): Promise<AboutSopt | null> {
+    const aboutSopt = await this.aboutSoptRepository.findOne({
       where: { id: id },
     });
 
-    if (!aboutsopt) {
+    if (!aboutSopt) {
       return this.initializeAboutSoptById(id);
     }
 
-    return aboutsopt;
+    return aboutSopt;
   }
 
   private async initializeAboutSoptById(id: number): Promise<AboutSopt | null> {
-    await this.aboutSoptRepository.save({ id });
+    const aboutSopt = await this.aboutSoptRepository.save({ id });
+    const saveCoreValues = [
+      CoreValue.init(),
+      CoreValue.init(),
+      CoreValue.init(),
+    ].map((coreValue) => {
+      coreValue.aboutSopt = aboutSopt;
+      return this.coreValueRepository.save(coreValue);
+    });
+
+    await Promise.all(saveCoreValues);
+
     return this.aboutSoptRepository.findOne({ where: { id: id } });
   }
 

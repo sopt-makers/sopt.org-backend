@@ -3,12 +3,11 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   Post,
-  Query,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { AboutSoptRequestDto } from '../dtos/aboutsopt-request.dto';
 
 import { AboutSoptService } from '../services/aboutsopt.service';
 import { AboutSoptResponseDto } from '../dtos/aboutsopt-response.dto';
@@ -18,12 +17,11 @@ import { AboutSoptResponseDto } from '../dtos/aboutsopt-response.dto';
 export class AboutSoptController {
   constructor(private readonly aboutsoptService: AboutSoptService) {}
 
-  @Get()
-  async getAboutSopt(
-    @Query() aboutSoptRequestDto: AboutSoptRequestDto,
+  @Get('/semester/:id/admin')
+  async getOrInit(
+    @Param('id') id: number,
   ): Promise<AboutSoptResponseDto | null> {
-    console.log(aboutSoptRequestDto);
-    return this.aboutsoptService.getOrInit(aboutSoptRequestDto);
+    return this.aboutsoptService.getOrInit(id);
   }
 
   @Post()
