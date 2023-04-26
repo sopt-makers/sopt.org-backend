@@ -1,10 +1,8 @@
 import { StudyResponseDto } from './../dtos/study-response.dto';
 import { StudyService } from '../service/study.service';
 import {
-  Body,
     Controller,
     Get,
-    Post,
     Query,
     UsePipes,
     ValidationPipe,

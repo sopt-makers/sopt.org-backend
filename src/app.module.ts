@@ -1,3 +1,4 @@
+import { MembersModule } from './members/members.module';
 import { StudyModule } from './study/study.module';
 import { AboutSoptModule } from './aboutsopt/aboutsopt.module';
 import { Module } from '@nestjs/common';
@@ -29,6 +30,7 @@ import { ReviewsModule } from './reviews/reviews.module';
     SemestersModule,
     ReviewsModule,
     AboutSoptModule,
+    MembersModule,
     StudyModule
   ],
   controllers: [AppController],
