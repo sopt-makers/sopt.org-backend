@@ -17,7 +17,7 @@ export class AboutSopt {
 
   @Column('varchar', {
     name: 'bannerImage',
-    nullable: true,
+    default: '',
     length: 400,
     comment: '배너 이미지',
   })
@@ -25,7 +25,7 @@ export class AboutSopt {
 
   @Column('varchar', {
     name: 'coreDescription',
-    nullable: true,
+    default: '',
     length: 400,
     comment: '핵심가치 설명 (ex 브랜딩 메시지)',
   })
@@ -33,7 +33,7 @@ export class AboutSopt {
 
   @Column('varchar', {
     name: 'planCurriculum',
-    nullable: true,
+    default: '',
     length: 400,
     comment: '기획 파트 커리큘럼',
   })
@@ -41,7 +41,7 @@ export class AboutSopt {
 
   @Column('varchar', {
     name: 'designCurriculum',
-    nullable: true,
+    default: '',
     length: 400,
     comment: '디자인 파트 커리큘럼',
   })
@@ -49,7 +49,7 @@ export class AboutSopt {
 
   @Column('varchar', {
     name: 'androidCurriculum',
-    nullable: true,
+    default: '',
     length: 400,
     comment: '안드로이드 파트 커리큘럼',
   })
@@ -57,7 +57,7 @@ export class AboutSopt {
 
   @Column('varchar', {
     name: 'iosCurriculum',
-    nullable: true,
+    default: '',
     length: 400,
     comment: 'ios 파트 커리큘럼',
   })
@@ -65,7 +65,7 @@ export class AboutSopt {
 
   @Column('varchar', {
     name: 'webCurriculum',
-    nullable: true,
+    default: '',
     length: 400,
     comment: '웹 파트 커리큘럼',
   })
@@ -73,7 +73,7 @@ export class AboutSopt {
 
   @Column('varchar', {
     name: 'serverCurriculum',
-    nullable: true,
+    default: '',
     length: 400,
     comment: '서버 파트 커리큘럼',
   })
