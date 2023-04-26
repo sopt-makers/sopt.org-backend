@@ -11,6 +11,7 @@ import {
 import { AboutSoptService } from '../services/aboutsopt.service';
 import { AboutSoptResponseDto } from '../dtos/aboutsopt-response.dto';
 import { AboutSoptUpdateDto } from '../dtos/aboutsopt-update.dto';
+import { GetAdminAboutSoptDocs } from '../../../docs/aboutsopt/aboutSopt.swagger';
 
 @UsePipes(new ValidationPipe({ transform: true }))
 @Controller('aboutsopt')
@@ -18,6 +19,7 @@ export class AboutSoptController {
   constructor(private readonly aboutSoptService: AboutSoptService) {}
 
   @Get('admin/semester/:id')
+  @GetAdminAboutSoptDocs()
   async getOrInit(
     @Param('id') id: number,
   ): Promise<AboutSoptResponseDto | null> {

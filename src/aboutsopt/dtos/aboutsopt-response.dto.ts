@@ -2,97 +2,128 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber } from 'class-validator';
 import { Transform } from 'class-transformer';
 
-export class AboutSoptResponseDto {
+export class CoreValueResponseDto {
   @ApiProperty({
     type: Number,
     required: true,
+    description: '코어밸류 id',
+  })
+  @IsNumber()
+  readonly id: number;
+
+  @ApiProperty({
+    type: String,
+    nullable: false,
+    description: '코어밸류',
+  })
+  readonly title: string;
+
+  @ApiProperty({
+    type: String,
+    nullable: false,
+    description: '코어밸루 설명',
+  })
+  readonly subTitle: string;
+
+  @ApiProperty({
+    type: Date,
+    nullable: false,
+    description: '핵심가치 이미지 주소',
+  })
+  readonly imageUrl: string;
+
+  @ApiProperty({
+    type: Date,
+    nullable: false,
+    description: '생성일자',
+  })
+  readonly createdAt: Date;
+
+  @ApiProperty({
+    type: String,
+    nullable: false,
+    description: '핵심가치 설명',
+  })
+  readonly updatedAt: Date;
+}
+
+export class AboutSoptResponseDto {
+  @ApiProperty({
+    type: Number,
+    nullable: false,
     description: '기수',
   })
   @IsNumber()
   @Transform(({ value }) => parseInt(value), { toClassOnly: true })
-  id: number;
+  readonly id: number;
 
   @ApiProperty({
     type: Boolean,
-    required: true,
+    nullable: false,
     description: '배포 여부',
   })
-  isPublished: boolean;
+  readonly isPublished: boolean;
 
   @ApiProperty({
     type: String,
-    required: false,
+    nullable: false,
     description: '배너 이미지 주소',
   })
-  bannerImage?: string;
+  readonly bannerImage: string;
 
   @ApiProperty({
     type: String,
-    required: false,
+    nullable: false,
     description: '핵심가치 설명',
   })
-  coreDescription?: string;
+  readonly coreDescription: string;
 
   @ApiProperty({
     type: String,
-    required: false,
-    description: '핵심가치 1 이미지 주소',
-  })
-  coreValue1?: string;
-
-  @ApiProperty({
-    type: String,
-    required: false,
-    description: '핵심가치 2 이미지 주소',
-  })
-  coreValue2?: string;
-
-  @ApiProperty({
-    type: String,
-    required: false,
-    description: '핵심가치 3 이미지 주소',
-  })
-  coreValue3?: string;
-
-  @ApiProperty({
-    type: String,
-    required: false,
+    nullable: false,
     description: '기획파트 커리큘럼',
   })
-  planCurriculum?: string;
+  readonly planCurriculum: string;
 
   @ApiProperty({
     type: String,
-    required: false,
+    nullable: false,
     description: '디자인파트 커리큘럼',
   })
-  designCurriculum?: string;
+  readonly designCurriculum: string;
 
   @ApiProperty({
     type: String,
-    required: false,
+    nullable: false,
     description: '안드로이드 파트 커리큘럼',
   })
-  androidCurriculum?: string;
+  readonly androidCurriculum: string;
 
   @ApiProperty({
     type: String,
-    required: false,
+    nullable: false,
     description: 'ios 파트 커리큘럼',
   })
-  iosCurriculum?: string;
+  readonly iosCurriculum: string;
 
   @ApiProperty({
     type: String,
-    required: false,
+    nullable: false,
     description: '웹 파트 커리큘럼',
   })
-  webCurriculum?: string;
+  readonly webCurriculum: string;
 
   @ApiProperty({
     type: String,
-    required: false,
+    nullable: false,
     description: '서버 파트 커리큘럼',
   })
-  serverCurriculum?: string;
+  readonly serverCurriculum: string;
+
+  @ApiProperty({
+    type: [CoreValueResponseDto],
+    nullable: false,
+    description: '코어밸류 리스트',
+  })
+  readonly coreValues: CoreValueResponseDto[];
 }
