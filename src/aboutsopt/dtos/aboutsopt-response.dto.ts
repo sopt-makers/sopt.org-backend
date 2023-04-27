@@ -67,6 +67,13 @@ export class AboutSoptResponseDto {
   @ApiProperty({
     type: String,
     nullable: false,
+    description: 'AboutTab 상단 타이틀',
+  })
+  readonly title: string;
+
+  @ApiProperty({
+    type: String,
+    nullable: false,
     description: '배너 이미지 주소',
   })
   readonly bannerImage: string;
