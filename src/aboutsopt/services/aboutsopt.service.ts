@@ -67,7 +67,7 @@ export class AboutSoptService {
     }
 
     aboutSopt.overwrite(aboutSoptUpdateDto);
-    await this.coreValueRepository.save(aboutSopt.coreValues);
+
     await this.aboutSoptRepository.save(aboutSopt);
     return aboutSopt;
   }
