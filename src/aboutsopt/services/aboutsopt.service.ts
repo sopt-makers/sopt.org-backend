@@ -22,6 +22,12 @@ export class AboutSoptService {
     const aboutsopt = await this.aboutSoptRepository.findOne({
       where: { id: id, isPublished: true },
     });
+
+    if (!aboutsopt) {
+      throw new NotFoundException(
+        'Not found Published about sopt with id: ' + id,
+      );
+    }
     return aboutsopt;
   }
 

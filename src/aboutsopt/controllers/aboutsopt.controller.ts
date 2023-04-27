@@ -18,6 +18,13 @@ import { GetAdminAboutSoptDocs } from '../../../docs/aboutsopt/aboutSopt.swagger
 export class AboutSoptController {
   constructor(private readonly aboutSoptService: AboutSoptService) {}
 
+  @Get('semester/:id')
+  async getAboutSopt(
+    @Param('id') id: number,
+  ): Promise<AboutSoptResponseDto | null> {
+    return this.aboutSoptService.getAboutSopt(id);
+  }
+
   @Get('admin/semester/:id')
   @GetAdminAboutSoptDocs()
   async getOrInit(
