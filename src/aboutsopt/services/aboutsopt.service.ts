@@ -55,10 +55,10 @@ export class AboutSoptService {
 
   async updateAboutSopt(
     id: number,
-    aboutSoptPostDto: AboutSoptUpdateDto,
+    aboutSoptUpdateDto: AboutSoptUpdateDto,
   ): Promise<AboutSopt> {
     const aboutSopt = await this.aboutSoptRepository.findOne({
-      where: { id: id },
+      where: { id },
       order: {
         coreValues: {
           id: 'asc',
@@ -69,27 +69,29 @@ export class AboutSoptService {
       throw new NotFoundException('Not found about sopt with id: ' + id);
     }
 
-    this.validateAboutSoptPostDto(aboutSopt, aboutSoptPostDto);
+    this.validateAboutSoptPostDto(aboutSopt, aboutSoptUpdateDto);
 
-    aboutSopt.bannerImage = aboutSoptPostDto.bannerImage;
-    aboutSopt.coreDescription = aboutSoptPostDto.coreDescription;
-    aboutSopt.planCurriculum = aboutSoptPostDto.planCurriculum;
-    aboutSopt.androidCurriculum = aboutSoptPostDto.androidCurriculum;
-    aboutSopt.designCurriculum = aboutSoptPostDto.designCurriculum;
-    aboutSopt.iosCurriculum = aboutSoptPostDto.iosCurriculum;
-    aboutSopt.serverCurriculum = aboutSoptPostDto.serverCurriculum;
-    aboutSopt.webCurriculum = aboutSoptPostDto.webCurriculum;
+    aboutSopt.bannerImage = aboutSoptUpdateDto.bannerImage;
+    aboutSopt.coreDescription = aboutSoptUpdateDto.coreDescription;
+    aboutSopt.planCurriculum = aboutSoptUpdateDto.planCurriculum;
+    aboutSopt.androidCurriculum = aboutSoptUpdateDto.androidCurriculum;
+    aboutSopt.designCurriculum = aboutSoptUpdateDto.designCurriculum;
+    aboutSopt.iosCurriculum = aboutSoptUpdateDto.iosCurriculum;
+    aboutSopt.serverCurriculum = aboutSoptUpdateDto.serverCurriculum;
+    aboutSopt.webCurriculum = aboutSoptUpdateDto.webCurriculum;
 
     aboutSopt.coreValues.map((coreValue) => {
-      const coreValueDto = aboutSoptPostDto.coreValues.find(
+      const coreValueDto = aboutSoptUpdateDto.coreValues.find(
         (coreValueDto) => coreValueDto.id === coreValue.id,
       ) as CoreValueUpdateDto;
       coreValue.title = coreValueDto.title;
       coreValue.subTitle = coreValueDto.subTitle;
       coreValue.imageUrl = coreValueDto.imageUrl;
-      return this.coreValueRepository.save(coreValue);
+      return coreValue;
     });
-    return this.aboutSoptRepository.save(aboutSopt);
+    await this.coreValueRepository.save(aboutSopt.coreValues);
+    await this.aboutSoptRepository.save(aboutSopt);
+    return aboutSopt;
   }
 
   private validateAboutSoptPostDto(
