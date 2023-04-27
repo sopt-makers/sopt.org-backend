@@ -1,5 +1,10 @@
 import { Column, Entity, Index, OneToMany, PrimaryColumn } from 'typeorm';
 import { CoreValue } from './coreValue.entity';
+import {
+  AboutSoptUpdateDto,
+  CoreValueUpdateDto,
+} from '../dtos/aboutsopt-update.dto';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 
 @Index('aboutsopt_pk', ['id'], { unique: true })
 @Entity('AboutSopt', { schema: 'public' })
@@ -83,4 +88,49 @@ export class AboutSopt {
     eager: true,
   })
   coreValues: CoreValue[];
+
+  private overwriteValidate(
+    aboutSopt: AboutSopt,
+    aboutSoptUpdateDto: AboutSoptUpdateDto,
+  ): void {
+    const coreValueIds = aboutSopt.coreValues.map((coreValue) => coreValue.id);
+    aboutSoptUpdateDto.coreValues.forEach((coreValueDto) => {
+      if (!coreValueIds.includes(coreValueDto.id)) {
+        throw new NotFoundException(
+          'Not found core value with id: ' + coreValueDto.id,
+        );
+      }
+    });
+
+    const coreValueDtoIds = aboutSoptUpdateDto.coreValues.map(
+      (coreValueDto) => coreValueDto.id,
+    );
+    const coreValueDtoIdsSet = new Set(coreValueDtoIds);
+
+    if (coreValueIds.length !== coreValueDtoIdsSet.size) {
+      throw new BadRequestException('Duplicated core value id');
+    }
+  }
+
+  overwrite(aboutSoptUpdateDto: AboutSoptUpdateDto): void {
+    this.overwriteValidate(this, aboutSoptUpdateDto);
+
+    this.bannerImage = aboutSoptUpdateDto.bannerImage;
+    this.coreDescription = aboutSoptUpdateDto.coreDescription;
+    this.planCurriculum = aboutSoptUpdateDto.planCurriculum;
+    this.androidCurriculum = aboutSoptUpdateDto.androidCurriculum;
+    this.designCurriculum = aboutSoptUpdateDto.designCurriculum;
+    this.iosCurriculum = aboutSoptUpdateDto.iosCurriculum;
+    this.serverCurriculum = aboutSoptUpdateDto.serverCurriculum;
+    this.webCurriculum = aboutSoptUpdateDto.webCurriculum;
+    this.coreValues.map((coreValue) => {
+      const coreValueDto = aboutSoptUpdateDto.coreValues.find(
+        (coreValueDto) => coreValueDto.id === coreValue.id,
+      ) as CoreValueUpdateDto;
+      coreValue.title = coreValueDto.title;
+      coreValue.subTitle = coreValueDto.subTitle;
+      coreValue.imageUrl = coreValueDto.imageUrl;
+      return coreValue;
+    });
+  }
 }

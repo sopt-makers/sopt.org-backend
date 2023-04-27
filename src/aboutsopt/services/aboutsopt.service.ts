@@ -4,10 +4,7 @@ import { Repository } from 'typeorm';
 
 import { AboutSopt } from '../entities/aboutsopt.entity';
 import { CoreValue } from '../entities/coreValue.entity';
-import {
-  AboutSoptUpdateDto,
-  CoreValueUpdateDto,
-} from '../dtos/aboutsopt-update.dto';
+import { AboutSoptUpdateDto } from '../dtos/aboutsopt-update.dto';
 
 @Injectable()
 export class AboutSoptService {
@@ -69,42 +66,9 @@ export class AboutSoptService {
       throw new NotFoundException('Not found about sopt with id: ' + id);
     }
 
-    this.validateAboutSoptPostDto(aboutSopt, aboutSoptUpdateDto);
-
-    aboutSopt.bannerImage = aboutSoptUpdateDto.bannerImage;
-    aboutSopt.coreDescription = aboutSoptUpdateDto.coreDescription;
-    aboutSopt.planCurriculum = aboutSoptUpdateDto.planCurriculum;
-    aboutSopt.androidCurriculum = aboutSoptUpdateDto.androidCurriculum;
-    aboutSopt.designCurriculum = aboutSoptUpdateDto.designCurriculum;
-    aboutSopt.iosCurriculum = aboutSoptUpdateDto.iosCurriculum;
-    aboutSopt.serverCurriculum = aboutSoptUpdateDto.serverCurriculum;
-    aboutSopt.webCurriculum = aboutSoptUpdateDto.webCurriculum;
-
-    aboutSopt.coreValues.map((coreValue) => {
-      const coreValueDto = aboutSoptUpdateDto.coreValues.find(
-        (coreValueDto) => coreValueDto.id === coreValue.id,
-      ) as CoreValueUpdateDto;
-      coreValue.title = coreValueDto.title;
-      coreValue.subTitle = coreValueDto.subTitle;
-      coreValue.imageUrl = coreValueDto.imageUrl;
-      return coreValue;
-    });
+    aboutSopt.overwrite(aboutSoptUpdateDto);
     await this.coreValueRepository.save(aboutSopt.coreValues);
     await this.aboutSoptRepository.save(aboutSopt);
     return aboutSopt;
-  }
-
-  private validateAboutSoptPostDto(
-    aboutSopt: AboutSopt,
-    aboutSoptPostDto: AboutSoptUpdateDto,
-  ): void {
-    const coreValueIds = aboutSopt.coreValues.map((coreValue) => coreValue.id);
-    aboutSoptPostDto.coreValues.forEach((coreValueDto) => {
-      if (!coreValueIds.includes(coreValueDto.id)) {
-        throw new NotFoundException(
-          'Not found core value with id: ' + coreValueDto.id,
-        );
-      }
-    });
   }
 }
