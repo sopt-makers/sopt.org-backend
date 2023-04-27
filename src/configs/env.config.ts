@@ -1,4 +1,5 @@
 import * as Joi from 'joi';
+
 export interface EnvConfig {
   NODE_ENV: 'development' | 'production' | 'local';
   DB_HOST: string;
@@ -10,6 +11,10 @@ export interface EnvConfig {
   PLAYGROUND_API_URL_JWT_TOKEN: string;
   ACCESS_TOKEN_SECRET: string;
   REFRESH_TOKEN_SECRET: string;
+  AWS_ACCESS_KEY_ID: string;
+  AWS_SECRET_ACCESS_KEY: string;
+  BUCKET_NAME: string;
+  CREW_API_URL: string;
 }
 
 export const envValidationSchema = Joi.object({
@@ -25,4 +30,8 @@ export const envValidationSchema = Joi.object({
   PLAYGROUND_API_URL_JWT_TOKEN: Joi.string().required(),
   ACCESS_TOKEN_SECRET: Joi.string().required(),
   REFRESH_TOKEN_SECRET: Joi.string().required(),
+  CREW_API_URL: Joi.string().required(),
+  AWS_ACCESS_KEY_ID: Joi.string().required(),
+  AWS_SECRET_ACCESS_KEY: Joi.string().required(),
+  BUCKET_NAME: Joi.string().required(),
 });
