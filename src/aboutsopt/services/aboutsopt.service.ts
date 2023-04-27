@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -29,6 +33,38 @@ export class AboutSoptService {
       );
     }
     return aboutsopt;
+  }
+
+  async publishAboutSopt(id: number): Promise<AboutSopt | null> {
+    const aboutsopt = await this.aboutSoptRepository.findOne({
+      where: { id: id },
+    });
+    if (!aboutsopt) {
+      throw new NotFoundException(
+        'Not found Published about sopt with id: ' + id,
+      );
+    }
+    this.validatePublishAboutSopt(aboutsopt);
+    if (aboutsopt.isPublished === false) {
+      await this.aboutSoptRepository.update(aboutsopt.id, {
+        isPublished: true,
+      });
+    } else {
+      await this.aboutSoptRepository.update(aboutsopt.id, {
+        isPublished: false,
+      });
+    }
+    return this.aboutSoptRepository.findOne({
+      where: { id: id },
+    });
+  }
+
+  private validatePublishAboutSopt(aboutSopt: AboutSopt) {
+    if (Object.values(aboutSopt).includes('')) {
+      throw new BadRequestException(
+        'there is not filled field in : ' + aboutSopt.id,
+      );
+    }
   }
 
   async getOrInit(id: number): Promise<AboutSopt | null> {
