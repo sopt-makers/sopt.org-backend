@@ -1,3 +1,6 @@
+import { MembersModule } from './members/members.module';
+import { StudyModule } from './study/study.module';
+import { AboutSoptModule } from './aboutsopt/aboutsopt.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -11,6 +14,7 @@ import { ProjectsModule } from './projects/projects.module';
 import { SemestersModule } from './semesters/semesters.module';
 import { envValidationSchema } from 'src/configs/env.config';
 import { ReviewsModule } from './reviews/reviews.module';
+import { FileModule } from './file/file.module';
 
 @Module({
   imports: [
@@ -26,6 +30,10 @@ import { ReviewsModule } from './reviews/reviews.module';
     ProjectsModule,
     SemestersModule,
     ReviewsModule,
+    FileModule,
+    AboutSoptModule,
+    MembersModule,
+    StudyModule
   ],
   controllers: [AppController],
   providers: [AppService],
