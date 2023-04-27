@@ -5,10 +5,25 @@ export class CoreValueUpdateDto {
   @ApiProperty({
     type: Number,
     required: true,
-    description: '핵심가치 이미지 주소',
   })
   @IsString()
-  id: number;
+  readonly id: number;
+
+  @ApiProperty({
+    type: String,
+    required: true,
+    description: '핵심가치 Title',
+  })
+  @IsString()
+  readonly title: string;
+
+  @ApiProperty({
+    type: String,
+    required: true,
+    description: '핵심가치 sub Title',
+  })
+  @IsString()
+  readonly subTitle: string;
 
   @ApiProperty({
     type: String,
@@ -16,23 +31,7 @@ export class CoreValueUpdateDto {
     description: '핵심가치 이미지 주소',
   })
   @IsString()
-  title: string;
-
-  @ApiProperty({
-    type: String,
-    required: true,
-    description: '핵심가치 이미지 주소',
-  })
-  @IsString()
-  subTitle: string;
-
-  @ApiProperty({
-    type: String,
-    required: true,
-    description: '핵심가치 이미지 주소',
-  })
-  @IsString()
-  imageUrl: string;
+  readonly imageUrl: string;
 }
 
 export class AboutSoptUpdateDto {
@@ -42,7 +41,7 @@ export class AboutSoptUpdateDto {
     description: '배너 이미지 주소',
   })
   @IsString()
-  bannerImage: string;
+  readonly bannerImage: string;
 
   @ApiProperty({
     type: String,
@@ -50,61 +49,55 @@ export class AboutSoptUpdateDto {
     description: '핵심가치 설명',
   })
   @IsString()
-  coreDescription: string;
+  readonly coreDescription: string;
 
   @ApiProperty({
     type: String,
     required: false,
-    description: '핵심가치 설명',
   })
   @IsString()
-  planCurriculum: string;
+  readonly planCurriculum: string;
 
   @ApiProperty({
     type: String,
     required: false,
-    description: '핵심가치 설명',
   })
   @IsString()
-  designCurriculum: string;
+  readonly designCurriculum: string;
 
   @ApiProperty({
     type: String,
     required: false,
-    description: '핵심가치 설명',
   })
   @IsString()
-  androidCurriculum: string;
+  readonly androidCurriculum: string;
 
   @ApiProperty({
     type: String,
     required: false,
-    description: '핵심가치 설명',
   })
   @IsString()
-  iosCurriculum: string;
+  readonly iosCurriculum: string;
 
   @ApiProperty({
     type: String,
     required: false,
-    description: '핵심가치 설명',
   })
   @IsString()
-  webCurriculum: string;
+  readonly webCurriculum: string;
 
   @ApiProperty({
     type: String,
     required: false,
-    description: '핵심가치 설명',
   })
   @IsString()
-  serverCurriculum: string;
+  readonly serverCurriculum: string;
 
   @ApiProperty({
     type: [CoreValueUpdateDto],
     required: false,
-    description: '핵심가치 설명',
+    description: '핵심가치 리스트',
   })
   @IsArray()
-  coreValues: CoreValueUpdateDto[];
+  readonly coreValues: CoreValueUpdateDto[];
 }
