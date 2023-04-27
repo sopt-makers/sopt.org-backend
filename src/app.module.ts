@@ -1,7 +1,9 @@
+import { MembersModule } from './members/members.module';
+import { StudyModule } from './study/study.module';
+import { AboutSoptModule } from './aboutsopt/aboutsopt.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-
 import { typeORMFactory } from 'src/configs/typeorm.config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -29,6 +31,9 @@ import { FileModule } from './file/file.module';
     SemestersModule,
     ReviewsModule,
     FileModule,
+    AboutSoptModule,
+    MembersModule,
+    StudyModule
   ],
   controllers: [AppController],
   providers: [AppService],
