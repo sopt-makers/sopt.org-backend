@@ -11,7 +11,10 @@ import {
 import { AboutSoptService } from '../services/aboutsopt.service';
 import { AboutSoptResponseDto } from '../dtos/aboutsopt-response.dto';
 import { AboutSoptUpdateDto } from '../dtos/aboutsopt-update.dto';
-import { GetAdminAboutSoptDocs } from '../../../docs/aboutsopt/aboutSopt.swagger';
+import {
+  GetAdminAboutSoptDocs,
+  UpdateAboutSoptDocs,
+} from '../../../docs/aboutsopt/aboutSopt.swagger';
 
 @UsePipes(new ValidationPipe({ transform: true }))
 @Controller('aboutsopt')
@@ -27,6 +30,7 @@ export class AboutSoptController {
   }
 
   @Put('admin/semester/:id')
+  @UpdateAboutSoptDocs()
   async updateAboutSopt(
     @Body() aboutSoptPostDto: AboutSoptUpdateDto,
     @Param('id') id: number,
