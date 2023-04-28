@@ -1,15 +1,24 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
-import { AuthService } from './auth.service';
+import { ConfigService } from '@nestjs/config';
 
+import { AuthService } from './auth.service';
+import { EnvConfig } from '../configs/env.config';
+import { AuthGuard } from './auth.guard';
+
+@Global()
 @Module({
   imports: [
-    JwtModule.register({
-      global: true,
-      secret: process.env.ACCESS_TOKEN_SECRET,
+    JwtModule.registerAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService<EnvConfig>) => {
+        return {
+          secret: configService.get('ACCESS_TOKEN_SECRET'),
+        };
+      },
     }),
   ],
-  providers: [AuthService],
+  providers: [AuthService, AuthGuard],
   exports: [AuthService],
 })
 export class AuthModule {}
