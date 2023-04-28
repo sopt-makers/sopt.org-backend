@@ -45,6 +45,13 @@ export class AboutSoptUpdateDto {
 
   @ApiProperty({
     type: String,
+    nullable: false,
+    description: 'AboutTab 상단 타이틀',
+  })
+  readonly title: string;
+
+  @ApiProperty({
+    type: String,
     required: false,
     description: '핵심가치 설명',
   })

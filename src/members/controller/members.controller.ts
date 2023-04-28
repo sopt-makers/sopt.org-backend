@@ -5,6 +5,7 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
+import { GetMembersDocs } from 'docs/members/member.swagger';
 import { MemberResponseDto } from '../dtos/member-response-dto';
 import { MembersService } from '../service/members.service';
 
@@ -13,6 +14,7 @@ import { MembersService } from '../service/members.service';
 export class MembersController {
   constructor(private readonly membersService: MembersService) {}
   @Get('')
+  @GetMembersDocs()
   async getAllStudy(
     @Query('filter') filter: number,
     @Query('generation') generation: number,
