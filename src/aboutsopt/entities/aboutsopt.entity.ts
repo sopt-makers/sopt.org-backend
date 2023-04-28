@@ -107,4 +107,15 @@ export class AboutSopt {
     cascade: true,
   })
   coreValues: CoreValue[];
+
+  static from(id: number): AboutSopt {
+    const aboutSopt = new AboutSopt();
+    aboutSopt.id = id;
+    aboutSopt.coreValues = [
+      CoreValue.init(),
+      CoreValue.init(),
+      CoreValue.init(),
+    ];
+    return aboutSopt;
+  }
 }

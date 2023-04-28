@@ -77,19 +77,7 @@ export class AboutSoptService {
   }
 
   private async initializeAboutSoptById(id: number): Promise<AboutSopt | null> {
-    const aboutSopt = await this.aboutSoptRepository.save({ id });
-    const saveCoreValues = [
-      CoreValue.init(),
-      CoreValue.init(),
-      CoreValue.init(),
-    ].map((coreValue) => {
-      coreValue.aboutSopt = aboutSopt;
-      return this.coreValueRepository.save(coreValue);
-    });
-
-    await Promise.all(saveCoreValues);
-
-    return this.aboutSoptRepository.findOne({ where: { id: id } });
+    return this.aboutSoptRepository.save(AboutSopt.from(id));
   }
 
   async updateAboutSopt(
