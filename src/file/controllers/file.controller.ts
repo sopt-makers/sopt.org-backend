@@ -4,7 +4,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { GetPresignedUrlDocs } from '../../../docs/file/file.swagger';
 import { AuthGuard } from '../../auth/auth.guard';
 
-@ApiTags('File')
+@ApiTags('Admin-file')
 @Controller('file')
 export class FileController {
   constructor(private readonly fileService: FileService) {}
