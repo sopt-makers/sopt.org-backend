@@ -1,4 +1,12 @@
-import { Column, Entity, Index, OneToMany, PrimaryColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  Index,
+  OneToMany,
+  PrimaryColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { CoreValue } from './coreValue.entity';
 
 @Index('aboutsopt_pk', ['id'], { unique: true })
@@ -15,9 +23,10 @@ export class AboutSopt {
   })
   isPublished: boolean;
 
-  @Column('boolean', {
+  @Column('varchar', {
     name: 'title',
     nullable: false,
+    length: '200',
     default: '',
     comment: '상단 배너 타이틀',
   })
@@ -87,9 +96,26 @@ export class AboutSopt {
   })
   serverCurriculum: string;
 
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+
   @OneToMany(() => CoreValue, (coreValue) => coreValue.aboutSopt, {
     eager: true,
     cascade: true,
   })
   coreValues: CoreValue[];
+
+  static from(id: number): AboutSopt {
+    const aboutSopt = new AboutSopt();
+    aboutSopt.id = id;
+    aboutSopt.coreValues = [
+      CoreValue.init(),
+      CoreValue.init(),
+      CoreValue.init(),
+    ];
+    return aboutSopt;
+  }
 }

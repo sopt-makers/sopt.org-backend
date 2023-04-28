@@ -5,6 +5,7 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
@@ -18,6 +19,7 @@ import {
   UpdateAboutSoptDocs,
   PublishAboutSoptDocs,
 } from '../../../docs/aboutsopt/aboutSopt.swagger';
+import { AuthGuard } from '../../auth/auth.guard';
 
 @UsePipes(new ValidationPipe({ transform: true }))
 @Controller('aboutsopt')
@@ -26,9 +28,7 @@ export class AboutSoptController {
 
   @Get('semester/:id')
   @GetAboutSoptDocs()
-  async getAboutSopt(
-    @Param('id') id: number,
-  ): Promise<AboutSoptResponseDto | null> {
+  async getAboutSopt(@Param('id') id: number): Promise<AboutSoptResponseDto> {
     return this.aboutSoptService.getAboutSopt(id);
   }
 
@@ -41,6 +41,7 @@ export class AboutSoptController {
   }
 
   @Put('admin/semester/:id')
+  @UseGuards(AuthGuard)
   @UpdateAboutSoptDocs()
   async updateAboutSopt(
     @Body() aboutSoptPostDto: AboutSoptUpdateDto,
@@ -50,6 +51,7 @@ export class AboutSoptController {
   }
 
   @Post('admin/semester/:id/publish')
+  @UseGuards(AuthGuard)
   @PublishAboutSoptDocs()
   async publishAboutSopt(
     @Param('id') id: number,
