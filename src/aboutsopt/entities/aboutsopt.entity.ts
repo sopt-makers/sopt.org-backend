@@ -15,6 +15,14 @@ export class AboutSopt {
   })
   isPublished: boolean;
 
+  @Column('boolean', {
+    name: 'title',
+    nullable: false,
+    default: '',
+    comment: '상단 배너 타이틀',
+  })
+  title: string;
+
   @Column('varchar', {
     name: 'bannerImage',
     default: '',
