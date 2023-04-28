@@ -14,9 +14,9 @@ export class AuthGuard implements CanActivate {
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
     const request = context.switchToHttp().getRequest();
-    console.log(request.headers);
+
     if (!request.headers.authorization) {
-      throw new BadRequestException('No token provided');
+      throw new BadRequestException('No token provided ex) Bearer {jwt}');
     }
 
     const token = request.headers.authorization.split('Bearer ')[1];
