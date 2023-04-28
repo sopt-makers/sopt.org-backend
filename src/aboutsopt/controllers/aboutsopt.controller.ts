@@ -15,6 +15,7 @@ import { AboutSoptUpdateDto } from '../dtos/aboutsopt-update.dto';
 import {
   GetAboutSoptDocs,
   GetAdminAboutSoptDocs,
+  UpdateAboutSoptDocs,
   PublishAboutSoptDocs,
 } from '../../../docs/aboutsopt/aboutSopt.swagger';
 
@@ -40,6 +41,7 @@ export class AboutSoptController {
   }
 
   @Put('admin/semester/:id')
+  @UpdateAboutSoptDocs()
   async updateAboutSopt(
     @Body() aboutSoptPostDto: AboutSoptUpdateDto,
     @Param('id') id: number,

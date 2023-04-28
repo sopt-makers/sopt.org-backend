@@ -1,4 +1,4 @@
-import { MemberResponseDto } from './../../src/members/dtos/member-response-dto';
+import { MemberResponseDto } from '../../src/members/dtos/member-response-dto';
 import { applyDecorators } from '@nestjs/common';
 import {
   ApiOkResponse,

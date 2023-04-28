@@ -89,6 +89,7 @@ export class AboutSopt {
 
   @OneToMany(() => CoreValue, (coreValue) => coreValue.aboutSopt, {
     eager: true,
+    cascade: true,
   })
   coreValues: CoreValue[];
 }

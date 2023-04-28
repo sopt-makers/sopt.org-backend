@@ -1,4 +1,4 @@
-import { StudyResponseDto } from './../../src/study/dtos/study-response.dto';
+import { StudyResponseDto } from '../../src/study/dtos/study-response.dto';
 import { applyDecorators } from '@nestjs/common';
 import {
   ApiOkResponse,

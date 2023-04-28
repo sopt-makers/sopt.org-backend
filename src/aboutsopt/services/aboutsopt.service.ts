@@ -8,10 +8,7 @@ import { Repository } from 'typeorm';
 
 import { AboutSopt } from '../entities/aboutsopt.entity';
 import { CoreValue } from '../entities/coreValue.entity';
-import {
-  AboutSoptUpdateDto,
-  CoreValueUpdateDto,
-} from '../dtos/aboutsopt-update.dto';
+import { AboutSoptUpdateDto } from '../dtos/aboutsopt-update.dto';
 
 @Injectable()
 export class AboutSoptService {
@@ -97,10 +94,10 @@ export class AboutSoptService {
 
   async updateAboutSopt(
     id: number,
-    aboutSoptPostDto: AboutSoptUpdateDto,
+    aboutSoptUpdateDto: AboutSoptUpdateDto,
   ): Promise<AboutSopt> {
     const aboutSopt = await this.aboutSoptRepository.findOne({
-      where: { id: id },
+      where: { id },
       order: {
         coreValues: {
           id: 'asc',
@@ -111,40 +108,34 @@ export class AboutSoptService {
       throw new NotFoundException('Not found about sopt with id: ' + id);
     }
 
-    this.validateAboutSoptPostDto(aboutSopt, aboutSoptPostDto);
+    this.overwriteValidate(aboutSopt, aboutSoptUpdateDto);
 
-    aboutSopt.bannerImage = aboutSoptPostDto.bannerImage;
-    aboutSopt.coreDescription = aboutSoptPostDto.coreDescription;
-    aboutSopt.planCurriculum = aboutSoptPostDto.planCurriculum;
-    aboutSopt.androidCurriculum = aboutSoptPostDto.androidCurriculum;
-    aboutSopt.designCurriculum = aboutSoptPostDto.designCurriculum;
-    aboutSopt.iosCurriculum = aboutSoptPostDto.iosCurriculum;
-    aboutSopt.serverCurriculum = aboutSoptPostDto.serverCurriculum;
-    aboutSopt.webCurriculum = aboutSoptPostDto.webCurriculum;
-
-    aboutSopt.coreValues.map((coreValue) => {
-      const coreValueDto = aboutSoptPostDto.coreValues.find(
-        (coreValueDto) => coreValueDto.id === coreValue.id,
-      ) as CoreValueUpdateDto;
-      coreValue.title = coreValueDto.title;
-      coreValue.subTitle = coreValueDto.subTitle;
-      coreValue.imageUrl = coreValueDto.imageUrl;
-      return this.coreValueRepository.save(coreValue);
+    return this.aboutSoptRepository.save({
+      ...aboutSopt,
+      ...aboutSoptUpdateDto,
     });
-    return this.aboutSoptRepository.save(aboutSopt);
   }
 
-  private validateAboutSoptPostDto(
+  private overwriteValidate(
     aboutSopt: AboutSopt,
-    aboutSoptPostDto: AboutSoptUpdateDto,
+    aboutSoptUpdateDto: AboutSoptUpdateDto,
   ): void {
     const coreValueIds = aboutSopt.coreValues.map((coreValue) => coreValue.id);
-    aboutSoptPostDto.coreValues.forEach((coreValueDto) => {
+    aboutSoptUpdateDto.coreValues.forEach((coreValueDto) => {
       if (!coreValueIds.includes(coreValueDto.id)) {
         throw new NotFoundException(
           'Not found core value with id: ' + coreValueDto.id,
         );
       }
     });
+
+    const coreValueDtoIds = aboutSoptUpdateDto.coreValues.map(
+      (coreValueDto) => coreValueDto.id,
+    );
+    const coreValueDtoIdsSet = new Set(coreValueDtoIds);
+
+    if (coreValueIds.length !== coreValueDtoIdsSet.size) {
+      throw new BadRequestException('Duplicated core value id');
+    }
   }
 }

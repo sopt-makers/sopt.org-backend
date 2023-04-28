@@ -1,4 +1,4 @@
-import { StudyResponseDto } from './../dtos/study-response.dto';
+import { StudyResponseDto } from '../dtos/study-response.dto';
 import { StudyService } from '../service/study.service';
 import {
   Controller,
