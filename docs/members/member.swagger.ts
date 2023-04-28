@@ -1,9 +1,15 @@
 import { MemberResponseDto } from './../../src/members/dtos/member-response-dto';
 import { applyDecorators } from '@nestjs/common';
-import { ApiOkResponse, ApiOperation, ApiQuery } from '@nestjs/swagger';
+import {
+  ApiOkResponse,
+  ApiOperation,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
 
 export function GetMembersDocs() {
   return applyDecorators(
+    ApiTags('Members'),
     ApiOperation({
       summary: '멤버 정보 가져오기',
     }),

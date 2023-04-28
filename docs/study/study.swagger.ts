@@ -1,9 +1,15 @@
 import { StudyResponseDto } from './../../src/study/dtos/study-response.dto';
 import { applyDecorators } from '@nestjs/common';
-import { ApiOkResponse, ApiOperation, ApiQuery } from '@nestjs/swagger';
+import {
+  ApiOkResponse,
+  ApiOperation,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
 
 export function GetStudyDocs() {
   return applyDecorators(
+    ApiTags('Study'),
     ApiOperation({
       summary: '스터디 정보 전부 가져오기',
     }),
