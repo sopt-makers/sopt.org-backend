@@ -15,7 +15,7 @@ export class AboutSopt {
   })
   isPublished: boolean;
 
-  @Column('boolean', {
+  @Column('varchar', {
     name: 'title',
     nullable: false,
     default: '',
