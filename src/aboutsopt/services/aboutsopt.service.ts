@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -66,9 +70,34 @@ export class AboutSoptService {
       throw new NotFoundException('Not found about sopt with id: ' + id);
     }
 
-    aboutSopt.overwrite(aboutSoptUpdateDto);
+    this.overwriteValidate(aboutSopt, aboutSoptUpdateDto);
 
-    await this.aboutSoptRepository.save(aboutSopt);
-    return aboutSopt;
+    return this.aboutSoptRepository.save({
+      ...aboutSopt,
+      ...aboutSoptUpdateDto,
+    });
+  }
+
+  private overwriteValidate(
+    aboutSopt: AboutSopt,
+    aboutSoptUpdateDto: AboutSoptUpdateDto,
+  ): void {
+    const coreValueIds = aboutSopt.coreValues.map((coreValue) => coreValue.id);
+    aboutSoptUpdateDto.coreValues.forEach((coreValueDto) => {
+      if (!coreValueIds.includes(coreValueDto.id)) {
+        throw new NotFoundException(
+          'Not found core value with id: ' + coreValueDto.id,
+        );
+      }
+    });
+
+    const coreValueDtoIds = aboutSoptUpdateDto.coreValues.map(
+      (coreValueDto) => coreValueDto.id,
+    );
+    const coreValueDtoIdsSet = new Set(coreValueDtoIds);
+
+    if (coreValueIds.length !== coreValueDtoIdsSet.size) {
+      throw new BadRequestException('Duplicated core value id');
+    }
   }
 }
