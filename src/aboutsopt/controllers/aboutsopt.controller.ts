@@ -28,9 +28,7 @@ export class AboutSoptController {
 
   @Get('semester/:id')
   @GetAboutSoptDocs()
-  async getAboutSopt(
-    @Param('id') id: number,
-  ): Promise<AboutSoptResponseDto | null> {
+  async getAboutSopt(@Param('id') id: number): Promise<AboutSoptResponseDto> {
     return this.aboutSoptService.getAboutSopt(id);
   }
 

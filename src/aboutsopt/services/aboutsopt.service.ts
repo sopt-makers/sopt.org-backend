@@ -19,7 +19,7 @@ export class AboutSoptService {
     private readonly coreValueRepository: Repository<CoreValue>,
   ) {}
 
-  async getAboutSopt(id: number): Promise<AboutSopt | null> {
+  async getAboutSopt(id: number): Promise<AboutSopt> {
     const aboutsopt = await this.aboutSoptRepository.findOne({
       where: { id: id, isPublished: true },
     });
@@ -42,7 +42,7 @@ export class AboutSoptService {
       );
     }
     this.validatePublishAboutSopt(aboutsopt);
-    if (aboutsopt.isPublished === false) {
+    if (!aboutsopt.isPublished) {
       await this.aboutSoptRepository.update(aboutsopt.id, {
         isPublished: true,
       });
