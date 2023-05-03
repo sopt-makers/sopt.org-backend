@@ -78,7 +78,7 @@ export function UpdateAboutSoptDocs() {
   );
 }
 
-export function GetRecentSemesterAboutSopt() {
+export function GetRecentSemesterAboutSoptDocs() {
   return applyDecorators(
     ApiTags('AboutSopt'),
     ApiOperation({
@@ -88,5 +88,15 @@ export function GetRecentSemesterAboutSopt() {
       description: "CoreValueId가_중복으로_들어올때: 'Not found about sopt'",
     }),
     ApiOkResponse({ type: AboutSoptResponseDto }),
+  );
+}
+
+export function GetPublishedAboutSoptIdsDocs() {
+  return applyDecorators(
+    ApiTags('AboutSopt'),
+    ApiOperation({
+      summary: 'publish된 AboutSopt의 id 리스트 조회',
+    }),
+    ApiOkResponse({ type: [Number] }),
   );
 }

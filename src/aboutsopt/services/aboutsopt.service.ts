@@ -143,4 +143,15 @@ export class AboutSoptService {
     }
     return aboutSopt;
   }
+
+  async getPublishedAboutSoptIds(): Promise<number[]> {
+    const publishedAboutSoptIds = await this.aboutSoptRepository.find({
+      select: ['id'],
+      where: { isPublished: true },
+      order: { id: 'desc' },
+      loadEagerRelations: false,
+    });
+
+    return publishedAboutSoptIds.map((aboutSopt) => aboutSopt.id);
+  }
 }

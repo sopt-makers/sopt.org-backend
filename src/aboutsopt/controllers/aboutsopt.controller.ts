@@ -18,7 +18,8 @@ import {
   GetAdminAboutSoptDocs,
   UpdateAboutSoptDocs,
   PublishAboutSoptDocs,
-  GetRecentSemesterAboutSopt,
+  GetRecentSemesterAboutSoptDocs,
+  GetPublishedAboutSoptIdsDocs,
 } from '../../../docs/aboutsopt/aboutSopt.swagger';
 import { AuthGuard } from '../../auth/auth.guard';
 
@@ -61,8 +62,14 @@ export class AboutSoptController {
   }
 
   @Get('recent-semester')
-  @GetRecentSemesterAboutSopt()
+  @GetRecentSemesterAboutSoptDocs()
   getRecentAboutSopt(): Promise<AboutSoptResponseDto> {
     return this.aboutSoptService.getRecentAboutSopt();
+  }
+
+  @Get('published-ids')
+  @GetPublishedAboutSoptIdsDocs()
+  getPublishedAboutSoptIds(): Promise<number[]> {
+    return this.aboutSoptService.getPublishedAboutSoptIds();
   }
 }
