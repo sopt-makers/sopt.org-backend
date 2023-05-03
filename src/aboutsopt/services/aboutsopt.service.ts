@@ -60,9 +60,16 @@ export class AboutSoptService {
   private validatePublishAboutSopt(aboutSopt: AboutSopt) {
     if (Object.values(aboutSopt).includes('')) {
       throw new BadRequestException(
-        'there is not filled field in : ' + aboutSopt.id,
+        'there is not filled field in aboutSopt : ' + aboutSopt.id,
       );
     }
+    aboutSopt.coreValues.forEach((coreValue) => {
+      if (Object.values(coreValue).includes('')) {
+        throw new BadRequestException(
+          'there is not filled field in Core value : ' + aboutSopt.id,
+        );
+      }
+    });
   }
 
   async getOrInit(id: number): Promise<AboutSopt | null> {
