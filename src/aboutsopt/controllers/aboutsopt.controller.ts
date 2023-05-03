@@ -34,6 +34,7 @@ export class AboutSoptController {
 
   @Get('admin/semester/:id')
   @GetAdminAboutSoptDocs()
+  @UseGuards(AuthGuard)
   async getOrInit(
     @Param('id') id: number,
   ): Promise<AboutSoptResponseDto | null> {
