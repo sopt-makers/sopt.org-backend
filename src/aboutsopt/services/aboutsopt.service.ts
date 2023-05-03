@@ -9,6 +9,7 @@ import { Repository } from 'typeorm';
 import { AboutSopt } from '../entities/aboutsopt.entity';
 import { CoreValue } from '../entities/coreValue.entity';
 import { AboutSoptUpdateDto } from '../dtos/aboutsopt-update.dto';
+import { AboutSoptResponseDto } from '../dtos/aboutsopt-response.dto';
 
 @Injectable()
 export class AboutSoptService {
@@ -125,5 +126,21 @@ export class AboutSoptService {
     if (coreValueIds.length !== coreValueDtoIdsSet.size) {
       throw new BadRequestException('Duplicated core value id');
     }
+  }
+
+  async getRecentAboutSopt(): Promise<AboutSoptResponseDto> {
+    const aboutSopt = await this.aboutSoptRepository.findOne({
+      where: { isPublished: true },
+      order: {
+        id: 'desc',
+        coreValues: {
+          id: 'asc',
+        },
+      },
+    });
+    if (!aboutSopt) {
+      throw new NotFoundException('Not found about sopt');
+    }
+    return aboutSopt;
   }
 }

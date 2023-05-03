@@ -10,7 +10,6 @@ import {
 
 import { AboutSoptResponseDto } from '../../src/aboutsopt/dtos/aboutsopt-response.dto';
 
-
 export function GetAdminAboutSoptDocs() {
   return applyDecorators(
     ApiTags('AboutSoptAdmin'),
@@ -74,6 +73,19 @@ export function UpdateAboutSoptDocs() {
     ApiNotFoundResponse({
       description:
         "AboutSopt_ID가_없는_아이디일때: 'Not found about sopt with id: ${id}' / CoreValue의_ID가_aboutSopt와_연관된_아이디가_아닐때:'Not found core value with id: ${id}'",
+    }),
+    ApiOkResponse({ type: AboutSoptResponseDto }),
+  );
+}
+
+export function GetRecentSemesterAboutSopt() {
+  return applyDecorators(
+    ApiTags('AboutSopt'),
+    ApiOperation({
+      summary: '최근 기수의 AboutSopt 조회, isPublish가 true인 것만 조회',
+    }),
+    ApiBadRequestResponse({
+      description: "CoreValueId가_중복으로_들어올때: 'Not found about sopt'",
     }),
     ApiOkResponse({ type: AboutSoptResponseDto }),
   );
