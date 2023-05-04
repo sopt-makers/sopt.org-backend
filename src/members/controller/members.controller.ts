@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 
 import { GetMembersDocs } from 'docs/members/member.swagger';
-import { MemberResponseDto } from '../dtos/member-response.dto';
+import { MemberListResponseDto } from '../dtos/member-response.dto';
 import { MemberService } from '../service/member.service';
 import { MemberRequestDto } from '../dtos/member-request.dto';
 
@@ -20,7 +20,7 @@ export class MembersController {
   @GetMembersDocs()
   async getMembers(
     @Query() memberDto: MemberRequestDto,
-  ): Promise<MemberResponseDto[]> {
+  ): Promise<MemberListResponseDto> {
     return this.membersService.findAll(memberDto);
   }
 }
