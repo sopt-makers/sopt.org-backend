@@ -10,6 +10,10 @@ import { AboutSopt } from '../entities/aboutsopt.entity';
 import { CoreValue } from '../entities/coreValue.entity';
 import { AboutSoptUpdateDto } from '../dtos/aboutsopt-update.dto';
 import { AboutSoptResponseDto } from '../dtos/aboutsopt-response.dto';
+import { StudyService } from '../../study/service/study.service';
+import { MemberService } from '../../members/service/member.service';
+import { ProjectService } from '../../projects/services/project.service';
+import { GetAboutSoptResponseDto } from '../dtos/get-about-sopt-response.dto';
 
 @Injectable()
 export class AboutSoptService {
@@ -18,19 +22,35 @@ export class AboutSoptService {
     private readonly aboutSoptRepository: Repository<AboutSopt>,
     @InjectRepository(CoreValue)
     private readonly coreValueRepository: Repository<CoreValue>,
+    private readonly memberService: MemberService,
+    private readonly projectService: ProjectService,
+    private readonly studyService: StudyService,
   ) {}
 
-  async getAboutSopt(id: number): Promise<AboutSopt> {
-    const aboutsopt = await this.aboutSoptRepository.findOne({
+  async getAboutSopt(id: number): Promise<GetAboutSoptResponseDto> {
+    const aboutSopt = await this.aboutSoptRepository.findOne({
       where: { id: id, isPublished: true },
     });
 
-    if (!aboutsopt) {
+    if (!aboutSopt) {
       throw new NotFoundException(
         'Not found Published about sopt with id: ' + id,
       );
     }
-    return aboutsopt;
+
+    const members = await this.memberService.findAll({ generation: id });
+    const projects = await this.projectService.findByGeneration(id);
+    const studies = await this.studyService.findBySemester(id);
+
+    return {
+      aboutSopt: aboutSopt,
+      members: members,
+      activitiesRecords: {
+        activitiesMemberCount: members.numberOfMembersAtGeneration,
+        projectCounts: projects.length,
+        studyCounts: studies.length,
+      },
+    };
   }
 
   async publishAboutSopt(id: number): Promise<AboutSopt | null> {

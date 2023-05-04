@@ -94,6 +94,7 @@ export class ProjectService {
     };
   }
 
+  //todo Cachable
   async findAll(project?: string): Promise<ProjectsResponseDto[]> {
     const res: ProjectsResponseDto[] = [];
     const projectApiPath = '/internal/api/v1/projects';
@@ -166,5 +167,10 @@ export class ProjectService {
       );
     }
     return this.getProjectDetailResponseDto(response);
+  }
+
+  async findByGeneration(generation: number): Promise<ProjectsResponseDto[]> {
+    const projects = await this.findAll();
+    return projects.filter((project) => project.generation === generation);
   }
 }

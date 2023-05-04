@@ -9,6 +9,7 @@ import {
 } from '@nestjs/swagger';
 
 import { AboutSoptResponseDto } from '../../src/aboutsopt/dtos/aboutsopt-response.dto';
+import { GetAboutSoptResponseDto } from '../../src/aboutsopt/dtos/get-about-sopt-response.dto';
 
 export function GetAdminAboutSoptDocs() {
   return applyDecorators(
@@ -32,7 +33,7 @@ export function GetAboutSoptDocs() {
       type: 'number',
       description: '기수',
     }),
-    ApiOkResponse({ type: AboutSoptResponseDto }),
+    ApiOkResponse({ type: GetAboutSoptResponseDto }),
   );
 }
 

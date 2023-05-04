@@ -19,7 +19,7 @@ export class StudyService {
   async findAll(): Promise<StudyResponseDto[]> {
     const apiUrl = this.configService.get('CREW_API_URL');
 
-    const response = await lastValueFrom(
+    return await lastValueFrom(
       this.httpService
         .get<CrewMeetingResponseDto>(
           `${apiUrl}/meeting?isOnlyActiveGeneration=${true}`,
@@ -48,7 +48,10 @@ export class StudyService {
           }),
         ),
     );
+  }
 
-    return response;
+  async findBySemester(semester: number): Promise<StudyResponseDto[]> {
+    const allStudies = await this.findAll();
+    return allStudies.filter((study) => study.generation === semester);
   }
 }
