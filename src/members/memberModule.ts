@@ -7,5 +7,6 @@ import { MembersService } from './service/members.service';
   imports: [HttpModule],
   providers: [MembersService],
   controllers: [MembersController],
+  exports: [MembersService],
 })
-export class MembersModule {}
+export class MemberModule {}
