@@ -8,13 +8,13 @@ import {
 
 import { GetMembersDocs } from 'docs/members/member.swagger';
 import { MemberResponseDto } from '../dtos/member-response.dto';
-import { MembersService } from '../service/members.service';
+import { MemberService } from '../service/member.service';
 import { MemberRequestDto } from '../dtos/member-request.dto';
 
 @UsePipes(new ValidationPipe({ transform: true }))
 @Controller('member')
 export class MembersController {
-  constructor(private readonly membersService: MembersService) {}
+  constructor(private readonly membersService: MemberService) {}
 
   @Get('')
   @GetMembersDocs()

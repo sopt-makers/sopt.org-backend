@@ -7,7 +7,7 @@ import { MemberResponseDto } from '../dtos/member-response.dto';
 import { MemberRequestDto } from '../dtos/member-request.dto';
 
 @Injectable()
-export class MembersService {
+export class MemberService {
   constructor(
     private readonly httpService: HttpService,
     private readonly configService: ConfigService<EnvConfig>,

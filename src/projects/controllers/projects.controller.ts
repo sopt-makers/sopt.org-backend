@@ -5,14 +5,14 @@ import {
   GetProjectsDocs,
 } from 'docs/projects/projects.swagger';
 import { ProjectDetailResponseDto } from 'src/projects/dtos/project-detail-response.dto';
-import { ProjectsService } from 'src/projects/services/projects.service';
+import { ProjectService } from 'src/projects/services/project.service';
 import { compareProjects } from 'src/utils/compare';
 import { ProjectsResponseDto } from '../dtos/projects-response.dto';
 
 @ApiTags('Project')
 @Controller('projects')
 export class ProjectsController {
-  constructor(private readonly projectsService: ProjectsService) {}
+  constructor(private readonly projectsService: ProjectService) {}
 
   @Get('')
   @GetProjectsDocs()
