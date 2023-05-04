@@ -22,6 +22,7 @@ import {
   GetPublishedAboutSoptIdsDocs,
 } from '../../../docs/aboutsopt/aboutSopt.swagger';
 import { AuthGuard } from '../../auth/auth.guard';
+import { GetAboutSoptResponseDto } from '../dtos/get-about-sopt-response.dto';
 
 @UsePipes(new ValidationPipe({ transform: true }))
 @Controller('aboutsopt')
@@ -30,7 +31,9 @@ export class AboutSoptController {
 
   @Get('semester/:id')
   @GetAboutSoptDocs()
-  async getAboutSopt(@Param('id') id: number): Promise<AboutSoptResponseDto> {
+  async getAboutSopt(
+    @Param('id') id: number,
+  ): Promise<GetAboutSoptResponseDto> {
     return this.aboutSoptService.getAboutSopt(id);
   }
 

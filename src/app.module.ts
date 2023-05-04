@@ -1,4 +1,4 @@
-import { MembersModule } from './members/members.module';
+import { MemberModule } from './members/memberModule';
 import { StudyModule } from './study/study.module';
 import { AboutSoptModule } from './aboutsopt/aboutsopt.module';
 import { Module } from '@nestjs/common';
@@ -10,7 +10,7 @@ import { AppService } from './app.service';
 import { PartnersModule } from './partners/partners.module';
 import { LogosModule } from './logos/logos.module';
 import { CooperationProjectsModule } from './cooperation-projects/cooperation-projects.module';
-import { ProjectsModule } from './projects/projects.module';
+import { ProjectModule } from './projects/projectModule';
 import { SemestersModule } from './semesters/semesters.module';
 import { envValidationSchema } from 'src/configs/env.config';
 import { ReviewsModule } from './reviews/reviews.module';
@@ -28,14 +28,14 @@ import { AuthModule } from './auth/auth.module';
     PartnersModule,
     LogosModule,
     CooperationProjectsModule,
-    ProjectsModule,
+    ProjectModule,
     SemestersModule,
     ReviewsModule,
     AuthModule,
     FileModule,
     AboutSoptModule,
-    MembersModule,
-    StudyModule
+    MemberModule,
+    StudyModule,
   ],
   controllers: [AppController],
   providers: [AppService],

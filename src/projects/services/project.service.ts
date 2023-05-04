@@ -17,7 +17,7 @@ import { ProjectsResponseDto } from '../dtos/projects-response.dto';
 import { EnvConfig } from '../../configs/env.config';
 
 @Injectable()
-export class ProjectsService {
+export class ProjectService {
   constructor(
     private readonly httpService: HttpService,
     private readonly configService: ConfigService<EnvConfig>,
@@ -94,6 +94,7 @@ export class ProjectsService {
     };
   }
 
+  //todo Cachable
   async findAll(project?: string): Promise<ProjectsResponseDto[]> {
     const res: ProjectsResponseDto[] = [];
     const projectApiPath = '/internal/api/v1/projects';
@@ -166,5 +167,10 @@ export class ProjectsService {
       );
     }
     return this.getProjectDetailResponseDto(response);
+  }
+
+  async findByGeneration(generation: number): Promise<ProjectsResponseDto[]> {
+    const projects = await this.findAll();
+    return projects.filter((project) => project.generation === generation);
   }
 }

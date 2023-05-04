@@ -5,22 +5,22 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
+
 import { GetMembersDocs } from 'docs/members/member.swagger';
-import { MemberResponseDto } from '../dtos/member-response-dto';
-import { MembersService } from '../service/members.service';
+import { MemberListResponseDto } from '../dtos/member-response.dto';
+import { MemberService } from '../service/member.service';
+import { MemberRequestDto } from '../dtos/member-request.dto';
 
 @UsePipes(new ValidationPipe({ transform: true }))
 @Controller('member')
 export class MembersController {
-  constructor(private readonly membersService: MembersService) {}
+  constructor(private readonly membersService: MemberService) {}
+
   @Get('')
   @GetMembersDocs()
-  async getAllStudy(
-    @Query('filter') filter: number,
-    @Query('generation') generation: number,
-  ): Promise<MemberResponseDto[]> {
-    const projects = await this.membersService.findAll(filter, generation);
-
-    return projects;
+  async getMembers(
+    @Query() memberDto: MemberRequestDto,
+  ): Promise<MemberListResponseDto> {
+    return this.membersService.findAll(memberDto);
   }
 }
