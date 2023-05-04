@@ -3,7 +3,8 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { catchError, lastValueFrom, map, of } from 'rxjs';
 import { EnvConfig } from 'src/configs/env.config';
-import { MemberResponseDto } from '../dtos/member-response-dto';
+import { MemberResponseDto } from '../dtos/member-response.dto';
+import { MemberRequestDto } from '../dtos/member-request.dto';
 
 @Injectable()
 export class MembersService {
@@ -12,10 +13,10 @@ export class MembersService {
     private readonly configService: ConfigService<EnvConfig>,
   ) {}
 
-  async findAll(
-    part: number,
-    generation: number,
-  ): Promise<MemberResponseDto[]> {
+  async findAll({
+    filter: part,
+    generation,
+  }: MemberRequestDto): Promise<MemberResponseDto[]> {
     const memberApiPath = '/internal/api/v1/official/members/profile';
 
     const apiUrl = this.configService.get('PLAYGROUND_API_URL');
