@@ -37,7 +37,7 @@ export class AboutSoptController {
     return this.aboutSoptService.getAboutSopt(id);
   }
 
-  @Get('admin/semester/:id')
+  @Get('admin/generation/:id')
   @GetAdminAboutSoptDocs()
   @UseGuards(AuthGuard)
   async getOrInit(
@@ -46,7 +46,7 @@ export class AboutSoptController {
     return this.aboutSoptService.getOrInit(id);
   }
 
-  @Put('admin/semester/:id')
+  @Put('admin/generation/:id')
   @UseGuards(AuthGuard)
   @UpdateAboutSoptDocs()
   async updateAboutSopt(
@@ -56,7 +56,7 @@ export class AboutSoptController {
     return this.aboutSoptService.updateAboutSopt(id, aboutSoptPostDto);
   }
 
-  @Post('admin/semester/:id/publish')
+  @Post('admin/generation/:id/publish')
   @UseGuards(AuthGuard)
   @PublishAboutSoptDocs()
   async publishAboutSopt(
