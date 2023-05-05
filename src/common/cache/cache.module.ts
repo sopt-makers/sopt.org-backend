@@ -38,6 +38,10 @@ export class CacheModule implements OnModuleInit {
     this.registerAllCache();
   }
 
+  /**
+   * @description NestJS 의 DiscoveryService 를 이용하여 onModuleInit시점에 모든 Provider 를 탐색하고, Cache 데코레이터를 적용시킵니다.
+   * @private
+   */
   private registerAllCache(): void {
     this.discoveryService
       .getProviders()
@@ -52,6 +56,11 @@ export class CacheModule implements OnModuleInit {
       });
   }
 
+  /**
+   *
+   * @description @Cacheable 데코레이터가 붙은 메소드를 캐싱합니다.
+   * @private
+   */
   private registerCache(instance: any) {
     return (methodName: any) => {
       const methodRef = instance[methodName];

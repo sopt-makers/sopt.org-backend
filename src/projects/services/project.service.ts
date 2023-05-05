@@ -15,6 +15,7 @@ import { dropDuplication } from 'src/utils/helper';
 import { PlaygroundProjectDetailResponseDto } from '../dtos/playground-project-detail-response.dto';
 import { ProjectsResponseDto } from '../dtos/projects-response.dto';
 import { EnvConfig } from '../../configs/env.config';
+import { Cacheable } from '../../common/cache';
 
 @Injectable()
 export class ProjectService {
@@ -94,7 +95,10 @@ export class ProjectService {
     };
   }
 
-  //todo Cachable
+  @Cacheable({
+    ttl: 30 * 60,
+    validate: (value: any) => !(value instanceof Error),
+  })
   async findAll(project?: string): Promise<ProjectsResponseDto[]> {
     const res: ProjectsResponseDto[] = [];
     const projectApiPath = '/internal/api/v1/projects';
