@@ -27,7 +27,7 @@ export function GetAboutSoptDocs() {
     ApiTags('AboutSopt'),
     ApiOperation({
       summary:
-        '사용자용 AboutSopt 조회, 해당 기수의 AboutSOPT가  없으면 not found error',
+        '사용자용 AboutSopt 조회를 조회합니다, Query값이 null이면 최근 기수를 불러옵니다. 해당 기수의 AboutSOPT가  없으면 not found error',
     }),
     ApiQuery({
       name: 'generation',
@@ -76,19 +76,6 @@ export function UpdateAboutSoptDocs() {
     ApiNotFoundResponse({
       description:
         "AboutSopt_ID가_없는_아이디일때: 'Not found about sopt with id: ${id}' / CoreValue의_ID가_aboutSopt와_연관된_아이디가_아닐때:'Not found core value with id: ${id}'",
-    }),
-    ApiOkResponse({ type: AboutSoptResponseDto }),
-  );
-}
-
-export function GetRecentSemesterAboutSoptDocs() {
-  return applyDecorators(
-    ApiTags('AboutSopt'),
-    ApiOperation({
-      summary: '최근 기수의 AboutSopt 조회, isPublish가 true인 것만 조회',
-    }),
-    ApiBadRequestResponse({
-      description: "CoreValueId가_중복으로_들어올때: 'Not found about sopt'",
     }),
     ApiOkResponse({ type: AboutSoptResponseDto }),
   );

@@ -9,7 +9,6 @@ import { Repository } from 'typeorm';
 import { AboutSopt } from '../entities/aboutsopt.entity';
 import { CoreValue } from '../entities/coreValue.entity';
 import { AboutSoptUpdateDto } from '../dtos/aboutsopt-update.dto';
-import { AboutSoptResponseDto } from '../dtos/aboutsopt-response.dto';
 import { StudyService } from '../../study/service/study.service';
 import { MemberService } from '../../members/service/member.service';
 import { ProjectService } from '../../projects/services/project.service';
@@ -158,30 +157,6 @@ export class AboutSoptService {
     if (coreValueIds.length !== coreValueDtoIdsSet.size) {
       throw new BadRequestException('Duplicated core value id');
     }
-  }
-
-  async getRecentAboutSopt(): Promise<AboutSoptResponseDto> {
-    const id = 32;
-
-    const queryBuilder = await this.aboutSoptRepository
-      .createQueryBuilder('aboutSopt')
-      .where('aboutSopt.isPublished = :isPublished', { isPublished: true });
-
-    if (id) {
-      queryBuilder.andWhere('aboutSopt.id = :id', { id: id });
-    }
-
-    queryBuilder
-      .orderBy('aboutSopt.id', 'DESC')
-      .leftJoinAndSelect('aboutSopt.coreValues', 'coreValues')
-      .addOrderBy('coreValues.id', 'ASC');
-
-    const aboutSopt = await queryBuilder.getOne();
-
-    if (!aboutSopt) {
-      throw new NotFoundException('Not found about sopt');
-    }
-    return aboutSopt;
   }
 
   async getPublishedAboutSoptIds(): Promise<number[]> {
