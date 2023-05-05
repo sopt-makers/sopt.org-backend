@@ -16,6 +16,7 @@ import { envValidationSchema } from 'src/configs/env.config';
 import { ReviewsModule } from './reviews/reviews.module';
 import { FileModule } from './file/file.module';
 import { AuthModule } from './auth/auth.module';
+import { CacheModule } from './common/cache';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { AuthModule } from './auth/auth.module';
     AboutSoptModule,
     MemberModule,
     StudyModule,
+    CacheModule.forRoot(),
   ],
   controllers: [AppController],
   providers: [AppService],

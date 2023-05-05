@@ -1,13 +1,15 @@
-import { StudyResponseDto } from '../dtos/study-response.dto';
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { EnvConfig } from 'src/configs/env.config';
 import { catchError, lastValueFrom, map, of } from 'rxjs';
+import { ConfigService } from '@nestjs/config';
+
+import { StudyResponseDto } from '../dtos/study-response.dto';
+import { EnvConfig } from 'src/configs/env.config';
 import {
   CrewMeetingDto,
   CrewMeetingResponseDto,
 } from '../dtos/crew-study-response.dto';
+import { Cacheable } from '../../common/cache';
 
 @Injectable()
 export class StudyService {
@@ -16,6 +18,10 @@ export class StudyService {
     private readonly configService: ConfigService<EnvConfig>,
   ) {}
 
+  @Cacheable({
+    ttl: 30 * 60,
+    validate: (value: any) => !(value instanceof Error),
+  })
   async findAll(): Promise<StudyResponseDto[]> {
     const apiUrl = this.configService.get('CREW_API_URL');
 
