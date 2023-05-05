@@ -5,6 +5,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UseGuards,
   UsePipes,
   ValidationPipe,
@@ -29,10 +30,10 @@ import { GetAboutSoptResponseDto } from '../dtos/get-about-sopt-response.dto';
 export class AboutSoptController {
   constructor(private readonly aboutSoptService: AboutSoptService) {}
 
-  @Get('semester/:id')
+  @Get('')
   @GetAboutSoptDocs()
   async getAboutSopt(
-    @Param('id') id: number,
+    @Query('generation') id?: number,
   ): Promise<GetAboutSoptResponseDto> {
     return this.aboutSoptService.getAboutSopt(id);
   }

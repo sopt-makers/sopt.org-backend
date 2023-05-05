@@ -1,4 +1,3 @@
-import { MemberListResponseDto } from '../../members/dtos/member-response.dto';
 import { AboutSoptResponseDto } from './aboutsopt-response.dto';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -31,12 +30,6 @@ export class GetAboutSoptResponseDto {
     nullable: false,
   })
   readonly aboutSopt: AboutSoptResponseDto;
-
-  @ApiProperty({
-    type: MemberListResponseDto,
-    nullable: false,
-  })
-  readonly members: MemberListResponseDto;
 
   @ApiProperty({
     type: ActivitiesRecords,

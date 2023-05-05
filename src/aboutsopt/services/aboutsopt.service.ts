@@ -27,10 +27,21 @@ export class AboutSoptService {
     private readonly studyService: StudyService,
   ) {}
 
-  async getAboutSopt(id: number): Promise<GetAboutSoptResponseDto> {
-    const aboutSopt = await this.aboutSoptRepository.findOne({
-      where: { id: id, isPublished: true },
-    });
+  async getAboutSopt(id?: number): Promise<GetAboutSoptResponseDto> {
+    const queryBuilder = await this.aboutSoptRepository
+      .createQueryBuilder('aboutSopt')
+      .where('aboutSopt.isPublished = :isPublished', { isPublished: true });
+
+    if (id) {
+      queryBuilder.andWhere('aboutSopt.id = :id', { id: id });
+    }
+
+    queryBuilder
+      .orderBy('aboutSopt.id', 'DESC')
+      .leftJoinAndSelect('aboutSopt.coreValues', 'coreValues')
+      .addOrderBy('coreValues.id', 'ASC');
+
+    const aboutSopt = await queryBuilder.getOne();
 
     if (!aboutSopt) {
       throw new NotFoundException(
@@ -38,13 +49,14 @@ export class AboutSoptService {
       );
     }
 
-    const members = await this.memberService.findAll({ generation: id });
-    const projects = await this.projectService.findByGeneration(id);
-    const studies = await this.studyService.findBySemester(id);
+    const generation = id ? id : aboutSopt.id;
+
+    const members = await this.memberService.findAll({ generation });
+    const projects = await this.projectService.findByGeneration(generation);
+    const studies = await this.studyService.findByGeneration(generation);
 
     return {
       aboutSopt: aboutSopt,
-      members: members,
       activitiesRecords: {
         activitiesMemberCount: members.numberOfMembersAtGeneration,
         projectCounts: projects.length,
@@ -149,15 +161,23 @@ export class AboutSoptService {
   }
 
   async getRecentAboutSopt(): Promise<AboutSoptResponseDto> {
-    const aboutSopt = await this.aboutSoptRepository.findOne({
-      where: { isPublished: true },
-      order: {
-        id: 'desc',
-        coreValues: {
-          id: 'asc',
-        },
-      },
-    });
+    const id = 32;
+
+    const queryBuilder = await this.aboutSoptRepository
+      .createQueryBuilder('aboutSopt')
+      .where('aboutSopt.isPublished = :isPublished', { isPublished: true });
+
+    if (id) {
+      queryBuilder.andWhere('aboutSopt.id = :id', { id: id });
+    }
+
+    queryBuilder
+      .orderBy('aboutSopt.id', 'DESC')
+      .leftJoinAndSelect('aboutSopt.coreValues', 'coreValues')
+      .addOrderBy('coreValues.id', 'ASC');
+
+    const aboutSopt = await queryBuilder.getOne();
+
     if (!aboutSopt) {
       throw new NotFoundException('Not found about sopt');
     }

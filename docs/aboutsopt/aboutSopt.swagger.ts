@@ -6,6 +6,7 @@ import {
   ApiOperation,
   ApiTags,
   ApiParam,
+  ApiQuery,
 } from '@nestjs/swagger';
 
 import { AboutSoptResponseDto } from '../../src/aboutsopt/dtos/aboutsopt-response.dto';
@@ -28,10 +29,11 @@ export function GetAboutSoptDocs() {
       summary:
         '사용자용 AboutSopt 조회, 해당 기수의 AboutSOPT가  없으면 not found error',
     }),
-    ApiParam({
-      name: 'id',
+    ApiQuery({
+      name: 'generation',
       type: 'number',
       description: '기수',
+      required: false,
     }),
     ApiOkResponse({ type: GetAboutSoptResponseDto }),
   );

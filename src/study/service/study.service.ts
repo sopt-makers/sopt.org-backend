@@ -50,8 +50,8 @@ export class StudyService {
     );
   }
 
-  async findBySemester(semester: number): Promise<StudyResponseDto[]> {
+  async findByGeneration(generation: number): Promise<StudyResponseDto[]> {
     const allStudies = await this.findAll();
-    return allStudies.filter((study) => study.generation === semester);
+    return allStudies.filter((study) => study.generation === generation);
   }
 }
