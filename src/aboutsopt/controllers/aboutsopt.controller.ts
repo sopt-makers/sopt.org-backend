@@ -5,6 +5,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UseGuards,
   UsePipes,
   ValidationPipe,
@@ -18,7 +19,6 @@ import {
   GetAdminAboutSoptDocs,
   UpdateAboutSoptDocs,
   PublishAboutSoptDocs,
-  GetRecentSemesterAboutSoptDocs,
   GetPublishedAboutSoptIdsDocs,
 } from '../../../docs/aboutsopt/aboutSopt.swagger';
 import { AuthGuard } from '../../auth/auth.guard';
@@ -29,10 +29,10 @@ import { GetAboutSoptResponseDto } from '../dtos/get-about-sopt-response.dto';
 export class AboutSoptController {
   constructor(private readonly aboutSoptService: AboutSoptService) {}
 
-  @Get('semester/:id')
+  @Get('')
   @GetAboutSoptDocs()
   async getAboutSopt(
-    @Param('id') id: number,
+    @Query('generation') id?: number,
   ): Promise<GetAboutSoptResponseDto> {
     return this.aboutSoptService.getAboutSopt(id);
   }
@@ -63,12 +63,6 @@ export class AboutSoptController {
     @Param('id') id: number,
   ): Promise<AboutSoptResponseDto | null> {
     return this.aboutSoptService.publishAboutSopt(id);
-  }
-
-  @Get('recent-semester')
-  @GetRecentSemesterAboutSoptDocs()
-  getRecentAboutSopt(): Promise<AboutSoptResponseDto> {
-    return this.aboutSoptService.getRecentAboutSopt();
   }
 
   @Get('published-ids')

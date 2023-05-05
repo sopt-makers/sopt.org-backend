@@ -9,7 +9,6 @@ import { Repository } from 'typeorm';
 import { AboutSopt } from '../entities/aboutsopt.entity';
 import { CoreValue } from '../entities/coreValue.entity';
 import { AboutSoptUpdateDto } from '../dtos/aboutsopt-update.dto';
-import { AboutSoptResponseDto } from '../dtos/aboutsopt-response.dto';
 import { StudyService } from '../../study/service/study.service';
 import { MemberService } from '../../members/service/member.service';
 import { ProjectService } from '../../projects/services/project.service';
@@ -27,10 +26,21 @@ export class AboutSoptService {
     private readonly studyService: StudyService,
   ) {}
 
-  async getAboutSopt(id: number): Promise<GetAboutSoptResponseDto> {
-    const aboutSopt = await this.aboutSoptRepository.findOne({
-      where: { id: id, isPublished: true },
-    });
+  async getAboutSopt(id?: number): Promise<GetAboutSoptResponseDto> {
+    const queryBuilder = await this.aboutSoptRepository
+      .createQueryBuilder('aboutSopt')
+      .where('aboutSopt.isPublished = :isPublished', { isPublished: true });
+
+    if (id) {
+      queryBuilder.andWhere('aboutSopt.id = :id', { id: id });
+    }
+
+    queryBuilder
+      .orderBy('aboutSopt.id', 'DESC')
+      .leftJoinAndSelect('aboutSopt.coreValues', 'coreValues')
+      .addOrderBy('coreValues.id', 'ASC');
+
+    const aboutSopt = await queryBuilder.getOne();
 
     if (!aboutSopt) {
       throw new NotFoundException(
@@ -38,13 +48,14 @@ export class AboutSoptService {
       );
     }
 
-    const members = await this.memberService.findAll({ generation: id });
-    const projects = await this.projectService.findByGeneration(id);
-    const studies = await this.studyService.findBySemester(id);
+    const generation = id ? id : aboutSopt.id;
+
+    const members = await this.memberService.findAll({ generation });
+    const projects = await this.projectService.findByGeneration(generation);
+    const studies = await this.studyService.findByGeneration(generation);
 
     return {
       aboutSopt: aboutSopt,
-      members: members,
       activitiesRecords: {
         activitiesMemberCount: members.numberOfMembersAtGeneration,
         projectCounts: projects.length,
@@ -153,22 +164,6 @@ export class AboutSoptService {
     if (coreValueIds.length !== coreValueDtoIdsSet.size) {
       throw new BadRequestException('Duplicated core value id');
     }
-  }
-
-  async getRecentAboutSopt(): Promise<AboutSoptResponseDto> {
-    const aboutSopt = await this.aboutSoptRepository.findOne({
-      where: { isPublished: true },
-      order: {
-        id: 'desc',
-        coreValues: {
-          id: 'asc',
-        },
-      },
-    });
-    if (!aboutSopt) {
-      throw new NotFoundException('Not found about sopt');
-    }
-    return aboutSopt;
   }
 
   async getPublishedAboutSoptIds(): Promise<number[]> {
