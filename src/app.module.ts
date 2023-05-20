@@ -17,6 +17,7 @@ import { ReviewsModule } from './reviews/reviews.module';
 import { FileModule } from './file/file.module';
 import { AuthModule } from './auth/auth.module';
 import { CacheModule } from './common/cache';
+import { SopticleModule } from './sopticle/sopticle.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { CacheModule } from './common/cache';
     MemberModule,
     StudyModule,
     CacheModule.forRoot(),
+    SopticleModule,
   ],
   controllers: [AppController],
   providers: [AppService],
