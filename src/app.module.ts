@@ -1,9 +1,11 @@
+import { Module, ValidationPipe } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { APP_PIPE } from '@nestjs/core';
+import { TypeOrmModule } from '@nestjs/typeorm';
+
 import { MemberModule } from './members/memberModule';
 import { StudyModule } from './study/study.module';
 import { AboutSoptModule } from './aboutsopt/aboutsopt.module';
-import { Module, ValidationPipe } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeORMFactory } from 'src/configs/typeorm.config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -18,7 +20,7 @@ import { FileModule } from './file/file.module';
 import { AuthModule } from './auth/auth.module';
 import { CacheModule } from './common/cache';
 import { SopticleModule } from './sopticle/sopticle.module';
-import { APP_PIPE } from '@nestjs/core';
+import { InternalServiceModule } from './internal/internalService.module';
 
 @Module({
   imports: [
@@ -41,6 +43,7 @@ import { APP_PIPE } from '@nestjs/core';
     StudyModule,
     CacheModule.forRoot(),
     SopticleModule,
+    InternalServiceModule,
   ],
   controllers: [AppController],
   providers: [

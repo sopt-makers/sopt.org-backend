@@ -6,3 +6,11 @@ export enum Part {
   ANDROID = 'ANDROID',
   WEB = 'WEB',
 }
+
+export interface PlaygroundUser {
+  id: number;
+  name: string;
+  generation: number;
+  profileImage: string | null;
+  hasProfile: boolean;
+}
