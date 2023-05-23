@@ -15,7 +15,7 @@ export class StudyService {
   })
   async getStudies(): Promise<StudyResponseDto[]> {
     const MAX_TAKE_COUNT = 50;
-    const response = await this.studyRepository.findStudy({
+    const response = await this.studyRepository.findAll({
       page: 1,
       limit: MAX_TAKE_COUNT,
     });
@@ -40,7 +40,7 @@ export class StudyService {
    * 공홈 AboutTab에서 StudyCount를 집계할때 사용됩니다.
    */
   async getStudyCount(): Promise<number> {
-    const findStudyResponse = await this.studyRepository.findStudy({
+    const findStudyResponse = await this.studyRepository.findAll({
       page: 1,
       limit: 1,
     });

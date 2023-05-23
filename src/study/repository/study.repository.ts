@@ -17,7 +17,7 @@ export class StudyRepository {
     this.URL = this.configService.get('CREW_API_URL') as string;
   }
 
-  async findStudy({
+  async findAll({
     page = 1,
     limit = 12,
   }: {
