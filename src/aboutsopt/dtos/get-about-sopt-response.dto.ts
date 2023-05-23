@@ -18,10 +18,10 @@ export class ActivitiesRecords {
 
   @ApiProperty({
     type: Number,
-    nullable: false,
-    description: '스터디 수',
+    nullable: true,
+    description: '스터디 수, CrewAPI 서버 에러시 Count대신 null을 반환합니다.',
   })
-  readonly studyCounts: number;
+  readonly studyCounts: number | null;
 }
 
 export class GetAboutSoptResponseDto {

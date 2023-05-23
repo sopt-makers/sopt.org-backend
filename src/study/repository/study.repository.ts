@@ -1,6 +1,7 @@
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { catchError, lastValueFrom, map } from 'rxjs';
+import { AxiosError } from 'axios';
 
 import { EnvConfig } from '../../configs/env.config';
 import { CrewMeetingResponseDto } from '../dtos/crew-study-response.dto';
@@ -35,8 +36,8 @@ export class StudyRepository {
         )
         .pipe(
           map((res) => res.data),
-          catchError((error) => {
-            console.error(error);
+          catchError((error: AxiosError<unknown>) => {
+            console.error(error.response);
             throw new InternalServerErrorException(
               'Get study API Error',
               error.message,

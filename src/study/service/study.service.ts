@@ -39,11 +39,15 @@ export class StudyService {
   /**
    * 공홈 AboutTab에서 StudyCount를 집계할때 사용됩니다.
    */
-  async getStudyCount(): Promise<number> {
-    const findStudyResponse = await this.studyRepository.findAll({
-      page: 1,
-      limit: 1,
-    });
-    return findStudyResponse.data.meta.itemCount;
+  async getStudyCount(): Promise<number | null> {
+    try {
+      const findStudyResponse = await this.studyRepository.findAll({
+        page: 1,
+        limit: 1,
+      });
+      return findStudyResponse.data.meta.itemCount;
+    } catch (error) {
+      return null;
+    }
   }
 }
