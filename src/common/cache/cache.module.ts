@@ -90,6 +90,7 @@ export class CacheModule implements OnModuleInit {
         const cached = await this.cacheManager.get(cacheKey);
 
         if (Boolean(cached)) {
+          console.log('cache hit');
           return cached;
         }
 
