@@ -1,13 +1,5 @@
 import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
-
-export enum Part {
-  iOS = 'iOS',
-  PLAN = 'PLAN',
-  DESIGN = 'DESIGN',
-  SERVER = 'SERVER',
-  ANDROID = 'ANDROID',
-  WEB = 'WEB',
-}
+import { Part } from '../../common/type';
 
 @Index('review_pk', ['id'], { unique: true })
 @Entity('Review', { schema: 'public' })

@@ -1,6 +1,6 @@
 import { PageRequest } from '../../utils/paginate-request.dto';
-import { Part } from '../entities/reviews.entity';
 import { ApiProperty } from '@nestjs/swagger';
+import { Part } from '../../common/type';
 
 export class ReviewsRequestDto extends PageRequest {
   @ApiProperty({
