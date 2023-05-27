@@ -7,18 +7,18 @@ import {
 import { ApiProperty } from '@nestjs/swagger';
 
 export const validateVelogURL = (url: string): boolean => {
-  const regex = /^https:\/\/velog\.io\/@[^/]+(\/[^/]+)?\/?$/;
-  return regex.test(url);
+  const velogRegexp = /^https:\/\/velog\.io\/@[^/]+(\/[^/]+)?\/?$/;
+  return velogRegexp.test(url);
 };
 
 export const validateTistoryURL = (url: string): boolean => {
-  const regex = /^https:\/\/\w+\.tistory\.com\/[^/]+\/?$/;
-  return regex.test(url);
+  const tistoryRegexp = /^https:\/\/(?:\w+(?:-)?)+\.tistory\.com\/[^/]+\/?$/;
+  return tistoryRegexp.test(url);
 };
 
 export const validateBrunchURL = (url: string): boolean => {
-  const regex = /^https:\/\/brunch\.co\.kr\/[^/]+\/[^/]+\/?$/;
-  return regex.test(url);
+  const brunchRegexp = /^https:\/\/brunch\.co\.kr\/[^/]+\/[^/]+\/?$/;
+  return brunchRegexp.test(url);
 };
 
 export function IsValidateSopticlePlatformUrl(

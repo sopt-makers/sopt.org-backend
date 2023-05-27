@@ -39,6 +39,12 @@ describe('IsValidateSopticlePlatformUrl', () => {
       expect(validateTistoryURL('https://soptcom.tistory.com/1')).toBeTruthy();
     });
 
+    it('정상적인 Tistory Post라면 True를 리턴한다22,', () => {
+      expect(
+        validateTistoryURL('https://sancheck-developer.tistory.com/72'),
+      ).toBeTruthy();
+    });
+
     it('url 마지막 문자 / 가 있어도 true를 리턴한다', () => {
       expect(validateTistoryURL('https://soptcom.tistory.com/1/')).toBeTruthy();
     });
