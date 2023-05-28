@@ -1,4 +1,5 @@
 export enum Role {
+  TEAMLEADER = 'Team Leader',
   MAINPM = 'Main PM',
   PM = 'PM',
   TEAMIMPROVEMENT = 'Team Improvement',
