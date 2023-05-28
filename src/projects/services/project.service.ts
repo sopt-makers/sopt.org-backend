@@ -16,6 +16,7 @@ import { PlaygroundProjectDetailResponseDto } from '../dtos/playground-project-d
 import { ProjectsResponseDto } from '../dtos/projects-response.dto';
 import { EnvConfig } from '../../configs/env.config';
 import { Cacheable } from '../../common/cache';
+import { Role } from '../dtos/playground-member';
 
 @Injectable()
 export class ProjectService {
@@ -170,6 +171,11 @@ export class ProjectService {
         `프로젝트 데이터를 가져오지 못했습니다.`,
       );
     }
+
+    response.members.forEach((member) => {
+      let role = member.memberRole;
+      member.memberRole = Role[role as keyof typeof Role];
+    });
     return this.getProjectDetailResponseDto(response);
   }
 
