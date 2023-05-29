@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 import { PlaygroundRepository } from './playground.repository';
 import { GetPlaygroundUserInfoResponseDto } from './dto/get-playground-user-info-response.dto';
+import { GetSopticlesResponseDto } from './dto/get-playground-sopticle-response.dto';
 
 @Injectable()
 export class PlaygroundService {
@@ -11,5 +12,9 @@ export class PlaygroundService {
     authToken: string,
   ): Promise<GetPlaygroundUserInfoResponseDto> {
     return await this.playgroundRepository.getUser(authToken);
+  }
+
+  async getPlaygroundSopticles(): Promise<GetSopticlesResponseDto[]> {
+    return await this.playgroundRepository.getSopticles();
   }
 }

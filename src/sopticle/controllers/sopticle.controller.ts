@@ -17,8 +17,9 @@ export class SopticleController {
   async getSopticleList(
     @Query() getSopticleListRequestDto: GetSopticleListRequestDto,
   ): Promise<PaginateResponseDto<SopticleResponseDto>> {
+    const sopticles = await this.sopticleService.getSopticles();
     return new PaginateResponseDto<SopticleResponseDto>(
-      [],
+      sopticles,
       0,
       getSopticleListRequestDto.getLimit(),
       getSopticleListRequestDto.pageNo,
