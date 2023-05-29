@@ -9,8 +9,8 @@ import { PlaygroundService } from '../../internal/playground/playground.service'
 import { ScraperService } from '../../scraper/scraper.service';
 import { GetSopticlesResponseDto } from '../../internal/playground/dto/get-playground-sopticle-response.dto';
 import { CreateScraperResponseDto } from '../../scraper/dto/create-scraper-response.dto';
-import { Part } from '../../common/type';
 import { SopticleResponseDto } from '../dtos/sopticle-response.dto';
+import { SopticleFactoryService } from './sopticle-factory.service';
 
 @Injectable()
 export class SopticleService {
@@ -21,6 +21,7 @@ export class SopticleService {
     private readonly sopticleLikeRepository: Repository<SopticleLike>,
     private readonly playgroundService: PlaygroundService,
     private readonly scrapperService: ScraperService,
+    private readonly sopticleFactoryService: SopticleFactoryService,
   ) {}
 
   async getSopticles(): Promise<SopticleResponseDto[]> {
@@ -41,23 +42,33 @@ export class SopticleService {
       willParsingSopticleUrl,
     );
 
-    return this.toSopticleResponseDto([...newSopticles, ...sopticles]);
+    return this.toSopticleResponseDto([
+      ...newSopticles,
+      ...sopticles.filter((sopticle) => sopticle.load),
+    ]);
   }
 
   toSopticleResponseDto(sopticles: Sopticle[]): SopticleResponseDto[] {
-    return sopticles.map((sopticle) => ({
-      id: sopticle.id,
-      part: sopticle.part,
-      generation: sopticle.generation,
-      thumbnailUrl: sopticle.thumbnailUrl,
-      title: sopticle.title,
-      description: sopticle.description,
-      author: sopticle.authorName,
-      authorProfileImageUrl: sopticle.authorProfileImageUrl,
-      sopticleUrl: sopticle.sopticleUrl,
-      uploadedAt: sopticle.createdAt,
-      likeCount: sopticle.likeCount,
-    }));
+    return sopticles
+      .filter(
+        (sopticle) =>
+          sopticle.thumbnailUrl && sopticle.description && sopticle.title,
+      )
+      .map((sopticle) => {
+        return {
+          id: sopticle.id,
+          part: sopticle.part,
+          generation: sopticle.generation,
+          thumbnailUrl: sopticle.thumbnailUrl as string,
+          title: sopticle.title as string,
+          description: sopticle.description as string,
+          author: sopticle.authorName,
+          authorProfileImageUrl: sopticle.authorProfileImageUrl,
+          sopticleUrl: sopticle.sopticleUrl,
+          uploadedAt: sopticle.createdAt,
+          likeCount: sopticle.likeCount,
+        };
+      });
   }
 
   private findDistinctSopticles(
@@ -83,20 +94,17 @@ export class SopticleService {
             return null;
           });
       if (scrapResult === null) {
+        await this.sopticleRepository.create(
+          this.sopticleFactoryService.createNewLoadFail(pgSopticle),
+        );
         continue;
       }
 
-      const sopticle = new Sopticle();
+      const sopticle = this.sopticleFactoryService.createNewLoadSuccess(
+        pgSopticle,
+        scrapResult,
+      );
 
-      sopticle.part = pgSopticle.writers[0].part as Part;
-      sopticle.generation = pgSopticle.writers[0].generation;
-      sopticle.authorName = pgSopticle.writers[0].name;
-      sopticle.authorId = pgSopticle.writers[0].id;
-      sopticle.authorProfileImageUrl = null;
-      sopticle.title = scrapResult.title;
-      sopticle.thumbnailUrl = scrapResult.thumbnailUrl;
-      sopticle.description = scrapResult.description;
-      sopticle.sopticleUrl = scrapResult.sopticleUrl;
       const result = await this.sopticleRepository.create(sopticle);
       sopticles.push(result);
     }
