@@ -34,14 +34,11 @@ export class Sopticle {
   @Column({ length: 20 })
   authorName: string;
 
-  @Column({ length: 500, nullable: true })
-  authorProfileImageUrl: string;
+  @Column({ type: 'varchar', length: 500, nullable: true })
+  authorProfileImageUrl: string | null;
 
   @Column({ length: 500 })
   sopticleUrl: string;
-
-  @Column()
-  uploadedAt: Date;
 
   @CreateDateColumn()
   createdAt: Date;
