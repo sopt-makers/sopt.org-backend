@@ -18,4 +18,5 @@ export interface PlaygroundUser {
 export enum SopticlePlatformEnum {
   TISTORY = 'tistory',
   VELOG = 'velog',
+  Brunch = 'Brunch',
 }
