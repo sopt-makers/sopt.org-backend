@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as _ from 'lodash';
@@ -33,7 +33,7 @@ export class SopticleService {
       pgSopticles,
       sopticles,
     );
-
+    console.log('pgSopticles', pgSopticles);
     if (_.isEmpty(willParsingSopticleUrl)) {
       return this.toSopticleResponseDto(sopticles);
     }
@@ -110,5 +110,40 @@ export class SopticleService {
     }
 
     return sopticles;
+  }
+
+  //todo transaction
+  async like({
+    id,
+    session,
+  }: {
+    session: string;
+    id: number;
+  }): Promise<SopticleLike> {
+    const sopticle = await this.sopticleRepository.findOne({
+      where: {
+        id,
+      },
+    });
+
+    if (!sopticle) {
+      throw new BadRequestException('NotFoundSopticle id' + id);
+    }
+
+    const alreadyLike = await this.sopticleLikeRepository
+      .createQueryBuilder('sopticleLike')
+      .where('sopticleLike.sopticleId = :sopticleId', { sopticleId: id })
+      .andWhere('sopticleLike.session = :session', { session })
+      .getExists();
+
+    if (alreadyLike) {
+      throw new BadRequestException('AlreadyLike');
+    }
+    const sopticleLike = new SopticleLike();
+    sopticleLike.sopticle = sopticle;
+    sopticle.likeCount += 1;
+    await this.sopticleLikeRepository.save(sopticleLike);
+    await this.sopticleRepository.save(sopticle);
+    return sopticleLike;
   }
 }

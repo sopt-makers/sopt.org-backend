@@ -19,9 +19,6 @@ export class SopticleLike {
   @Column('varchar', { length: 50 })
   sessionId: string;
 
-  @Column('varchar', { length: 50 })
-  ipAddress: string;
-
   @CreateDateColumn()
   createdAt: Date;
 }

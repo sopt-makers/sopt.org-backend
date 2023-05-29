@@ -1,4 +1,4 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Post, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import { SopticleService } from '../services/sopticle.service';
@@ -6,6 +6,8 @@ import { GetSopticleListRequestDto } from '../dtos/get-sopticle-list-request.dto
 import { PaginateResponseDto } from '../../utils/paginate-response.dto';
 import { SopticleResponseDto } from '../dtos/sopticle-response.dto';
 import { GetSopticleListDocs } from '../../../docs/sopticle/sopticle.swagger';
+import { Cookies, NotNullPipe } from '../../common/decorator/cookie.decorator';
+import { SopticleLike } from '../entities/sopticleLike.entity';
 
 @ApiTags('Sopticle')
 @Controller('sopticle')
@@ -24,5 +26,13 @@ export class SopticleController {
       getSopticleListRequestDto.getLimit(),
       getSopticleListRequestDto.pageNo,
     );
+  }
+
+  @Post(':id/like')
+  async likeSopticle(
+    @Query('id') id: number,
+    @Cookies('session', NotNullPipe) session: string,
+  ): Promise<SopticleLike> {
+    return await this.sopticleService.like({ id, session });
   }
 }
