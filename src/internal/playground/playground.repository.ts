@@ -54,6 +54,7 @@ export class PlaygroundRepository {
         .pipe(map((response) => response.data))
         .pipe(
           catchError((err) => {
+            console.log(err.data);
             throw new InternalServerErrorException('API 서버 오류', err);
           }),
         ),

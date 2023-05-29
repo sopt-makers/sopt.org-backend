@@ -15,6 +15,10 @@ export class PlaygroundService {
   }
 
   async getPlaygroundSopticles(): Promise<GetSopticlesResponseDto[]> {
-    return await this.playgroundRepository.getSopticles();
+    try {
+      return await this.playgroundRepository.getSopticles();
+    } catch (err) {
+      return [];
+    }
   }
 }
