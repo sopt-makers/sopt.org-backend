@@ -5,6 +5,7 @@ import { catchError, lastValueFrom, map } from 'rxjs';
 
 import { EnvConfig } from '../../configs/env.config';
 import { GetPlaygroundUserInfoResponseDto } from './dto/get-playground-user-info-response.dto';
+import { GetSopticlesResponseDto } from './dto/get-playground-sopticle-response.dto';
 
 @Injectable()
 export class PlaygroundRepository {
@@ -25,6 +26,28 @@ export class PlaygroundRepository {
           {
             headers: {
               Authorization: authToken,
+            },
+          },
+        )
+        .pipe(map((response) => response.data))
+        .pipe(
+          catchError((err) => {
+            throw new InternalServerErrorException('API 서버 오류', err);
+          }),
+        ),
+    );
+  }
+
+  async getSopticles(): Promise<GetSopticlesResponseDto[]> {
+    return await lastValueFrom(
+      this.httpService
+        .get<GetSopticlesResponseDto[]>(
+          `${this.API_URL}/internal/api/v1/sopticles`,
+          {
+            headers: {
+              Authorization: this.configService.get(
+                'PLAYGROUND_API_URL_JWT_TOKEN',
+              ),
             },
           },
         )
