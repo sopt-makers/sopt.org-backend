@@ -19,14 +19,14 @@ export class Sopticle {
   @Column()
   generation: number;
 
-  @Column({ length: 500, nullable: true })
-  thumbnailUrl: string;
+  @Column({ type: 'varchar', length: 500, nullable: true })
+  thumbnailUrl: string | null;
 
-  @Column({ length: 100 })
-  title: string;
+  @Column({ type: 'varchar', length: 100 })
+  title: string | null;
 
-  @Column({ length: 300 })
-  description: string;
+  @Column({ type: 'varchar', length: 300 })
+  description: string | null;
 
   @Column()
   authorId: number;
@@ -39,6 +39,9 @@ export class Sopticle {
 
   @Column({ length: 500 })
   sopticleUrl: string;
+
+  @Column({ comment: '스크랩 로드 여부. 로드 실패시 false, 성공시 true' })
+  load: boolean;
 
   @CreateDateColumn()
   createdAt: Date;

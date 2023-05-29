@@ -23,7 +23,6 @@ export class SopticleResponseDto {
 
   @ApiProperty({
     type: String,
-    nullable: true,
     description: '솝티클 썸네일 이미지',
   })
   readonly thumbnailUrl: string;
