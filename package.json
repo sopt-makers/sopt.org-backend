@@ -41,7 +41,6 @@
     "cache-manager": "^4.0.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
-    "cookie-parser": "^1.4.6",
     "dayjs": "^1.11.7",
     "joi": "^17.7.0",
     "lodash": "^4.17.21",
