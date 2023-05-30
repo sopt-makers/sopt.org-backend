@@ -6,12 +6,19 @@ import { EnvConfig } from '../configs/env.config';
 @Injectable()
 export class PuppeteerService implements OnModuleInit, OnModuleDestroy {
   private browser: puppeteer.Browser;
+  private readonly headless: false | 'new';
 
-  constructor(private readonly configService: ConfigService<EnvConfig>) {}
+  constructor(private readonly configService: ConfigService<EnvConfig>) {
+    if (this.configService.get('NODE_ENV') === 'local') {
+      this.headless = false;
+    } else {
+      this.headless = 'new';
+    }
+  }
 
   async onModuleInit() {
     this.browser = await puppeteer.launch({
-      headless: this.configService.get('NODE_ENV') !== 'production',
+      headless: this.headless,
     });
   }
 
@@ -21,7 +28,9 @@ export class PuppeteerService implements OnModuleInit, OnModuleDestroy {
 
   async getBrowser() {
     if (!this.browser) {
-      this.browser = await puppeteer.launch();
+      this.browser = await puppeteer.launch({
+        headless: this.headless,
+      });
     }
     return this.browser;
   }
