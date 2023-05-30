@@ -1,9 +1,11 @@
+import { Module, ValidationPipe } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { APP_PIPE } from '@nestjs/core';
+import { TypeOrmModule } from '@nestjs/typeorm';
+
 import { MemberModule } from './members/memberModule';
 import { StudyModule } from './study/study.module';
 import { AboutSoptModule } from './aboutsopt/aboutsopt.module';
-import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeORMFactory } from 'src/configs/typeorm.config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -17,6 +19,8 @@ import { ReviewsModule } from './reviews/reviews.module';
 import { FileModule } from './file/file.module';
 import { AuthModule } from './auth/auth.module';
 import { CacheModule } from './common/cache';
+import { SopticleModule } from './sopticle/sopticle.module';
+import { InternalServiceModule } from './internal/internalService.module';
 
 @Module({
   imports: [
@@ -38,8 +42,16 @@ import { CacheModule } from './common/cache';
     MemberModule,
     StudyModule,
     CacheModule.forRoot(),
+    SopticleModule,
+    InternalServiceModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_PIPE,
+      useFactory: () => new ValidationPipe({ transform: true }),
+    },
+  ],
 })
 export class AppModule {}
