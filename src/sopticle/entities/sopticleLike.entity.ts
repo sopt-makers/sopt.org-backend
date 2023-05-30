@@ -2,12 +2,14 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
 import { Sopticle } from './sopticle.entity';
 
+@Index('sopticle_like_pk', ['id'], { unique: true })
 @Entity('SopticleLike', { schema: 'public' })
 export class SopticleLike {
   @PrimaryGeneratedColumn()

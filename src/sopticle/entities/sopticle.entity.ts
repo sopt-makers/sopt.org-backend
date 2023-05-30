@@ -3,11 +3,13 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { SopticleLike } from './sopticleLike.entity';
 
+@Index('sopticle_pk', ['id'], { unique: true })
 @Entity('Sopticle', { schema: 'public' })
 export class Sopticle {
   @PrimaryGeneratedColumn('increment', { type: 'integer', name: 'id' })
