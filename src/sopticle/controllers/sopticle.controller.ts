@@ -5,7 +5,6 @@ import {
   ParseIntPipe,
   Post,
   Query,
-  Req,
   Headers,
   BadRequestException,
 } from '@nestjs/common';
@@ -52,7 +51,6 @@ export class SopticleController {
   async unLikeSopticle(
     @Param('id', ParseIntPipe) id: number,
     @Headers('session-id') session: string | null,
-    @Req() req: Request,
   ): Promise<LikeSopticleResponseDto> {
     if (!session) {
       throw new BadRequestException('session-id is required');
