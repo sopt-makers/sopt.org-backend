@@ -21,7 +21,6 @@ import { AuthModule } from './auth/auth.module';
 import { CacheModule } from './common/cache';
 import { SopticleModule } from './sopticle/sopticle.module';
 import { InternalServiceModule } from './internal/internalService.module';
-import { ScraperModule } from './scraper/scraper.module';
 
 @Module({
   imports: [
@@ -45,7 +44,6 @@ import { ScraperModule } from './scraper/scraper.module';
     CacheModule.forRoot(),
     SopticleModule,
     InternalServiceModule,
-    ScraperModule,
   ],
   controllers: [AppController],
   providers: [
