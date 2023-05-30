@@ -5,9 +5,12 @@ import { SopticleService } from '../services/sopticle.service';
 import { GetSopticleListRequestDto } from '../dtos/get-sopticle-list-request.dto';
 import { PaginateResponseDto } from '../../utils/paginate-response.dto';
 import { SopticleResponseDto } from '../dtos/sopticle-response.dto';
-import { GetSopticleListDocs } from '../../../docs/sopticle/sopticle.swagger';
+import {
+  GetSopticleListDocs,
+  LikeSopticleDocs,
+} from '../../../docs/sopticle/sopticle.swagger';
 import { Cookies, NotNullPipe } from '../../common/decorator/cookie.decorator';
-import { SopticleLike } from '../entities/sopticleLike.entity';
+import { LikeSopticleResponseDto } from '../dtos/like-sopticle-response.dto';
 
 @ApiTags('Sopticle')
 @Controller('sopticle')
@@ -29,10 +32,11 @@ export class SopticleController {
   }
 
   @Post(':id/like')
+  @LikeSopticleDocs()
   async likeSopticle(
     @Query('id') id: number,
     @Cookies('session', NotNullPipe) session: string,
-  ): Promise<SopticleLike> {
+  ): Promise<LikeSopticleResponseDto> {
     return await this.sopticleService.like({ id, session });
   }
 }

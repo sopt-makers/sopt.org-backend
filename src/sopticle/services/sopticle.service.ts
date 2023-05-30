@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as _ from 'lodash';
@@ -11,6 +15,7 @@ import { GetSopticlesResponseDto } from '../../internal/playground/dto/get-playg
 import { CreateScraperResponseDto } from '../../scraper/dto/create-scraper-response.dto';
 import { SopticleResponseDto } from '../dtos/sopticle-response.dto';
 import { SopticleFactoryService } from './sopticle-factory.service';
+import { LikeSopticleResponseDto } from '../dtos/like-sopticle-response.dto';
 
 @Injectable()
 export class SopticleService {
@@ -119,7 +124,7 @@ export class SopticleService {
   }: {
     session: string;
     id: number;
-  }): Promise<SopticleLike> {
+  }): Promise<LikeSopticleResponseDto> {
     const sopticle = await this.sopticleRepository.findOne({
       where: {
         id,
@@ -127,7 +132,7 @@ export class SopticleService {
     });
 
     if (!sopticle) {
-      throw new BadRequestException('NotFoundSopticle id' + id);
+      throw new NotFoundException('NotFoundSopticle id' + id);
     }
 
     const alreadyLike = await this.sopticleLikeRepository
@@ -144,6 +149,12 @@ export class SopticleService {
     sopticle.likeCount += 1;
     await this.sopticleLikeRepository.save(sopticleLike);
     await this.sopticleRepository.save(sopticle);
-    return sopticleLike;
+
+    return {
+      id: sopticleLike.id,
+      sopticleId: sopticle.id,
+      sessionId: sopticleLike.sessionId,
+      createdAt: sopticleLike.createdAt,
+    };
   }
 }
