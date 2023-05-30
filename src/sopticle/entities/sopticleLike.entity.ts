@@ -2,12 +2,14 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
 import { Sopticle } from './sopticle.entity';
 
+@Index('sopticle_like_pk', ['id'], { unique: true })
 @Entity('SopticleLike', { schema: 'public' })
 export class SopticleLike {
   @PrimaryGeneratedColumn()
@@ -18,9 +20,6 @@ export class SopticleLike {
 
   @Column('varchar', { length: 50 })
   sessionId: string;
-
-  @Column('varchar', { length: 50 })
-  ipAddress: string;
 
   @CreateDateColumn()
   createdAt: Date;

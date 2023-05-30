@@ -23,7 +23,6 @@ export class SopticleResponseDto {
 
   @ApiProperty({
     type: String,
-    nullable: true,
     description: '솝티클 썸네일 이미지',
   })
   readonly thumbnailUrl: string;
@@ -51,7 +50,7 @@ export class SopticleResponseDto {
     nullable: true,
     description: '작성자 프로필 이미지',
   })
-  readonly authorProfileImageUrl: string;
+  readonly authorProfileImageUrl: string | null;
 
   @ApiProperty({
     type: String,

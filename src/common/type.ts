@@ -23,3 +23,9 @@ export interface PlaygroundUser {
   profileImage: string | null;
   hasProfile: boolean;
 }
+
+export enum SopticlePlatformEnum {
+  TISTORY = 'tistory',
+  VELOG = 'velog',
+  Brunch = 'Brunch',
+}
