@@ -146,9 +146,8 @@ export class SopticleService {
     }
     const sopticleLike = new SopticleLike();
     sopticleLike.sopticle = sopticle;
-    sopticle.likeCount += 1;
     await this.sopticleLikeRepository.save(sopticleLike);
-    await this.sopticleRepository.save(sopticle);
+    await this.sopticleRepository.increment({ id }, 'likeCount', 1);
 
     return {
       id: sopticleLike.id,
