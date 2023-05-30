@@ -39,4 +39,12 @@ export class SopticleController {
   ): Promise<LikeSopticleResponseDto> {
     return await this.sopticleService.like({ id, session });
   }
+
+  @Post('id/unlike')
+  async unLikeSopticle(
+    @Query('id') id: number,
+    @Cookies('session', NotNullPipe) session: string,
+  ): Promise<LikeSopticleResponseDto> {
+    return await this.sopticleService.unLike({ id, session });
+  }
 }

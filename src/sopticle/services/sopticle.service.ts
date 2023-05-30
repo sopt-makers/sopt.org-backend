@@ -157,4 +157,42 @@ export class SopticleService {
       createdAt: sopticleLike.createdAt,
     };
   }
+
+  async unLike({
+    id,
+    session,
+  }: {
+    session: string;
+    id: number;
+  }): Promise<LikeSopticleResponseDto> {
+    const sopticle = await this.sopticleRepository.findOne({
+      where: {
+        id,
+      },
+    });
+
+    if (!sopticle) {
+      throw new NotFoundException('NotFoundSopticle id' + id);
+    }
+
+    const sopticleLike = await this.sopticleLikeRepository
+      .createQueryBuilder('sopticleLike')
+      .where('sopticleLike.sopticleId = :sopticleId', { sopticleId: id })
+      .andWhere('sopticleLike.session = :session', { session })
+      .getOne();
+
+    if (!sopticleLike) {
+      throw new BadRequestException('Like 하지 않은 상태입니다.');
+    }
+
+    await this.sopticleRepository.decrement({ id }, 'likeCount', 1);
+    await this.sopticleLikeRepository.delete({ id: sopticleLike.id });
+
+    return {
+      id: sopticleLike.id,
+      sopticleId: sopticle.id,
+      sessionId: sopticleLike.sessionId,
+      createdAt: sopticleLike.createdAt,
+    };
+  }
 }
