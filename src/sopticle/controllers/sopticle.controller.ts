@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  Query,
+  Req,
+  Headers,
+  BadRequestException,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import { SopticleService } from '../services/sopticle.service';
@@ -8,8 +18,8 @@ import { SopticleResponseDto } from '../dtos/sopticle-response.dto';
 import {
   GetSopticleListDocs,
   LikeSopticleDocs,
+  UnLikeSopticleDocs,
 } from '../../../docs/sopticle/sopticle.swagger';
-import { Cookies, NotNullPipe } from '../../common/decorator/cookie.decorator';
 import { LikeSopticleResponseDto } from '../dtos/like-sopticle-response.dto';
 
 @ApiTags('Sopticle')
@@ -34,17 +44,25 @@ export class SopticleController {
   @Post(':id/like')
   @LikeSopticleDocs()
   async likeSopticle(
-    @Query('id') id: number,
-    @Cookies('session', NotNullPipe) session: string,
+    @Param('id', ParseIntPipe) id: number,
+    @Headers('session-id') session: string | null,
   ): Promise<LikeSopticleResponseDto> {
+    if (!session) {
+      throw new BadRequestException('session-id is required');
+    }
     return await this.sopticleService.like({ id, session });
   }
 
-  @Post('id/unlike')
+  @Post(':id/unlike')
+  @UnLikeSopticleDocs()
   async unLikeSopticle(
-    @Query('id') id: number,
-    @Cookies('session', NotNullPipe) session: string,
+    @Param('id', ParseIntPipe) id: number,
+    @Headers('session-id') session: string | null,
+    @Req() req: Request,
   ): Promise<LikeSopticleResponseDto> {
+    if (!session) {
+      throw new BadRequestException('session-id is required');
+    }
     return await this.sopticleService.unLike({ id, session });
   }
 }
