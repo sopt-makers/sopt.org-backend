@@ -1,4 +1,5 @@
 import { MeetingJoinablePart } from './study-response.dto';
+import { CrewPageApiMetaResponseDto } from '../../common/type';
 
 export interface CrewMeetingResponseDto {
   readonly statusCode: number;
@@ -7,6 +8,7 @@ export interface CrewMeetingResponseDto {
 
 export interface CrewMeetingListDto {
   readonly meetings: CrewMeetingDto[];
+  readonly meta: CrewPageApiMetaResponseDto;
 }
 
 export interface CrewMeetingDto {

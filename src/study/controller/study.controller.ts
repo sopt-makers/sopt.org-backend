@@ -10,6 +10,6 @@ export class StudyController {
   @Get('')
   @GetStudyDocs()
   async getAllStudy(): Promise<StudyResponseDto[]> {
-    return this.studyService.findAll();
+    return this.studyService.getStudies();
   }
 }

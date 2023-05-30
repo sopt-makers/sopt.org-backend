@@ -1,63 +1,53 @@
-import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
-import { catchError, lastValueFrom, map, of } from 'rxjs';
-import { ConfigService } from '@nestjs/config';
 
 import { StudyResponseDto } from '../dtos/study-response.dto';
-import { EnvConfig } from 'src/configs/env.config';
-import {
-  CrewMeetingDto,
-  CrewMeetingResponseDto,
-} from '../dtos/crew-study-response.dto';
+import { CrewMeetingDto } from '../dtos/crew-study-response.dto';
+import { StudyRepository } from '../repository/study.repository';
 import { Cacheable } from '../../common/cache';
 
 @Injectable()
 export class StudyService {
-  constructor(
-    private readonly httpService: HttpService,
-    private readonly configService: ConfigService<EnvConfig>,
-  ) {}
+  constructor(private readonly studyRepository: StudyRepository) {}
 
   @Cacheable({
-    ttl: 30 * 60,
+    ttl: 7 * 24 * 60 * 60,
     validate: (value: any) => !(value instanceof Error),
   })
-  async findAll(): Promise<StudyResponseDto[]> {
-    const apiUrl = this.configService.get('CREW_API_URL');
+  async getStudies(): Promise<StudyResponseDto[]> {
+    const MAX_TAKE_COUNT = 50;
+    const response = await this.studyRepository.findAll({
+      page: 1,
+      limit: MAX_TAKE_COUNT,
+    });
 
-    return await lastValueFrom(
-      this.httpService
-        .get<CrewMeetingResponseDto>(
-          `${apiUrl}/meeting?isOnlyActiveGeneration=${true}`,
-        )
-        .pipe(
-          map((res) => res.data.data.meetings),
-          map((meetings: CrewMeetingDto[]) => {
-            return meetings.map((meeting: CrewMeetingDto): StudyResponseDto => {
-              return {
-                id: meeting.id,
-                generation: meeting.targetActiveGeneration,
-                parts: meeting.joinableParts,
-                title: meeting.title,
-                imageUrl: meeting.imageURL.length
-                  ? meeting.imageURL[0].url
-                  : null,
-                startDate: meeting.startDate,
-                endDate: meeting.endDate,
-                memberCount: meeting.appliedInfo.length,
-              };
-            });
-          }),
-          catchError((error) => {
-            console.error(`Get Study Failed: ${error}`);
-            return of([]);
-          }),
-        ),
+    return response.data.meetings.map(
+      (meeting: CrewMeetingDto): StudyResponseDto => {
+        return {
+          id: meeting.id,
+          generation: meeting.targetActiveGeneration,
+          parts: meeting.joinableParts,
+          title: meeting.title,
+          imageUrl: meeting.imageURL.length ? meeting.imageURL[0].url : null,
+          startDate: meeting.startDate,
+          endDate: meeting.endDate,
+          memberCount: meeting.appliedInfo.length,
+        };
+      },
     );
   }
 
-  async findByGeneration(generation: number): Promise<StudyResponseDto[]> {
-    const allStudies = await this.findAll();
-    return allStudies.filter((study) => study.generation === generation);
+  /**
+   * 공홈 AboutTab에서 StudyCount를 집계할때 사용됩니다.
+   */
+  async getStudyCount(): Promise<number | null> {
+    try {
+      const findStudyResponse = await this.studyRepository.findAll({
+        page: 1,
+        limit: 1,
+      });
+      return findStudyResponse.data.meta.itemCount;
+    } catch (error) {
+      return null;
+    }
   }
 }
