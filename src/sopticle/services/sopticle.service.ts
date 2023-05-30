@@ -16,6 +16,8 @@ import { CreateScraperResponseDto } from '../../scraper/dto/create-scraper-respo
 import { SopticleResponseDto } from '../dtos/sopticle-response.dto';
 import { SopticleFactoryService } from './sopticle-factory.service';
 import { LikeSopticleResponseDto } from '../dtos/like-sopticle-response.dto';
+import { GetSopticleListRequestDto } from '../dtos/get-sopticle-list-request.dto';
+import { PaginateResponseDto } from '../../utils/paginate-response.dto';
 
 @Injectable()
 export class SopticleService {
@@ -51,6 +53,27 @@ export class SopticleService {
       ...newSopticles,
       ...sopticles.filter((sopticle) => sopticle.load),
     ]);
+  }
+
+  async paginateSopticles(
+    dto: GetSopticleListRequestDto,
+  ): Promise<PaginateResponseDto<SopticleResponseDto>> {
+    const sopticleQueryBuilder =
+      await this.sopticleRepository.createQueryBuilder('Sopticle');
+
+    sopticleQueryBuilder.where('Sopticle.load = :load', { load: true });
+    sopticleQueryBuilder.take(dto.getLimit());
+    sopticleQueryBuilder.skip(dto.getOffset());
+    sopticleQueryBuilder.orderBy('id', 'DESC');
+    const [sopticles, sopticleCount] =
+      await sopticleQueryBuilder.getManyAndCount();
+
+    return new PaginateResponseDto<SopticleResponseDto>(
+      this.toSopticleResponseDto(sopticles),
+      sopticleCount,
+      dto.getLimit(),
+      dto.pageNo,
+    );
   }
 
   toSopticleResponseDto(sopticles: Sopticle[]): SopticleResponseDto[] {
