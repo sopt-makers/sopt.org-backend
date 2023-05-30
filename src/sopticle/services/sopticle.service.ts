@@ -137,8 +137,8 @@ export class SopticleService {
 
     const alreadyLike = await this.sopticleLikeRepository
       .createQueryBuilder('sopticleLike')
-      .where('sopticleLike.sopticleId = :sopticleId', { sopticleId: id })
-      .andWhere('sopticleLike.session = :session', { session })
+      .where('sopticleLike.sopticle.id = :sopticleId', { sopticleId: id })
+      .andWhere('sopticleLike.sessionId = :session', { session })
       .getExists();
 
     if (alreadyLike) {
@@ -146,6 +146,7 @@ export class SopticleService {
     }
     const sopticleLike = new SopticleLike();
     sopticleLike.sopticle = sopticle;
+    sopticleLike.sessionId = session;
     await this.sopticleLikeRepository.save(sopticleLike);
     await this.sopticleRepository.increment({ id }, 'likeCount', 1);
 
@@ -176,8 +177,8 @@ export class SopticleService {
 
     const sopticleLike = await this.sopticleLikeRepository
       .createQueryBuilder('sopticleLike')
-      .where('sopticleLike.sopticleId = :sopticleId', { sopticleId: id })
-      .andWhere('sopticleLike.session = :session', { session })
+      .where('sopticleLike.sopticle.id = :sopticleId', { sopticleId: id })
+      .andWhere('sopticleLike.sessionId = :session', { session })
       .getOne();
 
     if (!sopticleLike) {
