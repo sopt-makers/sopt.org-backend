@@ -5,11 +5,14 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import * as _ from 'lodash';
 
 import { Sopticle } from '../entities/sopticle.entity';
 import { SopticleLike } from '../entities/sopticleLike.entity';
 import { PlaygroundService } from '../../internal/playground/playground.service';
+import { ScraperService } from '../../scraper/scraper.service';
 import { GetSopticlesResponseDto } from '../../internal/playground/dto/get-playground-sopticle-response.dto';
+import { CreateScraperResponseDto } from '../../scraper/dto/create-scraper-response.dto';
 import { SopticleResponseDto } from '../dtos/sopticle-response.dto';
 import { SopticleFactoryService } from './sopticle-factory.service';
 import { LikeSopticleResponseDto } from '../dtos/like-sopticle-response.dto';
@@ -24,8 +27,33 @@ export class SopticleService {
     @InjectRepository(SopticleLike)
     private readonly sopticleLikeRepository: Repository<SopticleLike>,
     private readonly playgroundService: PlaygroundService,
+    private readonly scrapperService: ScraperService,
     private readonly sopticleFactoryService: SopticleFactoryService,
   ) {}
+
+  async getSopticles(): Promise<SopticleResponseDto[]> {
+    const pgSopticles = await this.playgroundService.getPlaygroundSopticles();
+    const sopticles = await this.sopticleRepository.find({
+      order: { id: 'DESC' },
+    });
+    const willParsingSopticleUrl = this.findDistinctSopticles(
+      pgSopticles,
+      sopticles,
+    );
+    console.log('pgSopticles', pgSopticles);
+    if (_.isEmpty(willParsingSopticleUrl)) {
+      return this.toSopticleResponseDto(sopticles);
+    }
+
+    const newSopticles: Sopticle[] = await this.parsingSopticles(
+      willParsingSopticleUrl,
+    );
+
+    return this.toSopticleResponseDto([
+      ...newSopticles,
+      ...sopticles.filter((sopticle) => sopticle.load),
+    ]);
+  }
 
   async paginateSopticles(
     dto: GetSopticleListRequestDto,
@@ -79,6 +107,37 @@ export class SopticleService {
     return pgSopticles.filter(
       (pgSopticle) => !sopticleUrls.includes(pgSopticle.link),
     );
+  }
+
+  async parsingSopticles(
+    willParsingSopticleUrl: GetSopticlesResponseDto[],
+  ): Promise<Sopticle[]> {
+    const sopticles: Sopticle[] = [];
+    for (const pgSopticle of willParsingSopticleUrl) {
+      const scrapResult: CreateScraperResponseDto | null =
+        await this.scrapperService
+          .scrap({ sopticleUrl: pgSopticle.link })
+          .catch((err) => {
+            console.error('scrapError', err);
+            return null;
+          });
+      if (scrapResult === null) {
+        await this.sopticleRepository.create(
+          this.sopticleFactoryService.createNewLoadFail(pgSopticle),
+        );
+        continue;
+      }
+
+      const sopticle = this.sopticleFactoryService.createNewLoadSuccess(
+        pgSopticle,
+        scrapResult,
+      );
+
+      const result = await this.sopticleRepository.create(sopticle);
+      sopticles.push(result);
+    }
+
+    return sopticles;
   }
 
   //todo transaction
