@@ -21,6 +21,9 @@ COPY --from=build /app/package.json ./package.json
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/yarn.lock ./yarn.lock
 COPY --from=build /app/dist ./dist
+RUN apk update && apk add --no-cache chromium ##
+
+ENV CHROME_BIN=/usr/bin/chromium-browser
 
 EXPOSE 3000
 
