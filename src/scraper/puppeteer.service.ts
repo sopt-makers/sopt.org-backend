@@ -18,7 +18,6 @@ export class PuppeteerService implements OnModuleInit, OnModuleDestroy {
       this.options = {
         headless: 'new',
         args: ['--no-sandbox', '--disable-setuid-sandbox'],
-        executablePath: '/usr/bin/chromium-browser', // docker 환경에서는 chromium path를 직접 지정
       };
     }
   }
