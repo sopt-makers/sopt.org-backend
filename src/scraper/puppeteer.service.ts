@@ -16,7 +16,7 @@ export class PuppeteerService implements OnModuleInit, OnModuleDestroy {
       };
     } else {
       this.options = {
-        headless: true,
+        headless: 'new',
         args: ['--no-sandbox', '--disable-setuid-sandbox'],
       };
     }
