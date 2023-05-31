@@ -7,6 +7,7 @@ import {
   Query,
   Headers,
   BadRequestException,
+  Body,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
@@ -17,9 +18,12 @@ import { SopticleResponseDto } from '../dtos/sopticle-response.dto';
 import {
   GetSopticleListDocs,
   LikeSopticleDocs,
+  ScrapSopticleDocs,
   UnLikeSopticleDocs,
 } from '../../../docs/sopticle/sopticle.swagger';
 import { LikeSopticleResponseDto } from '../dtos/like-sopticle-response.dto';
+import { CreateSopticleDto } from '../dtos/create-sopticle.dto';
+import { CreateScraperResponseDto } from '../../scraper/dto/create-scraper-response.dto';
 
 @ApiTags('Sopticle')
 @Controller('sopticle')
@@ -32,6 +36,14 @@ export class SopticleController {
     @Query() getSopticleListRequestDto: GetSopticleListRequestDto,
   ): Promise<PaginateResponseDto<SopticleResponseDto>> {
     return this.sopticleService.paginateSopticles(getSopticleListRequestDto);
+  }
+
+  @Post('scrap')
+  @ScrapSopticleDocs()
+  scrapSopticle(
+    @Body() dto: CreateSopticleDto,
+  ): Promise<CreateScraperResponseDto> {
+    return this.sopticleService.scrapSopticle(dto);
   }
 
   @Post(':id/like')

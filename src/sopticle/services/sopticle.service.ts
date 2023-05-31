@@ -18,6 +18,7 @@ import { SopticleFactoryService } from './sopticle-factory.service';
 import { LikeSopticleResponseDto } from '../dtos/like-sopticle-response.dto';
 import { GetSopticleListRequestDto } from '../dtos/get-sopticle-list-request.dto';
 import { PaginateResponseDto } from '../../utils/paginate-response.dto';
+import { CreateSopticleDto } from '../dtos/create-sopticle.dto';
 
 @Injectable()
 export class SopticleService {
@@ -217,5 +218,11 @@ export class SopticleService {
       sessionId: sopticleLike.sessionId,
       createdAt: sopticleLike.createdAt,
     };
+  }
+
+  async scrapSopticle(
+    dto: CreateSopticleDto,
+  ): Promise<CreateScraperResponseDto> {
+    return await this.scrapperService.scrap(dto);
   }
 }

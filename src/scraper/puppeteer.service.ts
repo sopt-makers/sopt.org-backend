@@ -10,7 +10,7 @@ export class PuppeteerService implements OnModuleInit, OnModuleDestroy {
   private readonly options: PuppeteerLaunchOptions;
 
   constructor(private readonly configService: ConfigService<EnvConfig>) {
-    if (this.configService.get('NODE_ENV') === 'local') {
+    if (this.configService.get('LOCAL')) {
       this.options = {
         headless: false,
       };
