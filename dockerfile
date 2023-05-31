@@ -17,11 +17,6 @@ FROM node:16-alpine AS production
 
 WORKDIR /app
 
-COPY package*.json ./
-COPY yarn.lock ./
-
-RUN yarn install --production
-
 COPY --from=build /app/dist ./dist
 
 EXPOSE 3000
