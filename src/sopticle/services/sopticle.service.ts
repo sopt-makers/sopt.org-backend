@@ -31,6 +31,7 @@ export class SopticleService {
 
   async paginateSopticles(
     dto: GetSopticleListRequestDto,
+    sessionId: string,
   ): Promise<PaginateResponseDto<SopticleResponseDto>> {
     const { part } = dto;
     const sopticleQueryBuilder = await this.sopticleRepository
@@ -47,35 +48,59 @@ export class SopticleService {
     const [sopticles, sopticleCount] =
       await sopticleQueryBuilder.getManyAndCount();
 
+    const sopticleIds = sopticles.map((sopticle) => sopticle.id);
+    const sopticleLikes = await this.getLikedIdsBySession(
+      sopticleIds,
+      sessionId,
+    );
+
     return new PaginateResponseDto<SopticleResponseDto>(
-      this.toSopticleResponseDto(sopticles),
+      this.toSopticleResponseDto(sopticles, sopticleLikes),
       sopticleCount,
       dto.getLimit(),
       dto.pageNo,
     );
   }
 
-  toSopticleResponseDto(sopticles: Sopticle[]): SopticleResponseDto[] {
-    return sopticles
-      .filter(
-        (sopticle) =>
-          sopticle.thumbnailUrl && sopticle.description && sopticle.title,
-      )
-      .map((sopticle) => {
-        return {
-          id: sopticle.id,
-          part: sopticle.part,
-          generation: sopticle.generation,
-          thumbnailUrl: sopticle.thumbnailUrl as string,
-          title: sopticle.title as string,
-          description: sopticle.description as string,
-          author: sopticle.authorName,
-          authorProfileImageUrl: sopticle.authorProfileImageUrl,
-          sopticleUrl: sopticle.sopticleUrl,
-          uploadedAt: sopticle.createdAt,
-          likeCount: sopticle.likeCount,
-        };
-      });
+  private async getLikedIdsBySession(
+    sopticleIds: number[],
+    sessionId: string,
+  ): Promise<{ sopticleId: number }[]> {
+    if (_.isEmpty(sopticleIds)) {
+      return [];
+    }
+
+    return await this.sopticleLikeRepository
+      .createQueryBuilder('SopticleLike')
+      .select('SopticleLike.sopticleId', 'sopticleId')
+      .where('SopticleLike.sopticleId IN (:...sopticleIds)', { sopticleIds })
+      .andWhere('SopticleLike.sessionId = :sessionId', { sessionId })
+      .getRawMany<{ sopticleId: number }>();
+  }
+
+  toSopticleResponseDto(
+    sopticles: Sopticle[],
+    sopticleLikes: { sopticleId: number }[],
+  ): SopticleResponseDto[] {
+    return sopticles.map((sopticle) => {
+      const isLiked = sopticleLikes.some(
+        ({ sopticleId }) => sopticleId === sopticle.id,
+      );
+      return {
+        id: sopticle.id,
+        part: sopticle.part,
+        generation: sopticle.generation,
+        thumbnailUrl: sopticle.thumbnailUrl as string,
+        title: sopticle.title as string,
+        description: sopticle.description as string,
+        author: sopticle.authorName,
+        authorProfileImageUrl: sopticle.authorProfileImageUrl,
+        sopticleUrl: sopticle.sopticleUrl,
+        uploadedAt: sopticle.createdAt,
+        likeCount: sopticle.likeCount,
+        liked: isLiked,
+      };
+    });
   }
 
   //todo transaction

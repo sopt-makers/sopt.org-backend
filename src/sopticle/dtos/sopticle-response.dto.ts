@@ -69,4 +69,10 @@ export class SopticleResponseDto {
     description: '좋아요',
   })
   readonly likeCount: number;
+
+  @ApiProperty({
+    type: Boolean,
+    description: '좋아요 했는지 여부',
+  })
+  readonly liked: boolean;
 }

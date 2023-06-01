@@ -34,8 +34,15 @@ export class SopticleController {
   @GetSopticleListDocs()
   async getSopticleList(
     @Query() getSopticleListRequestDto: GetSopticleListRequestDto,
+    @Headers('session-id') session: string | null,
   ): Promise<PaginateResponseDto<SopticleResponseDto>> {
-    return this.sopticleService.paginateSopticles(getSopticleListRequestDto);
+    if (!session) {
+      throw new BadRequestException('session-id is required');
+    }
+    return this.sopticleService.paginateSopticles(
+      getSopticleListRequestDto,
+      session,
+    );
   }
 
   @Post('scrap')
