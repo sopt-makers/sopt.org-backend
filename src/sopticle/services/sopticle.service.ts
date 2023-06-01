@@ -11,10 +11,8 @@ import { Sopticle } from '../entities/sopticle.entity';
 import { SopticleLike } from '../entities/sopticleLike.entity';
 import { PlaygroundService } from '../../internal/playground/playground.service';
 import { ScraperService } from '../../scraper/scraper.service';
-import { GetSopticlesResponseDto } from '../../internal/playground/dto/get-playground-sopticle-response.dto';
 import { CreateScraperResponseDto } from '../../scraper/dto/create-scraper-response.dto';
 import { SopticleResponseDto } from '../dtos/sopticle-response.dto';
-import { SopticleFactoryService } from './sopticle-factory.service';
 import { LikeSopticleResponseDto } from '../dtos/like-sopticle-response.dto';
 import { GetSopticleListRequestDto } from '../dtos/get-sopticle-list-request.dto';
 import { PaginateResponseDto } from '../../utils/paginate-response.dto';
@@ -29,116 +27,80 @@ export class SopticleService {
     private readonly sopticleLikeRepository: Repository<SopticleLike>,
     private readonly playgroundService: PlaygroundService,
     private readonly scrapperService: ScraperService,
-    private readonly sopticleFactoryService: SopticleFactoryService,
   ) {}
-
-  async getSopticles(): Promise<SopticleResponseDto[]> {
-    const pgSopticles = await this.playgroundService.getPlaygroundSopticles();
-    const sopticles = await this.sopticleRepository.find({
-      order: { id: 'DESC' },
-    });
-    const willParsingSopticleUrl = this.findDistinctSopticles(
-      pgSopticles,
-      sopticles,
-    );
-    console.log('pgSopticles', pgSopticles);
-    if (_.isEmpty(willParsingSopticleUrl)) {
-      return this.toSopticleResponseDto(sopticles);
-    }
-
-    const newSopticles: Sopticle[] = await this.parsingSopticles(
-      willParsingSopticleUrl,
-    );
-
-    return this.toSopticleResponseDto([
-      ...newSopticles,
-      ...sopticles.filter((sopticle) => sopticle.load),
-    ]);
-  }
 
   async paginateSopticles(
     dto: GetSopticleListRequestDto,
+    sessionId: string,
   ): Promise<PaginateResponseDto<SopticleResponseDto>> {
-    const sopticleQueryBuilder =
-      await this.sopticleRepository.createQueryBuilder('Sopticle');
+    const { part } = dto;
+    const sopticleQueryBuilder = await this.sopticleRepository
+      .createQueryBuilder('Sopticle')
+      .where('Sopticle.load = :load', { load: true })
+      .take(dto.getLimit())
+      .skip(dto.getOffset())
+      .orderBy('id', 'DESC');
 
-    sopticleQueryBuilder.where('Sopticle.load = :load', { load: true });
-    sopticleQueryBuilder.take(dto.getLimit());
-    sopticleQueryBuilder.skip(dto.getOffset());
-    sopticleQueryBuilder.orderBy('id', 'DESC');
+    if (part) {
+      sopticleQueryBuilder.where('Sopticle.part = :part', { part });
+    }
+
     const [sopticles, sopticleCount] =
       await sopticleQueryBuilder.getManyAndCount();
 
+    const sopticleIds = sopticles.map((sopticle) => sopticle.id);
+    const sopticleLikes = await this.getLikedIdsBySession(
+      sopticleIds,
+      sessionId,
+    );
+
     return new PaginateResponseDto<SopticleResponseDto>(
-      this.toSopticleResponseDto(sopticles),
+      this.toSopticleResponseDto(sopticles, sopticleLikes),
       sopticleCount,
       dto.getLimit(),
       dto.pageNo,
     );
   }
 
-  toSopticleResponseDto(sopticles: Sopticle[]): SopticleResponseDto[] {
-    return sopticles
-      .filter(
-        (sopticle) =>
-          sopticle.thumbnailUrl && sopticle.description && sopticle.title,
-      )
-      .map((sopticle) => {
-        return {
-          id: sopticle.id,
-          part: sopticle.part,
-          generation: sopticle.generation,
-          thumbnailUrl: sopticle.thumbnailUrl as string,
-          title: sopticle.title as string,
-          description: sopticle.description as string,
-          author: sopticle.authorName,
-          authorProfileImageUrl: sopticle.authorProfileImageUrl,
-          sopticleUrl: sopticle.sopticleUrl,
-          uploadedAt: sopticle.createdAt,
-          likeCount: sopticle.likeCount,
-        };
-      });
-  }
-
-  private findDistinctSopticles(
-    pgSopticles: GetSopticlesResponseDto[],
-    sopticles: Sopticle[],
-  ): GetSopticlesResponseDto[] {
-    const sopticleUrls = sopticles.map((sopticle) => sopticle.sopticleUrl);
-    return pgSopticles.filter(
-      (pgSopticle) => !sopticleUrls.includes(pgSopticle.link),
-    );
-  }
-
-  async parsingSopticles(
-    willParsingSopticleUrl: GetSopticlesResponseDto[],
-  ): Promise<Sopticle[]> {
-    const sopticles: Sopticle[] = [];
-    for (const pgSopticle of willParsingSopticleUrl) {
-      const scrapResult: CreateScraperResponseDto | null =
-        await this.scrapperService
-          .scrap({ sopticleUrl: pgSopticle.link })
-          .catch((err) => {
-            console.error('scrapError', err);
-            return null;
-          });
-      if (scrapResult === null) {
-        await this.sopticleRepository.create(
-          this.sopticleFactoryService.createNewLoadFail(pgSopticle),
-        );
-        continue;
-      }
-
-      const sopticle = this.sopticleFactoryService.createNewLoadSuccess(
-        pgSopticle,
-        scrapResult,
-      );
-
-      const result = await this.sopticleRepository.create(sopticle);
-      sopticles.push(result);
+  private async getLikedIdsBySession(
+    sopticleIds: number[],
+    sessionId: string,
+  ): Promise<{ sopticleId: number }[]> {
+    if (_.isEmpty(sopticleIds)) {
+      return [];
     }
 
-    return sopticles;
+    return await this.sopticleLikeRepository
+      .createQueryBuilder('SopticleLike')
+      .select('SopticleLike.sopticleId', 'sopticleId')
+      .where('SopticleLike.sopticleId IN (:...sopticleIds)', { sopticleIds })
+      .andWhere('SopticleLike.sessionId = :sessionId', { sessionId })
+      .getRawMany<{ sopticleId: number }>();
+  }
+
+  toSopticleResponseDto(
+    sopticles: Sopticle[],
+    sopticleLikes: { sopticleId: number }[],
+  ): SopticleResponseDto[] {
+    return sopticles.map((sopticle) => {
+      const isLiked = sopticleLikes.some(
+        ({ sopticleId }) => sopticleId === sopticle.id,
+      );
+      return {
+        id: sopticle.id,
+        part: sopticle.part,
+        generation: sopticle.generation,
+        thumbnailUrl: sopticle.thumbnailUrl as string,
+        title: sopticle.title as string,
+        description: sopticle.description as string,
+        author: sopticle.authorName,
+        authorProfileImageUrl: sopticle.authorProfileImageUrl,
+        sopticleUrl: sopticle.sopticleUrl,
+        uploadedAt: sopticle.createdAt,
+        likeCount: sopticle.likeCount,
+        liked: isLiked,
+      };
+    });
   }
 
   //todo transaction
