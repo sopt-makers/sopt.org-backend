@@ -1,6 +1,7 @@
 import { applyDecorators } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
+  ApiBody,
   ApiExtraModels,
   ApiHeaders,
   ApiNotFoundResponse,
@@ -11,6 +12,8 @@ import {
 import { PaginateResponseDto } from '../../src/utils/paginate-response.dto';
 import { SopticleResponseDto } from '../../src/sopticle/dtos/sopticle-response.dto';
 import { LikeSopticleResponseDto } from '../../src/sopticle/dtos/like-sopticle-response.dto';
+import { CreateScraperResponseDto } from '../../src/scraper/dto/create-scraper-response.dto';
+import { CreateSopticleDto } from '../../src/sopticle/dtos/create-sopticle.dto';
 
 export function GetSopticleListDocs() {
   return applyDecorators(
@@ -77,5 +80,17 @@ export function UnLikeSopticleDocs() {
           'session Id를 브라우저마다 임의로 생성해서 넣어주세요. 해당 세션값은 클리아언트를 식별하기 위한 값입니다.(uuid-v4 값으로..)',
       },
     ]),
+  );
+}
+
+export function ScrapSopticleDocs() {
+  return applyDecorators(
+    ApiOperation({
+      summary: 'Sopticle 스크랩',
+    }),
+    ApiOkResponse({ type: CreateScraperResponseDto }),
+    ApiBody({
+      type: CreateSopticleDto,
+    }),
   );
 }
