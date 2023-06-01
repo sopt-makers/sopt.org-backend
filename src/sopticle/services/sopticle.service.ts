@@ -59,13 +59,18 @@ export class SopticleService {
   async paginateSopticles(
     dto: GetSopticleListRequestDto,
   ): Promise<PaginateResponseDto<SopticleResponseDto>> {
-    const sopticleQueryBuilder =
-      await this.sopticleRepository.createQueryBuilder('Sopticle');
+    const { part } = dto;
+    const sopticleQueryBuilder = await this.sopticleRepository
+      .createQueryBuilder('Sopticle')
+      .where('Sopticle.load = :load', { load: true })
+      .take(dto.getLimit())
+      .skip(dto.getOffset())
+      .orderBy('id', 'DESC');
 
-    sopticleQueryBuilder.where('Sopticle.load = :load', { load: true });
-    sopticleQueryBuilder.take(dto.getLimit());
-    sopticleQueryBuilder.skip(dto.getOffset());
-    sopticleQueryBuilder.orderBy('id', 'DESC');
+    if (part) {
+      sopticleQueryBuilder.where('Sopticle.part = :part', { part });
+    }
+
     const [sopticles, sopticleCount] =
       await sopticleQueryBuilder.getManyAndCount();
 
