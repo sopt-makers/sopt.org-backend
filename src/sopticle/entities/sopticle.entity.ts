@@ -27,7 +27,7 @@ export class Sopticle {
   @Column({ type: 'varchar', length: 100 })
   title: string | null;
 
-  @Column({ type: 'varchar', length: 300 })
+  @Column({ type: 'varchar', length: 600 })
   description: string | null;
 
   @Column()
