@@ -13,7 +13,7 @@ import { PaginateResponseDto } from '../../src/utils/paginate-response.dto';
 import { SopticleResponseDto } from '../../src/sopticle/dtos/sopticle-response.dto';
 import { LikeSopticleResponseDto } from '../../src/sopticle/dtos/like-sopticle-response.dto';
 import { CreateScraperResponseDto } from '../../src/scraper/dto/create-scraper-response.dto';
-import { CreateSopticleDto } from '../../src/sopticle/dtos/create-sopticle.dto';
+import { ScrapSopticleDto } from '../../src/sopticle/dtos/scrap-sopticle.dto';
 
 export function GetSopticleListDocs() {
   return applyDecorators(
@@ -97,7 +97,7 @@ export function ScrapSopticleDocs() {
     }),
     ApiOkResponse({ type: CreateScraperResponseDto }),
     ApiBody({
-      type: CreateSopticleDto,
+      type: ScrapSopticleDto,
     }),
   );
 }

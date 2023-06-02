@@ -22,7 +22,7 @@ import {
   UnLikeSopticleDocs,
 } from '../../../docs/sopticle/sopticle.swagger';
 import { LikeSopticleResponseDto } from '../dtos/like-sopticle-response.dto';
-import { CreateSopticleDto } from '../dtos/create-sopticle.dto';
+import { ScrapSopticleDto } from '../dtos/scrap-sopticle.dto';
 import { CreateScraperResponseDto } from '../../scraper/dto/create-scraper-response.dto';
 
 @ApiTags('Sopticle')
@@ -48,7 +48,7 @@ export class SopticleController {
   @Post('scrap')
   @ScrapSopticleDocs()
   scrapSopticle(
-    @Body() dto: CreateSopticleDto,
+    @Body() dto: ScrapSopticleDto,
   ): Promise<CreateScraperResponseDto> {
     return this.sopticleService.scrapSopticle(dto);
   }

@@ -16,7 +16,7 @@ import { SopticleResponseDto } from '../dtos/sopticle-response.dto';
 import { LikeSopticleResponseDto } from '../dtos/like-sopticle-response.dto';
 import { GetSopticleListRequestDto } from '../dtos/get-sopticle-list-request.dto';
 import { PaginateResponseDto } from '../../utils/paginate-response.dto';
-import { CreateSopticleDto } from '../dtos/create-sopticle.dto';
+import { ScrapSopticleDto } from '../dtos/scrap-sopticle.dto';
 
 @Injectable()
 export class SopticleService {
@@ -186,7 +186,7 @@ export class SopticleService {
   }
 
   async scrapSopticle(
-    dto: CreateSopticleDto,
+    dto: ScrapSopticleDto,
   ): Promise<CreateScraperResponseDto> {
     return await this.scrapperService.scrap(dto);
   }

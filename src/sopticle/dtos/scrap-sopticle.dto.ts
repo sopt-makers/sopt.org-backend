@@ -29,7 +29,7 @@ export function IsValidateSopticlePlatformUrl(
   };
 }
 
-export class CreateSopticleDto {
+export class ScrapSopticleDto {
   @ApiProperty({
     type: String,
     required: true,
