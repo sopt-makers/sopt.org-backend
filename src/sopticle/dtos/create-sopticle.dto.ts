@@ -19,6 +19,9 @@ export function IsValidateSopticlePlatformUrl(
       options: validationOptions,
       validator: {
         validate(value: string): boolean {
+          if (value.includes('notion.so')) {
+            return false;
+          }
           return false;
         },
       },
