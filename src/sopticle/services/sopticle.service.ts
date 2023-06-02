@@ -120,12 +120,7 @@ export class SopticleService {
     if (!sopticle) {
       throw new NotFoundException('NotFoundSopticle id' + id);
     }
-
-    const alreadyLike = await this.sopticleLikeRepository
-      .createQueryBuilder('sopticleLike')
-      .where('sopticleLike.sopticle.id = :sopticleId', { sopticleId: id })
-      .andWhere('sopticleLike.sessionId = :session', { session })
-      .getExists();
+    const alreadyLike = await this.isLiked(id, session);
 
     if (alreadyLike) {
       throw new BadRequestException('AlreadyLike');
@@ -142,6 +137,14 @@ export class SopticleService {
       sessionId: sopticleLike.sessionId,
       createdAt: sopticleLike.createdAt,
     };
+  }
+
+  async isLiked(id: number, session: string): Promise<boolean> {
+    return await this.sopticleLikeRepository
+      .createQueryBuilder('sopticleLike')
+      .where('sopticleLike.sopticle.id = :sopticleId', { sopticleId: id })
+      .andWhere('sopticleLike.sessionId = :session', { session })
+      .getExists();
   }
 
   async unLike({
