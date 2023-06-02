@@ -17,7 +17,7 @@ export class VelogScrapingStrategy extends ScrapingStrategy {
     const title = await this.getTitle(page);
     const description = await this.getDescription(page);
     const image = await this.getImage(page);
-
+    await page.close();
     return {
       thumbnailUrl: image,
       title,
