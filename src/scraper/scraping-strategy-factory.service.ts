@@ -1,12 +1,13 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
 import { ScrapingStrategy } from './strategy/scrap.strategy';
 import { PuppeteerService } from './puppeteer.service';
+import { CommonScrapingStrategy } from './strategy/common-scraping.strategy';
 
 @Injectable()
 export class ScrapingStrategyFactoryService {
   constructor(private readonly puppeteerService: PuppeteerService) {}
   newScrapingStrategy(url: string): ScrapingStrategy {
-    throw new BadRequestException('Not supported platform');
+    return new CommonScrapingStrategy(url, this.puppeteerService);
   }
 }

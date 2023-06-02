@@ -22,7 +22,7 @@ export function IsValidateSopticlePlatformUrl(
           if (value.includes('notion.so')) {
             return false;
           }
-          return false;
+          return true;
         },
       },
     });
@@ -38,6 +38,8 @@ export class CreateSopticleDto {
   })
   @IsUrl()
   @IsString()
-  @IsValidateSopticlePlatformUrl({ message: 'Invalid url' })
+  @IsValidateSopticlePlatformUrl({
+    message: 'Notion 플랫폼은 업로드 할 수 없습니다.',
+  })
   readonly sopticleUrl: string;
 }
