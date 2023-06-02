@@ -6,7 +6,6 @@ import { SopticleController } from './controllers/sopticle.controller';
 import { SopticleService } from './services/sopticle.service';
 import { PlaygroudModule } from '../internal/playground/playgroud.module';
 import { ScraperModule } from '../scraper/scraper.module';
-import { SopticleFactoryService } from './services/sopticle-factory.service';
 
 @Module({
   imports: [
@@ -15,6 +14,6 @@ import { SopticleFactoryService } from './services/sopticle-factory.service';
     ScraperModule,
   ],
   controllers: [SopticleController],
-  providers: [SopticleService, SopticleFactoryService],
+  providers: [SopticleService],
 })
 export class SopticleModule {}
