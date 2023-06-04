@@ -74,7 +74,7 @@ export class CreateSopticleResponseDto {
 
   @ApiProperty({
     type: Number,
-    description: '작성자 활동 기수',
+    description: 'SopticleId',
     nullable: false,
   })
   @IsNotEmpty()
