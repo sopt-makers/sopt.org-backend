@@ -1,50 +1,44 @@
-import { ScrapSopticleDto } from './scrap-sopticle.dto';
-import { Part } from '../../common/type';
 import { ApiProperty } from '@nestjs/swagger';
 import {
+  IsArray,
   IsEnum,
   IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
+  IsUrl,
 } from 'class-validator';
 
-export class CreateSopticleDto extends ScrapSopticleDto {
+import { IsValidateSopticlePlatformUrl } from './scrap-sopticle.dto';
+import { Part } from '../../common/type';
+
+export class CreateSopticleAuthorDto {
   @ApiProperty({
-    enum: Part,
-    description: '활동 파트',
+    type: Number,
+    description: '작성자 id',
     required: true,
   })
   @IsNotEmpty()
-  @IsEnum(Part)
-  readonly part: Part;
+  @IsNumber()
+  readonly id: number;
 
   @ApiProperty({
     type: String,
-    description: '솝티클 썸네일 이미지',
+    description: '작성자 이름',
     required: true,
   })
   @IsNotEmpty()
   @IsString()
-  readonly thumbnailUrl: string;
+  readonly name: string;
 
   @ApiProperty({
     type: String,
-    description: '솝티클 제목',
-    required: true,
+    description: '작성자 프로필 이미지',
+    required: false,
   })
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  readonly title: string;
-
-  @ApiProperty({
-    type: String,
-    description: '솝티클 설명',
-    required: true,
-  })
-  @IsNotEmpty()
-  @IsString()
-  readonly description: string;
+  readonly profileImage: string | null;
 
   @ApiProperty({
     type: Number,
@@ -56,29 +50,41 @@ export class CreateSopticleDto extends ScrapSopticleDto {
   readonly generation: number;
 
   @ApiProperty({
+    enum: Part,
+    description: '활동 파트',
+    required: true,
+  })
+  @IsNotEmpty()
+  @IsEnum(Part)
+  readonly part: Part;
+}
+
+export class CreateSopticleDto {
+  @ApiProperty({
     type: Number,
-    description: '작성자 id',
     required: true,
+    description:
+      'pg에서 생성한 솝티클 id 입니다., 공홈 SopticleID와 같습니다. ( 추후 Sync가 맞지 않는다면 분리를 해야 할 수도 있을것 같아요)',
   })
-  @IsNotEmpty()
-  @IsNumber()
-  readonly authorId: number;
+  id: number;
 
   @ApiProperty({
     type: String,
-    description: '작성자 이름',
     required: true,
+    description: '솝티클 주소 입니다. Notion 플랫폼을 제외하고 가능합니다.',
   })
-  @IsNotEmpty()
+  @IsUrl()
   @IsString()
-  readonly authorName: string;
+  @IsValidateSopticlePlatformUrl({
+    message: 'Notion 플랫폼은 업로드 할 수 없습니다.',
+  })
+  readonly link: string;
 
   @ApiProperty({
-    type: String,
-    description: '작성자 프로필 이미지',
-    required: false,
+    type: [CreateSopticleAuthorDto],
+    description: '작성자 정보',
   })
-  @IsOptional()
-  @IsString()
-  readonly authorProfileImageUrl: string;
+  @IsArray()
+  @IsNotEmpty()
+  readonly authors: CreateSopticleAuthorDto[];
 }

@@ -8,6 +8,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { SopticleLike } from './sopticleLike.entity';
+import { SopticleAuthor } from './sopticle-author.entity';
 
 @Index('sopticle_pk', ['id'], { unique: true })
 @Entity('Sopticle', { schema: 'public' })
@@ -42,19 +43,26 @@ export class Sopticle {
   @Column({ length: 500, unique: true })
   sopticleUrl: string;
 
-  @Column({ comment: '스크랩 로드 여부. 로드 실패시 false, 성공시 true' })
-  load: boolean;
-
   @CreateDateColumn()
   createdAt: Date;
 
   @Column({ default: 0 })
   likeCount: number;
 
+  @Column({ comment: 'PG에서 사용하는 SopticleId' })
+  pgSopticleId: number;
+
   @OneToMany(() => SopticleLike, (sopticleLike) => sopticleLike.sopticle, {
     onDelete: 'CASCADE',
   })
   sopticleLikes: SopticleLike[];
+
+  @OneToMany(
+    () => SopticleAuthor,
+    (sopticleAuthor) => sopticleAuthor.sopticle,
+    { onDelete: 'CASCADE' },
+  )
+  authors: SopticleAuthor[];
 
   static from(params: {
     part: Part;
@@ -64,6 +72,7 @@ export class Sopticle {
     description: string;
     authorId: number;
     authorName: string;
+    pgSopticleId: number;
     authorProfileImageUrl: string | null;
     sopticleUrl: string;
   }): Sopticle {
@@ -75,6 +84,7 @@ export class Sopticle {
       description,
       authorId,
       authorName,
+      pgSopticleId,
       authorProfileImageUrl,
       sopticleUrl,
     } = params;
@@ -89,7 +99,7 @@ export class Sopticle {
     sopticle.authorName = authorName;
     sopticle.authorProfileImageUrl = authorProfileImageUrl;
     sopticle.sopticleUrl = sopticleUrl;
-
+    sopticle.pgSopticleId = pgSopticleId;
     return sopticle;
   }
 }

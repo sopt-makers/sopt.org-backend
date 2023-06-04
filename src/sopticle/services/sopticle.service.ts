@@ -19,6 +19,7 @@ import { PaginateResponseDto } from '../../utils/paginate-response.dto';
 import { ScrapSopticleDto } from '../dtos/scrap-sopticle.dto';
 import { CreateSopticleDto } from '../dtos/create-sopticle.dto';
 import { CreateSopticleResponseDto } from '../dtos/create-sopticle-response.dto';
+import { SopticleAuthor } from '../entities/sopticle-author.entity';
 
 @Injectable()
 export class SopticleService {
@@ -27,6 +28,8 @@ export class SopticleService {
     private readonly sopticleRepository: Repository<Sopticle>,
     @InjectRepository(SopticleLike)
     private readonly sopticleLikeRepository: Repository<SopticleLike>,
+    @InjectRepository(SopticleAuthor)
+    private readonly sopticleAuthorRepository: Repository<SopticleAuthor>,
     private readonly playgroundService: PlaygroundService,
     private readonly scrapperService: ScraperService,
   ) {}
@@ -38,7 +41,6 @@ export class SopticleService {
     const { part } = dto;
     const sopticleQueryBuilder = await this.sopticleRepository
       .createQueryBuilder('Sopticle')
-      .where('Sopticle.load = :load', { load: true })
       .take(dto.getLimit())
       .skip(dto.getOffset())
       .orderBy('id', 'DESC');
@@ -198,7 +200,7 @@ export class SopticleService {
   ): Promise<CreateSopticleResponseDto> {
     const hasSopticleUrl = await this.sopticleRepository.findOne({
       where: {
-        sopticleUrl: dto.sopticleUrl,
+        sopticleUrl: dto.link,
       },
     });
 
@@ -206,7 +208,35 @@ export class SopticleService {
       throw new BadRequestException('이미 등록된 솝티클 입니다.');
     }
 
-    const sopticle = await this.sopticleRepository.save(Sopticle.from(dto));
+    const scrapResult = await this.scrapperService.scrap({
+      sopticleUrl: dto.link,
+    });
+
+    const sopticle = await this.sopticleRepository.save(
+      Sopticle.from({
+        pgSopticleId: dto.id,
+        part: dto.authors[0].part,
+        generation: dto.authors[0].generation,
+        thumbnailUrl: scrapResult.thumbnailUrl,
+        title: scrapResult.title,
+        description: scrapResult.description,
+        authorId: dto.authors[0].id,
+        authorName: dto.authors[0].name,
+        authorProfileImageUrl: dto.authors[0].profileImage,
+        sopticleUrl: scrapResult.sopticleUrl,
+      }),
+    );
+
+    const authorEntities = dto.authors.map((authorDto) =>
+      SopticleAuthor.from({
+        ...authorDto,
+        pgUserId: authorDto.id,
+        sopticle: sopticle,
+      }),
+    );
+
+    await this.sopticleAuthorRepository.save(authorEntities);
+
     return {
       id: sopticle.id,
       part: sopticle.part,
