@@ -16,6 +16,7 @@ import { GetSopticleListRequestDto } from '../dtos/get-sopticle-list-request.dto
 import { PaginateResponseDto } from '../../utils/paginate-response.dto';
 import { SopticleResponseDto } from '../dtos/sopticle-response.dto';
 import {
+  CreateSopticleDocs,
   GetSopticleListDocs,
   LikeSopticleDocs,
   ScrapSopticleDocs,
@@ -24,6 +25,8 @@ import {
 import { LikeSopticleResponseDto } from '../dtos/like-sopticle-response.dto';
 import { ScrapSopticleDto } from '../dtos/scrap-sopticle.dto';
 import { CreateScraperResponseDto } from '../../scraper/dto/create-scraper-response.dto';
+import { CreateSopticleDto } from '../dtos/create-sopticle.dto';
+import { CreateSopticleResponseDto } from '../dtos/create-sopticle-response.dto';
 
 @ApiTags('Sopticle')
 @Controller('sopticle')
@@ -43,6 +46,14 @@ export class SopticleController {
       getSopticleListRequestDto,
       session,
     );
+  }
+
+  @Post('')
+  @CreateSopticleDocs()
+  createSopticle(
+    @Body() dto: CreateSopticleDto,
+  ): Promise<CreateSopticleResponseDto> {
+    return this.sopticleService.createSopticle(dto);
   }
 
   @Post('scrap')

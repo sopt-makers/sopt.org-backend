@@ -22,13 +22,13 @@ export class Sopticle {
   generation: number;
 
   @Column({ type: 'varchar', length: 500, nullable: true })
-  thumbnailUrl: string | null;
+  thumbnailUrl: string;
 
   @Column({ type: 'varchar', length: 100 })
-  title: string | null;
+  title: string;
 
   @Column({ type: 'varchar', length: 600 })
-  description: string | null;
+  description: string;
 
   @Column()
   authorId: number;
@@ -39,7 +39,7 @@ export class Sopticle {
   @Column({ type: 'varchar', length: 500, nullable: true })
   authorProfileImageUrl: string | null;
 
-  @Column({ length: 500 })
+  @Column({ length: 500, unique: true })
   sopticleUrl: string;
 
   @Column({ comment: '스크랩 로드 여부. 로드 실패시 false, 성공시 true' })
@@ -55,4 +55,41 @@ export class Sopticle {
     onDelete: 'CASCADE',
   })
   sopticleLikes: SopticleLike[];
+
+  static from(params: {
+    part: Part;
+    generation: number;
+    thumbnailUrl: string;
+    title: string;
+    description: string;
+    authorId: number;
+    authorName: string;
+    authorProfileImageUrl: string | null;
+    sopticleUrl: string;
+  }): Sopticle {
+    const {
+      part,
+      generation,
+      thumbnailUrl,
+      title,
+      description,
+      authorId,
+      authorName,
+      authorProfileImageUrl,
+      sopticleUrl,
+    } = params;
+
+    const sopticle = new Sopticle();
+    sopticle.part = part;
+    sopticle.generation = generation;
+    sopticle.thumbnailUrl = thumbnailUrl;
+    sopticle.title = title;
+    sopticle.description = description;
+    sopticle.authorId = authorId;
+    sopticle.authorName = authorName;
+    sopticle.authorProfileImageUrl = authorProfileImageUrl;
+    sopticle.sopticleUrl = sopticleUrl;
+
+    return sopticle;
+  }
 }

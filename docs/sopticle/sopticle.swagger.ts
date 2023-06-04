@@ -14,6 +14,8 @@ import { SopticleResponseDto } from '../../src/sopticle/dtos/sopticle-response.d
 import { LikeSopticleResponseDto } from '../../src/sopticle/dtos/like-sopticle-response.dto';
 import { CreateScraperResponseDto } from '../../src/scraper/dto/create-scraper-response.dto';
 import { ScrapSopticleDto } from '../../src/sopticle/dtos/scrap-sopticle.dto';
+import { CreateSopticleResponseDto } from '../../src/sopticle/dtos/create-sopticle-response.dto';
+import { CreateSopticleDto } from '../../src/sopticle/dtos/create-sopticle.dto';
 
 export function GetSopticleListDocs() {
   return applyDecorators(
@@ -98,6 +100,21 @@ export function ScrapSopticleDocs() {
     ApiOkResponse({ type: CreateScraperResponseDto }),
     ApiBody({
       type: ScrapSopticleDto,
+    }),
+  );
+}
+
+export function CreateSopticleDocs() {
+  return applyDecorators(
+    ApiOperation({
+      summary: 'Sopticle 생성',
+    }),
+    ApiOkResponse({ type: CreateSopticleResponseDto }),
+    ApiBody({
+      type: CreateSopticleDto,
+    }),
+    ApiBadRequestResponse({
+      description: '이미 등록된 솝티클 입니다.',
     }),
   );
 }

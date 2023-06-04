@@ -33,8 +33,7 @@ export class ScrapSopticleDto {
   @ApiProperty({
     type: String,
     required: true,
-    description:
-      '솝티클 주소 입니다. Velog, Brunch, Tistory  플랫폼만 가능합니다.',
+    description: '솝티클 주소 입니다. Notion 플랫폼을 제외하고 가능합니다.',
   })
   @IsUrl()
   @IsString()
