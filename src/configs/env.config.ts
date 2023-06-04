@@ -16,6 +16,7 @@ export interface EnvConfig {
   BUCKET_NAME: string;
   CREW_API_URL: string;
   LOCAL: boolean;
+  OFFICIAL_API_KEY: string;
 }
 
 export const envValidationSchema = Joi.object({
@@ -40,4 +41,7 @@ export const envValidationSchema = Joi.object({
     .description(
       '로컬 환경인지 여부, 로컬 환경이 아닐 경우에는 puppeteer chromium path를 직접 지정해야함. EC2 인스턴스에 올려져 있는 값들은 모두 false로 설정되어 있음.',
     ),
+  OFFICIAL_API_KEY: Joi.string()
+    .required()
+    .description('공홈 API를 사용하는 클라이언트에게 제공해주는 KEY 값'),
 });

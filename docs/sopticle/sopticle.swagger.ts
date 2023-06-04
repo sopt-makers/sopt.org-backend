@@ -106,6 +106,13 @@ export function ScrapSopticleDocs() {
 
 export function CreateSopticleDocs() {
   return applyDecorators(
+    ApiHeaders([
+      {
+        name: 'api-key',
+        description:
+          'api-key를 넣어주세요. 해당 키는 공홈 관리자에게 문의해주세요.',
+      },
+    ]),
     ApiOperation({
       summary: 'Sopticle 생성',
     }),

@@ -8,6 +8,7 @@ import {
   Headers,
   BadRequestException,
   Body,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
@@ -27,11 +28,16 @@ import { ScrapSopticleDto } from '../dtos/scrap-sopticle.dto';
 import { CreateScraperResponseDto } from '../../scraper/dto/create-scraper-response.dto';
 import { CreateSopticleDto } from '../dtos/create-sopticle.dto';
 import { CreateSopticleResponseDto } from '../dtos/create-sopticle-response.dto';
+import { ConfigService } from '@nestjs/config';
+import { EnvConfig } from '../../configs/env.config';
 
 @ApiTags('Sopticle')
 @Controller('sopticle')
 export class SopticleController {
-  constructor(private readonly sopticleService: SopticleService) {}
+  constructor(
+    private readonly sopticleService: SopticleService,
+    private readonly configService: ConfigService<EnvConfig>,
+  ) {}
 
   @Get('')
   @GetSopticleListDocs()
@@ -52,7 +58,16 @@ export class SopticleController {
   @CreateSopticleDocs()
   createSopticle(
     @Body() dto: CreateSopticleDto,
+    @Headers('api-key') apiKey: string | null,
   ): Promise<CreateSopticleResponseDto> {
+    if (!apiKey) {
+      throw new BadRequestException('api-key is required');
+    }
+
+    if (apiKey !== this.configService.get('OFFICIAL_API_KEY')) {
+      throw new UnauthorizedException('api-key is invalid');
+    }
+
     return this.sopticleService.createSopticle(dto);
   }
 
