@@ -9,7 +9,6 @@ import * as _ from 'lodash';
 
 import { Sopticle } from '../entities/sopticle.entity';
 import { SopticleLike } from '../entities/sopticleLike.entity';
-import { PlaygroundService } from '../../internal/playground/playground.service';
 import { ScraperService } from '../../scraper/scraper.service';
 import { CreateScraperResponseDto } from '../../scraper/dto/create-scraper-response.dto';
 import { SopticleResponseDto } from '../dtos/sopticle-response.dto';
@@ -30,7 +29,6 @@ export class SopticleService {
     private readonly sopticleLikeRepository: Repository<SopticleLike>,
     @InjectRepository(SopticleAuthor)
     private readonly sopticleAuthorRepository: Repository<SopticleAuthor>,
-    private readonly playgroundService: PlaygroundService,
     private readonly scrapperService: ScraperService,
   ) {}
 
