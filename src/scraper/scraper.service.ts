@@ -2,7 +2,7 @@ import { ScrapingStrategyFactoryService } from './scraping-strategy-factory.serv
 import { Injectable } from '@nestjs/common';
 import { ScrapingStrategy } from './strategy/scrap.strategy';
 import { CreateScraperResponseDto } from './dto/create-scraper-response.dto';
-import { CreateSopticleDto } from '../sopticle/dtos/create-sopticle.dto';
+import { ScrapSopticleDto } from '../sopticle/dtos/scrap-sopticle.dto';
 
 @Injectable()
 export class ScraperService {
@@ -12,7 +12,7 @@ export class ScraperService {
 
   async scrap({
     sopticleUrl,
-  }: CreateSopticleDto): Promise<CreateScraperResponseDto> {
+  }: ScrapSopticleDto): Promise<CreateScraperResponseDto> {
     const scraper: ScrapingStrategy =
       this.scrapingStrategyFactoryService.newScrapingStrategy(sopticleUrl);
     return await scraper.onLoad();

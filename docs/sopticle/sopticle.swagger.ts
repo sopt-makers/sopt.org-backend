@@ -13,6 +13,8 @@ import { PaginateResponseDto } from '../../src/utils/paginate-response.dto';
 import { SopticleResponseDto } from '../../src/sopticle/dtos/sopticle-response.dto';
 import { LikeSopticleResponseDto } from '../../src/sopticle/dtos/like-sopticle-response.dto';
 import { CreateScraperResponseDto } from '../../src/scraper/dto/create-scraper-response.dto';
+import { ScrapSopticleDto } from '../../src/sopticle/dtos/scrap-sopticle.dto';
+import { CreateSopticleResponseDto } from '../../src/sopticle/dtos/create-sopticle-response.dto';
 import { CreateSopticleDto } from '../../src/sopticle/dtos/create-sopticle.dto';
 
 export function GetSopticleListDocs() {
@@ -97,7 +99,29 @@ export function ScrapSopticleDocs() {
     }),
     ApiOkResponse({ type: CreateScraperResponseDto }),
     ApiBody({
+      type: ScrapSopticleDto,
+    }),
+  );
+}
+
+export function CreateSopticleDocs() {
+  return applyDecorators(
+    ApiHeaders([
+      {
+        name: 'api-key',
+        description:
+          'api-key를 넣어주세요. 해당 키는 공홈 관리자에게 문의해주세요.',
+      },
+    ]),
+    ApiOperation({
+      summary: 'Sopticle 생성',
+    }),
+    ApiOkResponse({ type: CreateSopticleResponseDto }),
+    ApiBody({
       type: CreateSopticleDto,
+    }),
+    ApiBadRequestResponse({
+      description: '이미 등록된 솝티클 입니다.',
     }),
   );
 }

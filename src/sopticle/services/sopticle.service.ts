@@ -9,14 +9,16 @@ import * as _ from 'lodash';
 
 import { Sopticle } from '../entities/sopticle.entity';
 import { SopticleLike } from '../entities/sopticleLike.entity';
-import { PlaygroundService } from '../../internal/playground/playground.service';
 import { ScraperService } from '../../scraper/scraper.service';
 import { CreateScraperResponseDto } from '../../scraper/dto/create-scraper-response.dto';
 import { SopticleResponseDto } from '../dtos/sopticle-response.dto';
 import { LikeSopticleResponseDto } from '../dtos/like-sopticle-response.dto';
 import { GetSopticleListRequestDto } from '../dtos/get-sopticle-list-request.dto';
 import { PaginateResponseDto } from '../../utils/paginate-response.dto';
+import { ScrapSopticleDto } from '../dtos/scrap-sopticle.dto';
 import { CreateSopticleDto } from '../dtos/create-sopticle.dto';
+import { CreateSopticleResponseDto } from '../dtos/create-sopticle-response.dto';
+import { SopticleAuthor } from '../entities/sopticle-author.entity';
 
 @Injectable()
 export class SopticleService {
@@ -25,7 +27,8 @@ export class SopticleService {
     private readonly sopticleRepository: Repository<Sopticle>,
     @InjectRepository(SopticleLike)
     private readonly sopticleLikeRepository: Repository<SopticleLike>,
-    private readonly playgroundService: PlaygroundService,
+    @InjectRepository(SopticleAuthor)
+    private readonly sopticleAuthorRepository: Repository<SopticleAuthor>,
     private readonly scrapperService: ScraperService,
   ) {}
 
@@ -36,7 +39,6 @@ export class SopticleService {
     const { part } = dto;
     const sopticleQueryBuilder = await this.sopticleRepository
       .createQueryBuilder('Sopticle')
-      .where('Sopticle.load = :load', { load: true })
       .take(dto.getLimit())
       .skip(dto.getOffset())
       .orderBy('id', 'DESC');
@@ -186,8 +188,64 @@ export class SopticleService {
   }
 
   async scrapSopticle(
-    dto: CreateSopticleDto,
+    dto: ScrapSopticleDto,
   ): Promise<CreateScraperResponseDto> {
     return await this.scrapperService.scrap(dto);
+  }
+
+  async createSopticle(
+    dto: CreateSopticleDto,
+  ): Promise<CreateSopticleResponseDto> {
+    const hasSopticleUrl = await this.sopticleRepository.findOne({
+      where: {
+        sopticleUrl: dto.link,
+      },
+    });
+
+    if (hasSopticleUrl) {
+      throw new BadRequestException('이미 등록된 솝티클 입니다.');
+    }
+
+    const scrapResult = await this.scrapperService.scrap({
+      sopticleUrl: dto.link,
+    });
+
+    const sopticle = await this.sopticleRepository.save(
+      Sopticle.from({
+        pgSopticleId: dto.id,
+        part: dto.authors[0].part,
+        generation: dto.authors[0].generation,
+        thumbnailUrl: scrapResult.thumbnailUrl,
+        title: scrapResult.title,
+        description: scrapResult.description,
+        authorId: dto.authors[0].id,
+        authorName: dto.authors[0].name,
+        authorProfileImageUrl: dto.authors[0].profileImage,
+        sopticleUrl: scrapResult.sopticleUrl,
+      }),
+    );
+
+    const authorEntities = dto.authors.map((authorDto) =>
+      SopticleAuthor.from({
+        ...authorDto,
+        pgUserId: authorDto.id,
+        sopticle: sopticle,
+      }),
+    );
+
+    await this.sopticleAuthorRepository.save(authorEntities);
+
+    return {
+      id: sopticle.id,
+      part: sopticle.part,
+      generation: sopticle.generation,
+      thumbnailUrl: sopticle.thumbnailUrl,
+      title: sopticle.title,
+      description: sopticle.description,
+      author: sopticle.authorName,
+      authorProfileImageUrl: sopticle.authorProfileImageUrl,
+      sopticleUrl: sopticle.sopticleUrl,
+      uploadedAt: sopticle.createdAt,
+    };
   }
 }

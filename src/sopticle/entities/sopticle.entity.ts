@@ -8,6 +8,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { SopticleLike } from './sopticleLike.entity';
+import { SopticleAuthor } from './sopticle-author.entity';
 
 @Index('sopticle_pk', ['id'], { unique: true })
 @Entity('Sopticle', { schema: 'public' })
@@ -22,13 +23,13 @@ export class Sopticle {
   generation: number;
 
   @Column({ type: 'varchar', length: 500, nullable: true })
-  thumbnailUrl: string | null;
+  thumbnailUrl: string;
 
   @Column({ type: 'varchar', length: 100 })
-  title: string | null;
+  title: string;
 
   @Column({ type: 'varchar', length: 600 })
-  description: string | null;
+  description: string;
 
   @Column()
   authorId: number;
@@ -39,11 +40,8 @@ export class Sopticle {
   @Column({ type: 'varchar', length: 500, nullable: true })
   authorProfileImageUrl: string | null;
 
-  @Column({ length: 500 })
+  @Column({ length: 500, unique: true })
   sopticleUrl: string;
-
-  @Column({ comment: '스크랩 로드 여부. 로드 실패시 false, 성공시 true' })
-  load: boolean;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -51,8 +49,57 @@ export class Sopticle {
   @Column({ default: 0 })
   likeCount: number;
 
+  @Column({ comment: 'PG에서 사용하는 SopticleId' })
+  pgSopticleId: number;
+
   @OneToMany(() => SopticleLike, (sopticleLike) => sopticleLike.sopticle, {
     onDelete: 'CASCADE',
   })
   sopticleLikes: SopticleLike[];
+
+  @OneToMany(
+    () => SopticleAuthor,
+    (sopticleAuthor) => sopticleAuthor.sopticle,
+    { onDelete: 'CASCADE' },
+  )
+  authors: SopticleAuthor[];
+
+  static from(params: {
+    part: Part;
+    generation: number;
+    thumbnailUrl: string;
+    title: string;
+    description: string;
+    authorId: number;
+    authorName: string;
+    pgSopticleId: number;
+    authorProfileImageUrl: string | null;
+    sopticleUrl: string;
+  }): Sopticle {
+    const {
+      part,
+      generation,
+      thumbnailUrl,
+      title,
+      description,
+      authorId,
+      authorName,
+      pgSopticleId,
+      authorProfileImageUrl,
+      sopticleUrl,
+    } = params;
+
+    const sopticle = new Sopticle();
+    sopticle.part = part;
+    sopticle.generation = generation;
+    sopticle.thumbnailUrl = thumbnailUrl;
+    sopticle.title = title;
+    sopticle.description = description;
+    sopticle.authorId = authorId;
+    sopticle.authorName = authorName;
+    sopticle.authorProfileImageUrl = authorProfileImageUrl;
+    sopticle.sopticleUrl = sopticleUrl;
+    sopticle.pgSopticleId = pgSopticleId;
+    return sopticle;
+  }
 }

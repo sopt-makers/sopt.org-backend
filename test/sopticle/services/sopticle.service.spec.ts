@@ -5,18 +5,17 @@ import { ScraperService } from '../../../src/scraper/scraper.service';
 import { SopticleLike } from '../../../src/sopticle/entities/sopticleLike.entity';
 import { Sopticle } from '../../../src/sopticle/entities/sopticle.entity';
 import { Repository } from 'typeorm';
-import { PlaygroundService } from '../../../src/internal/playground/playground.service';
 import { SopticleService } from '../../../src/sopticle/services/sopticle.service';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Part } from '../../../src/common/type';
+import { SopticleAuthor } from '../../../src/sopticle/entities/sopticle-author.entity';
 
 describe('SopticleServiceTest', () => {
   let sopticleService: SopticleService;
   let scrapService: ScraperService;
-  let playGroundService: PlaygroundService;
   let sopticleLikeRepository: Repository<SopticleLike>;
   let sopticleRepository: Repository<Sopticle>;
-
+  let sopticleAuthorRepository: Repository<SopticleAuthor>;
   let session: string;
   let id: number;
 
@@ -35,9 +34,10 @@ describe('SopticleServiceTest', () => {
           useClass: Repository,
         },
         {
-          provide: PlaygroundService,
-          useValue: {},
+          provide: getRepositoryToken(SopticleAuthor),
+          useClass: Repository,
         },
+
         {
           provide: ScraperService,
           useValue: {
@@ -49,12 +49,14 @@ describe('SopticleServiceTest', () => {
 
     sopticleService = module.get<SopticleService>(SopticleService);
     scrapService = module.get<ScraperService>(ScraperService);
-    playGroundService = module.get<PlaygroundService>(PlaygroundService);
     sopticleLikeRepository = module.get<Repository<SopticleLike>>(
       getRepositoryToken(SopticleLike),
     );
     sopticleRepository = module.get<Repository<Sopticle>>(
       getRepositoryToken(Sopticle),
+    );
+    sopticleAuthorRepository = module.get<Repository<SopticleAuthor>>(
+      getRepositoryToken(SopticleAuthor),
     );
 
     session = 'mockSession';
@@ -78,16 +80,15 @@ describe('SopticleServiceTest', () => {
     mockSopticle.authorName = faker.person.fullName();
     mockSopticle.authorProfileImageUrl = faker.internet.url();
     mockSopticle.sopticleUrl = faker.internet.url();
-    mockSopticle.load = true;
     mockSopticle.likeCount = 1;
   });
 
   it('should be defined', () => {
     expect(sopticleService).toBeDefined();
     expect(scrapService).toBeDefined();
-    expect(playGroundService).toBeDefined();
     expect(sopticleLikeRepository).toBeDefined();
     expect(sopticleRepository).toBeDefined();
+    expect(sopticleAuthorRepository).toBeDefined();
   });
 
   describe('Sopticle Like', () => {
