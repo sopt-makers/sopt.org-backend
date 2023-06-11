@@ -18,7 +18,7 @@ import { PaginateResponseDto } from '../../utils/paginate-response.dto';
 import { ScrapSopticleDto } from '../dtos/scrap-sopticle.dto';
 import {
   CreateSopticleDto,
-  CreateSopticleRole,
+  CreateSopticleAuthorRole,
 } from '../dtos/create-sopticle.dto';
 import { CreateSopticleResponseDto } from '../dtos/create-sopticle-response.dto';
 import { SopticleAuthor } from '../entities/sopticle-author.entity';
@@ -259,49 +259,55 @@ export class SopticleService {
    * @private
    * @description CreateSopticleRole을 공홈 솝티클 파트 enum으로 변환합니다.
    */
-  private roleToPart(role: CreateSopticleRole): Part {
+  private roleToPart(role: CreateSopticleAuthorRole): Part {
     if (
-      [CreateSopticleRole['웹 파트장'], CreateSopticleRole['웹']].includes(role)
+      [
+        CreateSopticleAuthorRole['웹 파트장'],
+        CreateSopticleAuthorRole['웹'],
+      ].includes(role)
     ) {
       return Part.WEB;
     }
     if (
-      [CreateSopticleRole['기획 파트장'], CreateSopticleRole['기획']].includes(
-        role,
-      )
+      [
+        CreateSopticleAuthorRole['기획 파트장'],
+        CreateSopticleAuthorRole['기획'],
+      ].includes(role)
     ) {
       return Part.PLAN;
     }
 
     if (
       [
-        CreateSopticleRole['디자인 파트장'],
-        CreateSopticleRole['디자인'],
+        CreateSopticleAuthorRole['디자인 파트장'],
+        CreateSopticleAuthorRole['디자인'],
       ].includes(role)
     ) {
       return Part.DESIGN;
     }
 
     if (
-      [CreateSopticleRole['iOS 파트장'], CreateSopticleRole['iOS']].includes(
-        role,
-      )
+      [
+        CreateSopticleAuthorRole['iOS 파트장'],
+        CreateSopticleAuthorRole['iOS'],
+      ].includes(role)
     ) {
       return Part.iOS;
     }
 
     if (
-      [CreateSopticleRole['서버 파트장'], CreateSopticleRole['서버']].includes(
-        role,
-      )
+      [
+        CreateSopticleAuthorRole['서버 파트장'],
+        CreateSopticleAuthorRole['서버'],
+      ].includes(role)
     ) {
       return Part.SERVER;
     }
 
     if (
       [
-        CreateSopticleRole['안드로이드 파트장'],
-        CreateSopticleRole['안드로이드'],
+        CreateSopticleAuthorRole['안드로이드 파트장'],
+        CreateSopticleAuthorRole['안드로이드'],
       ].includes(role)
     ) {
       return Part.ANDROID;

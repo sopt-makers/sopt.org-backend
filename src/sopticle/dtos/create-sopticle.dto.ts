@@ -17,7 +17,7 @@ import { Type } from 'class-transformer';
  * description Pg에서 CreateSopticle을 생성할 때 사용하는 Role입니다. 해당 Role이 mapping되어 Part enum으로 변경됩니다.
  * 회장, 부회장, 미디어팀장, 운영팀장의 Role은 자동으로 Plan으로 매핑됩니다. 해당 이슈는 PG와 함께 해결해야 합니다.
  */
-export enum CreateSopticleRole {
+export enum CreateSopticleAuthorRole {
   '웹' = '웹',
   '기획' = '기획',
   '디자인' = '디자인',
@@ -75,14 +75,14 @@ export class CreateSopticleAuthorDto {
   readonly generation: number;
 
   @ApiProperty({
-    enum: CreateSopticleRole,
+    enum: CreateSopticleAuthorRole,
     description:
       'playgroud Role입니다. 2기 플그 Role이 Legacy로 남아있어서 이렇게 맵핑을 할 수밖에 없습니다. 플그측에서 Role이 변경된다면 공홈에서도 변경될 가능성이 큽니다.',
     required: true,
   })
   @IsNotEmpty()
-  @IsEnum(CreateSopticleRole)
-  readonly part: CreateSopticleRole;
+  @IsEnum(CreateSopticleAuthorRole)
+  readonly part: CreateSopticleAuthorRole;
 }
 
 export class CreateSopticleDto {
