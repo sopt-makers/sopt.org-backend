@@ -7,10 +7,12 @@ import {
   IsOptional,
   IsString,
   IsUrl,
+  ValidateNested,
 } from 'class-validator';
 
 import { IsValidateSopticlePlatformUrl } from './scrap-sopticle.dto';
 import { Part } from '../../common/type';
+import { Type } from 'class-transformer';
 
 export class CreateSopticleAuthorDto {
   @ApiProperty({
@@ -86,5 +88,7 @@ export class CreateSopticleDto {
   })
   @IsArray()
   @IsNotEmpty()
+  @Type(() => CreateSopticleAuthorDto)
+  @ValidateNested({ each: true })
   readonly authors: CreateSopticleAuthorDto[];
 }
