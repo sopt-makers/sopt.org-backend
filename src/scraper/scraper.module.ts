@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ScraperService } from './scraper.service';
-import { ScrapingStrategyFactoryService } from './scraping-strategy-factory.service';
-import { PuppeteerService } from './puppeteer.service';
+
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
-  providers: [ScraperService, ScrapingStrategyFactoryService, PuppeteerService],
+  imports: [HttpModule],
+  providers: [ScraperService],
   exports: [ScraperService],
 })
 export class ScraperModule {}

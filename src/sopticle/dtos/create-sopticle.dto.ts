@@ -7,10 +7,35 @@ import {
   IsOptional,
   IsString,
   IsUrl,
+  ValidateNested,
 } from 'class-validator';
 
 import { IsValidateSopticlePlatformUrl } from './scrap-sopticle.dto';
-import { Part } from '../../common/type';
+import { Type } from 'class-transformer';
+
+/**
+ * description Pg에서 CreateSopticle을 생성할 때 사용하는 Role입니다. 해당 Role이 mapping되어 Part enum으로 변경됩니다.
+ * 회장, 부회장, 미디어팀장, 운영팀장의 Role은 자동으로 Plan으로 매핑됩니다. 해당 이슈는 PG와 함께 해결해야 합니다.
+ */
+export enum CreateSopticleAuthorRole {
+  '웹' = '웹',
+  '기획' = '기획',
+  '디자인' = '디자인',
+  'iOS' = 'iOS',
+  '서버' = '서버',
+  '안드로이드' = '안드로이드',
+  '웹 파트장' = '웹 파트장',
+  '기획 파트장' = '기획 파트장',
+  '디자인 파트장' = '디자인 파트장',
+  'iOS 파트장' = 'iOS 파트장',
+  '서버 파트장' = '서버 파트장',
+  '안드로이드 파트장' = '안드로이드 파트장',
+  '회장' = '회장',
+  '부회장' = '부회장',
+  '총무' = '총무',
+  '운영 팀장' = '운영 팀장',
+  '미디어 팀장' = '미디어 팀장',
+}
 
 export class CreateSopticleAuthorDto {
   @ApiProperty({
@@ -50,13 +75,14 @@ export class CreateSopticleAuthorDto {
   readonly generation: number;
 
   @ApiProperty({
-    enum: Part,
-    description: '활동 파트',
+    enum: CreateSopticleAuthorRole,
+    description:
+      'playgroud Role입니다. 2기 플그 Role이 Legacy로 남아있어서 이렇게 맵핑을 할 수밖에 없습니다. 플그측에서 Role이 변경된다면 공홈에서도 변경될 가능성이 큽니다.',
     required: true,
   })
   @IsNotEmpty()
-  @IsEnum(Part)
-  readonly part: Part;
+  @IsEnum(CreateSopticleAuthorRole)
+  readonly part: CreateSopticleAuthorRole;
 }
 
 export class CreateSopticleDto {
@@ -86,5 +112,7 @@ export class CreateSopticleDto {
   })
   @IsArray()
   @IsNotEmpty()
+  @Type(() => CreateSopticleAuthorDto)
+  @ValidateNested({ each: true })
   readonly authors: CreateSopticleAuthorDto[];
 }
