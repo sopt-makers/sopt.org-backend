@@ -4,7 +4,7 @@ import { AboutSopt } from './entities/aboutsopt.entity';
 import { AboutSoptService } from './services/aboutsopt.service';
 import { AboutSoptController } from './controllers/aboutsopt.controller';
 import { CoreValue } from './entities/coreValue.entity';
-import { MemberModule } from '../members/memberModule';
+import { MemberModule } from '../members/member.module';
 import { StudyModule } from '../study/study.module';
 import { ProjectModule } from '../projects/project.module';
 

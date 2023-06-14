@@ -5,11 +5,13 @@ import {
 } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
-import { catchError, lastValueFrom, map } from 'rxjs';
+import { catchError, lastValueFrom, map, of } from 'rxjs';
 import { EnvConfig } from '../../configs/env.config';
 import { GetPlaygroundUserInfoResponseDto } from './dto/get-playground-user-info-response.dto';
 import { PlaygroundProjectResponseDto } from './dto/playground-project-response.dto';
 import { PlaygroundProjectDetailResponseDto } from './dto/playground-project-detail-response.dto';
+import { MemberListResponseDto } from 'src/members/dtos/member-response.dto';
+import { MemberRequestDto } from 'src/members/dtos/member-request.dto';
 
 @Injectable()
 export class PlaygroundRepository {
@@ -81,6 +83,37 @@ export class PlaygroundRepository {
               'API ' + error.response.data.error,
               error.response.data.status,
             );
+          }),
+        ),
+    );
+  }
+
+  async getAllMembers({
+    filter: part,
+    generation,
+  }: MemberRequestDto): Promise<MemberListResponseDto> {
+    return await lastValueFrom(
+      this.httpService
+        .get<MemberListResponseDto>(
+          `${this.API_URL}/internal/api/v1/official/members/profile`,
+          {
+            headers: {
+              Authorization: this.jwtToken,
+            },
+            params: {
+              filter: part,
+              generation,
+            },
+          },
+        )
+        .pipe(
+          map((res) => res.data),
+          catchError((error) => {
+            console.error(`Get Member Failed: ${error}`);
+            return of({
+              members: [],
+              numberOfMembersAtGeneration: 0,
+            });
           }),
         ),
     );

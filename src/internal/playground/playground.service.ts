@@ -10,6 +10,8 @@ import { PlaygroundProjectDetailResponseDto } from './dto/playground-project-det
 import { PlaygroundProjectResponseDto } from './dto/playground-project-response.dto';
 import { Member } from './dto/member';
 import { Link } from './dto/link';
+import { MemberRequestDto } from 'src/members/dtos/member-request.dto';
+import { MemberListResponseDto } from 'src/members/dtos/member-response.dto';
 
 @Injectable()
 export class PlaygroundService {
@@ -134,5 +136,15 @@ export class PlaygroundService {
       member.memberRole = Role[role as keyof typeof Role];
     });
     return this.getProjectDetailResponseDto(response);
+  }
+
+  async getAllMembers({
+    filter: part,
+    generation,
+  }: MemberRequestDto): Promise<MemberListResponseDto> {
+    return await this.playgroundRepository.getAllMembers({
+      filter: part,
+      generation,
+    });
   }
 }

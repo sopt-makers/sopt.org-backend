@@ -8,7 +8,7 @@ import { ConfigModule } from '@nestjs/config';
 import { APP_PIPE } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { MemberModule } from './members/memberModule';
+import { MemberModule } from './members/member.module';
 import { StudyModule } from './study/study.module';
 import { AboutSoptModule } from './aboutsopt/aboutsopt.module';
 import { typeORMFactory } from 'src/configs/typeorm.config';
