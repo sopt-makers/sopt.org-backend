@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Category } from './category';
-import { Link } from './link';
+import { Link } from '../../internal/playground/dto/link';
 
 export enum ServiceType {
   WEB = 'WEB',

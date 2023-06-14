@@ -1,21 +1,29 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  HttpException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { catchError, lastValueFrom, map } from 'rxjs';
-
 import { EnvConfig } from '../../configs/env.config';
 import { GetPlaygroundUserInfoResponseDto } from './dto/get-playground-user-info-response.dto';
-import { GetSopticlesResponseDto } from './dto/get-playground-sopticle-response.dto';
+import { PlaygroundProjectResponseDto } from './dto/playground-project-response.dto';
+import { PlaygroundProjectDetailResponseDto } from './dto/playground-project-detail-response.dto';
 
 @Injectable()
 export class PlaygroundRepository {
   private readonly API_URL: string;
+  private readonly jwtToken: string;
 
   constructor(
     private readonly httpService: HttpService,
     private readonly configService: ConfigService<EnvConfig>,
   ) {
     this.API_URL = this.configService.get('PLAYGROUND_API_URL') as string;
+    this.jwtToken = this.configService.get(
+      'PLAYGROUND_API_URL_JWT_TOKEN',
+    ) as string;
   }
 
   async getUser(authToken: string): Promise<GetPlaygroundUserInfoResponseDto> {
@@ -38,24 +46,41 @@ export class PlaygroundRepository {
     );
   }
 
-  async getSopticles(): Promise<GetSopticlesResponseDto[]> {
+  async getAllProjects(): Promise<PlaygroundProjectResponseDto[]> {
     return await lastValueFrom(
       this.httpService
-        .get<GetSopticlesResponseDto[]>(
-          `${this.API_URL}/internal/api/v1/sopticles`,
+        .get<PlaygroundProjectResponseDto[]>(
+          `${this.API_URL}/internal/api/v1/projects`,
           {
             headers: {
-              Authorization: this.configService.get(
-                'PLAYGROUND_API_URL_JWT_TOKEN',
-              ),
+              Authorization: this.jwtToken,
             },
           },
         )
-        .pipe(map((response) => response.data))
+        .pipe(map((res) => res.data)),
+    );
+  }
+
+  async getProjectDetail(
+    projectId: number,
+  ): Promise<PlaygroundProjectDetailResponseDto> {
+    return await lastValueFrom(
+      this.httpService
+        .get<PlaygroundProjectDetailResponseDto>(
+          `${this.API_URL}/internal/api/v1/projects/${projectId}`,
+          {
+            headers: {
+              Authorization: this.jwtToken,
+            },
+          },
+        )
+        .pipe(map((res) => res.data))
         .pipe(
-          catchError((err) => {
-            console.log(err.data);
-            throw new InternalServerErrorException('API 서버 오류', err);
+          catchError((error) => {
+            throw new HttpException(
+              'API ' + error.response.data.error,
+              error.response.data.status,
+            );
           }),
         ),
     );

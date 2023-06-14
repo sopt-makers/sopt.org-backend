@@ -1,6 +1,6 @@
 import { ProjectType } from 'src/projects/dtos/category';
-import { PlaygroundLink } from 'src/projects/dtos/playground-link';
-import { ServiceType } from './projects-response.dto';
+import { PlaygroundLink } from 'src/internal/playground/dto/playground-link';
+import { ServiceType } from 'src/projects/dtos/projects-response.dto';
 
 type Category = ProjectType;
 

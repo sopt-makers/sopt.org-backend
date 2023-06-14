@@ -6,7 +6,7 @@ import { AboutSoptController } from './controllers/aboutsopt.controller';
 import { CoreValue } from './entities/coreValue.entity';
 import { MemberModule } from '../members/memberModule';
 import { StudyModule } from '../study/study.module';
-import { ProjectModule } from '../projects/projectModule';
+import { ProjectModule } from '../projects/project.module';
 
 @Module({
   imports: [
