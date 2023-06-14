@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { StudyService } from './study.service';
 import { StudyRepository } from '../repository/study.repository';
 import { InternalServerErrorException } from '@nestjs/common';
-import { CrewMeetingResponseDto } from '../dtos/crew-study-response.dto';
+import { CrewMeetingResponseDto } from '../../internal/crew/dto/crew-study-response.dto';
 
 describe('StudyServiceTest', () => {
   let studyService: StudyService;

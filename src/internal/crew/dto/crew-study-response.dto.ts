@@ -1,5 +1,5 @@
-import { MeetingJoinablePart } from './study-response.dto';
-import { CrewPageApiMetaResponseDto } from '../../common/type';
+import { MeetingJoinablePart } from '../../../study/dtos/study-response.dto';
+import { CrewPageApiMetaResponseDto } from '../../../common/type';
 
 export interface CrewMeetingResponseDto {
   readonly statusCode: number;
