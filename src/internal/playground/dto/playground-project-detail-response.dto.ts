@@ -1,7 +1,7 @@
 import { PlaygroundMember } from './playground-member';
 import { PlaygroundLink } from './playground-link';
-import { ProjectType } from './category';
-import { ServiceType } from './projects-response.dto';
+import { ProjectType } from 'src/projects/dtos/category';
+import { ServiceType } from 'src/projects/dtos/projects-response.dto';
 
 type Category = ProjectType;
 

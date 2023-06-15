@@ -1,18 +1,12 @@
-import { HttpService } from '@nestjs/axios';
+import { PlaygroundService } from 'src/internal/playground/playground.service';
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { catchError, lastValueFrom, map, of } from 'rxjs';
-import { EnvConfig } from 'src/configs/env.config';
 import { MemberListResponseDto } from '../dtos/member-response.dto';
 import { MemberRequestDto } from '../dtos/member-request.dto';
 import { Cacheable } from '../../common/cache';
 
 @Injectable()
 export class MemberService {
-  constructor(
-    private readonly httpService: HttpService,
-    private readonly configService: ConfigService<EnvConfig>,
-  ) {}
+  constructor(private readonly playgroundService: PlaygroundService) {}
 
   @Cacheable({
     ttl: 30 * 60,
@@ -22,32 +16,9 @@ export class MemberService {
     filter: part,
     generation,
   }: MemberRequestDto): Promise<MemberListResponseDto> {
-    const memberApiPath = '/internal/api/v1/official/members/profile';
-
-    const apiUrl = this.configService.get('PLAYGROUND_API_URL');
-    const jwtToken = this.configService.get('PLAYGROUND_API_URL_JWT_TOKEN');
-
-    return await lastValueFrom(
-      this.httpService
-        .get<MemberListResponseDto>(apiUrl + memberApiPath, {
-          headers: {
-            Authorization: jwtToken,
-          },
-          params: {
-            filter: part,
-            generation,
-          },
-        })
-        .pipe(
-          map((res) => res.data),
-          catchError((error) => {
-            console.error(`Get Member Failed: ${error}`);
-            return of({
-              members: [],
-              numberOfMembersAtGeneration: 0,
-            });
-          }),
-        ),
-    );
+    return await this.playgroundService.getAllMembers({
+      filter: part,
+      generation,
+    });
   }
 }

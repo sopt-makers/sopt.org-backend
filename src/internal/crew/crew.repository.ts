@@ -2,13 +2,12 @@ import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { catchError, lastValueFrom, map } from 'rxjs';
 import { AxiosError } from 'axios';
-
 import { EnvConfig } from '../../configs/env.config';
-import { CrewMeetingResponseDto } from '../dtos/crew-study-response.dto';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { CrewMeetingResponseDto } from './dto/crew-study-response.dto';
 
 @Injectable()
-export class StudyRepository {
+export class CrewRepository {
   private URL: string;
 
   constructor(

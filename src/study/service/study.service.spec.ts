@@ -1,18 +1,22 @@
+import { CrewService } from './../../internal/crew/crew.service';
+import { CrewRepository } from './../../internal/crew/crew.repository';
 import { Test, TestingModule } from '@nestjs/testing';
 import { StudyService } from './study.service';
-import { StudyRepository } from '../repository/study.repository';
 import { InternalServerErrorException } from '@nestjs/common';
-import { CrewMeetingResponseDto } from '../dtos/crew-study-response.dto';
+import { CrewMeetingResponseDto } from '../../internal/crew/dto/crew-study-response.dto';
 
 describe('StudyServiceTest', () => {
   let studyService: StudyService;
-  let studyRepository: StudyRepository;
+  let crewService: CrewService;
+  let crewRepository: CrewRepository;
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
+        CrewService,
         StudyService,
         {
-          provide: StudyRepository,
+          provide: CrewRepository,
           useValue: {
             findAll: jest.fn(),
           },
@@ -20,19 +24,20 @@ describe('StudyServiceTest', () => {
       ],
     }).compile();
 
+    crewService = module.get<CrewService>(CrewService);
     studyService = module.get<StudyService>(StudyService);
-    studyRepository = module.get<StudyRepository>(StudyRepository);
+    crewRepository = module.get<CrewRepository>(CrewRepository);
   });
 
   it('should be defined', () => {
     expect(studyService).toBeDefined();
-    expect(studyRepository).toBeDefined();
+    expect(crewRepository).toBeDefined();
   });
 
   describe('GetStudyCount Method', () => {
     it('StudyRepository.findAll 메서드에서 Error가 발생하면 getStudyCount의 response는 null이다', async () => {
       const mockError = new InternalServerErrorException('mock error');
-      studyRepository.findAll = jest.fn().mockRejectedValue(mockError);
+      crewRepository.findAll = jest.fn().mockRejectedValue(mockError);
 
       const response = await studyService.getStudyCount();
 
@@ -54,7 +59,7 @@ describe('StudyServiceTest', () => {
           },
         },
       };
-      studyRepository.findAll = jest.fn().mockResolvedValue(mockResponse);
+      crewRepository.findAll = jest.fn().mockResolvedValue(mockResponse);
 
       const response = await studyService.getStudyCount();
 
@@ -63,9 +68,9 @@ describe('StudyServiceTest', () => {
   });
 
   describe('GetStudies Method', () => {
-    it('StudyRepository FindAll 메서드 에서 Error가 발생하면 getStudies는 Error를 Throw 한다.', async () => {
+    it('CrewRepository FindAll 메서드 에서 Error가 발생하면 getStudies는 Error를 Throw 한다.', async () => {
       const mockError = new InternalServerErrorException('mock error');
-      studyRepository.findAll = jest.fn().mockRejectedValue(mockError);
+      crewRepository.findAll = jest.fn().mockRejectedValue(mockError);
 
       await expect(studyService.getStudies()).rejects.toThrowError(mockError);
     });
@@ -85,7 +90,7 @@ describe('StudyServiceTest', () => {
           },
         },
       };
-      studyRepository.findAll = jest.fn().mockResolvedValue(mockResponse);
+      crewRepository.findAll = jest.fn().mockResolvedValue(mockResponse);
 
       const response = studyService.getStudies();
 
