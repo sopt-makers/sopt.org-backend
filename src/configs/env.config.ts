@@ -15,6 +15,7 @@ export interface EnvConfig {
   AWS_SECRET_ACCESS_KEY: string;
   BUCKET_NAME: string;
   CREW_API_URL: string;
+  OFFICIAL_API_KEY: string;
 }
 
 export const envValidationSchema = Joi.object({
@@ -34,4 +35,7 @@ export const envValidationSchema = Joi.object({
   AWS_ACCESS_KEY_ID: Joi.string().required(),
   AWS_SECRET_ACCESS_KEY: Joi.string().required(),
   BUCKET_NAME: Joi.string().required(),
+  OFFICIAL_API_KEY: Joi.string()
+    .required()
+    .description('공홈 API를 사용하는 클라이언트에게 제공해주는 KEY 값'),
 });

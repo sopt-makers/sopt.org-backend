@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-import { Part } from '../entities/reviews.entity';
+import { Part } from '../../common/type';
 
 export class ReviewsResponseDto {
   @ApiProperty({

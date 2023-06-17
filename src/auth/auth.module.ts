@@ -5,6 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import { AuthService } from './auth.service';
 import { EnvConfig } from '../configs/env.config';
 import { AuthGuard } from './auth.guard';
+import { PlaygroudModule } from '../internal/playground/playgroud.module';
 
 @Global()
 @Module({
@@ -17,6 +18,7 @@ import { AuthGuard } from './auth.guard';
         };
       },
     }),
+    PlaygroudModule,
   ],
   providers: [AuthService, AuthGuard],
   exports: [AuthService],

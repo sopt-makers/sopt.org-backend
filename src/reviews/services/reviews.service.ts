@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Part, Review } from 'src/reviews/entities/reviews.entity';
+import { Review } from 'src/reviews/entities/reviews.entity';
 import { Repository } from 'typeorm';
 import { ReviewsResponseDto } from '../dtos/reviews-response.dto';
 import { ReviewsRequestDto } from '../dtos/reviews-request.dto';
 import { PaginateResponseDto } from '../../utils/paginate-response.dto';
+import { Part } from '../../common/type';
 
 @Injectable()
 export class ReviewsService {
@@ -25,9 +26,9 @@ export class ReviewsService {
     }
     reviewQueryBuilder.take(reviewsRequestDto.getLimit());
     reviewQueryBuilder.skip(reviewsRequestDto.getOffset());
-    reviewQueryBuilder.orderBy( 'semester', 'DESC' );
-    reviewQueryBuilder.addOrderBy( 'reviewer', 'ASC' );
-    reviewQueryBuilder.addOrderBy( 'id', 'ASC' );
+    reviewQueryBuilder.orderBy('semester', 'DESC');
+    reviewQueryBuilder.addOrderBy('reviewer', 'ASC');
+    reviewQueryBuilder.addOrderBy('id', 'ASC');
 
     const [reviews, reviewsCount] = await reviewQueryBuilder.getManyAndCount();
 

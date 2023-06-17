@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Member } from 'src/projects/dtos/member';
+import { Member } from 'src/internal/playground/dto/member';
 import { ProjectsResponseDto } from './projects-response.dto';
 
 export class ProjectDetailResponseDto extends ProjectsResponseDto {
