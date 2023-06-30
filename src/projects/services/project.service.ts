@@ -8,10 +8,6 @@ import { PlaygroundService } from 'src/internal/playground/playground.service';
 export class ProjectService {
   constructor(private readonly playgroundService: PlaygroundService) {}
 
-  @Cacheable({
-    ttl: 30 * 60,
-    validate: (value: any) => !(value instanceof Error),
-  })
   async findAll(project?: string): Promise<ProjectsResponseDto[]> {
     const projects = await this.playgroundService.getAllProjects(project);
     return projects;
