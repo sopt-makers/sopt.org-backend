@@ -58,9 +58,25 @@ export class PlaygroundRepository {
               Authorization: this.jwtToken,
             },
             maxContentLength: Infinity,
+            maxBodyLength: Infinity,
           },
         )
-        .pipe(map((res) => res.data)),
+        .pipe(
+          map((res) => {
+            console.log('headers', res.headers);
+            console.log('res request', res.request);
+            return res.data;
+          }),
+        )
+        .pipe(
+          catchError((error) => {
+            console.error('project api error', error);
+            throw new HttpException(
+              'Projcet API ' + error.response.data.error,
+              error.response.data.status,
+            );
+          }),
+        ),
     );
   }
 
