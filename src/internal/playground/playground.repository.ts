@@ -49,6 +49,7 @@ export class PlaygroundRepository {
   }
 
   async getAllProjects(): Promise<PlaygroundProjectResponseDto[]> {
+    console.log('project repository');
     return await lastValueFrom(
       this.httpService
         .get<PlaygroundProjectResponseDto[]>(

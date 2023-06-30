@@ -13,6 +13,7 @@ export class ProjectService {
     validate: (value: any) => !(value instanceof Error),
   })
   async findAll(project?: string): Promise<ProjectsResponseDto[]> {
+    console.log('project service');
     const projects = await this.playgroundService.getAllProjects(project);
     return projects;
   }
