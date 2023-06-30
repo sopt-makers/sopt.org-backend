@@ -58,8 +58,8 @@ export class PlaygroundRepository {
             headers: {
               Authorization: this.jwtToken,
             },
-            maxContentLength: Infinity,
-            maxBodyLength: Infinity,
+            maxBodyLength: 104857600, //100mb
+            maxContentLength: 104857600, //100mb
           },
         )
         .pipe(
