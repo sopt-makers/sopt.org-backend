@@ -50,7 +50,6 @@ export class PlaygroundService {
 
   async getAllProjects(project?: string): Promise<ProjectsResponseDto[]> {
     const res: ProjectsResponseDto[] = [];
-    console.log('service');
 
     const response = await this.playgroundRepository.getAllProjects();
     // 중복제거 로직 : 추후 제거 예정

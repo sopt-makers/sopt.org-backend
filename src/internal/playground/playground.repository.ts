@@ -49,7 +49,6 @@ export class PlaygroundRepository {
   }
 
   async getAllProjects(): Promise<PlaygroundProjectResponseDto[]> {
-    console.log('project repository');
     return await lastValueFrom(
       this.httpService
         .get<PlaygroundProjectResponseDto[]>(
@@ -62,13 +61,7 @@ export class PlaygroundRepository {
             maxContentLength: 104857600, //100mb
           },
         )
-        .pipe(
-          map((res) => {
-            console.log('headers', res.headers);
-            console.log('res request', res.request);
-            return res.data;
-          }),
-        )
+        .pipe(map((res) => res.data))
         .pipe(
           catchError((error) => {
             console.error('project api error', error);

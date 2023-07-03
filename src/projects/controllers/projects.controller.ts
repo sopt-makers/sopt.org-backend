@@ -19,7 +19,6 @@ export class ProjectsController {
   async getProjects(
     @Query('filter') filter: string,
   ): Promise<ProjectsResponseDto[]> {
-    console.log('controller');
     const projects = await this.projectsService.findAll(filter);
     projects.sort(compareProjects);
 
