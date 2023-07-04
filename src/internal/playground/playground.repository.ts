@@ -55,7 +55,7 @@ export class PlaygroundRepository {
   })
   async getAllProjects(): Promise<PlaygroundProjectResponseDto[]> {
     return await lastValueFrom(
-      this.httpService
+      await this.httpService
         .get<PlaygroundProjectResponseDto[]>(
           `${this.API_URL}/internal/api/v1/projects`,
           {
@@ -63,7 +63,7 @@ export class PlaygroundRepository {
               Authorization: this.jwtToken,
             },
             maxBodyLength: 104857600, //100mb
-            maxContentLength: 104857600, //100mb
+            maxContentLength: Infinity, //100mb
           },
         )
         .pipe(map((res) => res.data))
