@@ -50,7 +50,7 @@ export class PlaygroundRepository {
   }
 
   @Cacheable({
-    ttl: 30 * 60,
+    ttl: 7 * 24 * 60 * 60,
     validate: (value: any) => !(value instanceof Error),
   })
   async getAllProjects(): Promise<PlaygroundProjectResponseDto[]> {
@@ -62,12 +62,10 @@ export class PlaygroundRepository {
             headers: {
               Authorization: this.jwtToken,
             },
-            maxBodyLength: 104857600, //100mb
-            maxContentLength: Infinity, //100mb
           },
         )
-        .pipe(map((res) => res.data))
         .pipe(
+          map((res) => res.data),
           catchError((error) => {
             console.error('project api error', error);
             throw new HttpException(
@@ -92,8 +90,8 @@ export class PlaygroundRepository {
             },
           },
         )
-        .pipe(map((res) => res.data))
         .pipe(
+          map((res) => res.data),
           catchError((error) => {
             throw new HttpException(
               'API ' + error.response.data.error,
