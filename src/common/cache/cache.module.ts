@@ -99,7 +99,7 @@ export class CacheModule implements OnModuleInit {
         if (!validate(data)) {
           return data;
         }
-
+        console.log('cache miss');
         await this.cacheManager.set(cacheKey, data, ttl);
         return data;
       };
