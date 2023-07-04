@@ -12,6 +12,7 @@ import { PlaygroundProjectResponseDto } from './dto/playground-project-response.
 import { PlaygroundProjectDetailResponseDto } from './dto/playground-project-detail-response.dto';
 import { MemberListResponseDto } from 'src/members/dtos/member-response.dto';
 import { MemberRequestDto } from 'src/members/dtos/member-request.dto';
+import { Cacheable } from '../../common/cache';
 
 @Injectable()
 export class PlaygroundRepository {
@@ -48,6 +49,10 @@ export class PlaygroundRepository {
     );
   }
 
+  @Cacheable({
+    ttl: 30 * 60,
+    validate: (value: any) => !(value instanceof Error),
+  })
   async getAllProjects(): Promise<PlaygroundProjectResponseDto[]> {
     return await lastValueFrom(
       this.httpService
