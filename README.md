@@ -4,9 +4,9 @@
 - SoptOfficial 공홈 API 서버 입니다.
 - Package Manager는  ```Yarn Package Manager``` 를 사용합니다.
 
-## Overview
+## INDEX
 1. [Getting Started](#Getting-started)
-2. [Official_Server Structure](#official_server_structure)
+2. [project-structure](#project-structure)
 3. [Deploy_Pipeline](#deploy-pipeline)
 
 # Getting-started
@@ -14,9 +14,9 @@
 ```bash
  yarn start:local 
 ```
-```yarn start:local``` 를 실행학게되면 다음과 같은 작업을 수행합니다.
+```yarn start:local``` 를 실행게되면 다음과 같은 작업을 수행합니다.
 
-1. envs/local.develop.env 파일을 읽어서 환경변수를 설정합니다.
+1. envs/local.develop.env 파일을 읽어서 환경변수를 root directory에 .env 파일로 copy 합니다. 
 2. docker-compose를 이용하여 local에 postgresql 데이터베이스 컨테이너를 실행합니다.
 3. nestjs가 env파일을 읽어서 local Database에 연결하여 서버를 실행시킵니다.
 
