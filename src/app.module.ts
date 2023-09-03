@@ -28,6 +28,7 @@ import { SopticleModule } from './sopticle/sopticle.module';
 import { InternalServiceModule } from './internal/internalService.module';
 import { ScraperModule } from './scraper/scraper.module';
 import { AppLoggerMiddleware } from './common/middlewares/request-logger.middleware';
+import { ClearCacheModule } from './clear-cache/clear-cache.module';
 
 @Module({
   imports: [
@@ -52,6 +53,7 @@ import { AppLoggerMiddleware } from './common/middlewares/request-logger.middlew
     SopticleModule,
     InternalServiceModule,
     ScraperModule,
+    ClearCacheModule,
   ],
   controllers: [AppController],
   providers: [
