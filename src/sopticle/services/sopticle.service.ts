@@ -23,6 +23,7 @@ import {
 import { CreateSopticleResponseDto } from '../dtos/create-sopticle-response.dto';
 import { SopticleAuthor } from '../entities/sopticle-author.entity';
 import { Part } from '../../common/type';
+import {InternalServerErrorException} from "@nestjs/common/exceptions/internal-server-error.exception";
 
 @Injectable()
 export class SopticleService {
@@ -210,48 +211,53 @@ export class SopticleService {
       throw new BadRequestException('이미 등록된 솝티클 입니다.');
     }
 
-    const scrapResult = await this.scrapperService.scrap({
-      sopticleUrl: dto.link,
-    });
+    try {
+      const scrapResult = await this.scrapperService.scrap({
+        sopticleUrl: dto.link,
+      });
 
-    const sopticle = await this.sopticleRepository.save(
-      Sopticle.from({
-        pgSopticleId: dto.id,
-        part: this.roleToPart(dto.authors[0].part),
-        generation: dto.authors[0].generation,
-        thumbnailUrl: scrapResult.thumbnailUrl,
-        title: scrapResult.title,
-        description: scrapResult.description,
-        authorId: dto.authors[0].id,
-        authorName: dto.authors[0].name,
-        authorProfileImageUrl: dto.authors[0].profileImage,
-        sopticleUrl: scrapResult.sopticleUrl,
-      }),
-    );
+      const sopticle = await this.sopticleRepository.save(
+        Sopticle.from({
+          pgSopticleId: dto.id,
+          part: this.roleToPart(dto.authors[0].part),
+          generation: dto.authors[0].generation,
+          thumbnailUrl: scrapResult.thumbnailUrl,
+          title: scrapResult.title,
+          description: scrapResult.description,
+          authorId: dto.authors[0].id,
+          authorName: dto.authors[0].name,
+          authorProfileImageUrl: dto.authors[0].profileImage,
+          sopticleUrl: scrapResult.sopticleUrl,
+        }),
+      );
 
-    const authorEntities = dto.authors.map((authorDto) =>
-      SopticleAuthor.from({
-        ...authorDto,
-        pgUserId: authorDto.id,
-        sopticle: sopticle,
-        part: this.roleToPart(authorDto.part),
-      }),
-    );
+      const authorEntities = dto.authors.map((authorDto) =>
+        SopticleAuthor.from({
+          ...authorDto,
+          pgUserId: authorDto.id,
+          sopticle: sopticle,
+          part: this.roleToPart(authorDto.part),
+        }),
+      );
 
-    await this.sopticleAuthorRepository.save(authorEntities);
+      await this.sopticleAuthorRepository.save(authorEntities);
 
-    return {
-      id: sopticle.id,
-      part: sopticle.part,
-      generation: sopticle.generation,
-      thumbnailUrl: sopticle.thumbnailUrl,
-      title: sopticle.title,
-      description: sopticle.description,
-      author: sopticle.authorName,
-      authorProfileImageUrl: sopticle.authorProfileImageUrl,
-      sopticleUrl: sopticle.sopticleUrl,
-      uploadedAt: sopticle.createdAt,
-    };
+      return {
+        id: sopticle.id,
+        part: sopticle.part,
+        generation: sopticle.generation,
+        thumbnailUrl: sopticle.thumbnailUrl,
+        title: sopticle.title,
+        description: sopticle.description,
+        author: sopticle.authorName,
+        authorProfileImageUrl: sopticle.authorProfileImageUrl,
+        sopticleUrl: sopticle.sopticleUrl,
+        uploadedAt: sopticle.createdAt,
+      };
+    } catch (err) {
+      console.log(err);
+      throw new InternalServerErrorException('솝티클 업로드에 실패하였습니다.');
+    }
   }
 
   /**
