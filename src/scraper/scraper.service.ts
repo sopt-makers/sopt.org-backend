@@ -2,7 +2,9 @@ import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { catchError, lastValueFrom, map } from 'rxjs';
 import { HttpService } from '@nestjs/axios';
 import * as cheerio from 'cheerio';
+import * as puppeteer from 'puppeteer';
 import * as _ from 'lodash';
+import * as fs from 'fs';
 
 import { CreateScraperResponseDto } from './dto/create-scraper-response.dto';
 import { ScrapSopticleDto } from '../sopticle/dtos/scrap-sopticle.dto';
@@ -14,9 +16,13 @@ export class ScraperService {
   async scrap({
     sopticleUrl,
   }: ScrapSopticleDto): Promise<CreateScraperResponseDto> {
-    const html = await this.getHtmlData(sopticleUrl);
-    const $ = cheerio.load(html);
+    if (this.checkNaverBlog(sopticleUrl)) {
+      return this.scrapeNaverBlog(sopticleUrl);
+    }
 
+    const html = await this.getHtmlData(sopticleUrl);
+
+    const $ = cheerio.load(html);
     const title = this.getTitle($, sopticleUrl);
 
     const thumbnailUrl = this.getImage($, sopticleUrl);
@@ -83,5 +89,38 @@ export class ScraperService {
           }),
         ),
     );
+  }
+
+  private checkNaverBlog(url: string): boolean {
+    return url.includes('blog.naver.com');
+  }
+
+  private async scrapeNaverBlog(
+    url: string,
+  ): Promise<CreateScraperResponseDto> {
+    const browser = await puppeteer.launch({ headless: 'new' });
+    const page = await browser.newPage();
+
+    await page.goto(url);
+    const frame = page.frames().find((frame) => frame.name() === 'mainFrame');
+
+    if (!frame) {
+      throw new InternalServerErrorException('Naver Blog Scraping Error Occur');
+    }
+    const content = await frame.content();
+    const $ = cheerio.load(content);
+
+    const title = $('span[class="se-fs- se-ff-"]').text();
+    const mainDiv = $('div[class="se-main-container"]');
+    const description = mainDiv.find('p').text().slice(0, 300);
+    const image = mainDiv.find('img').first().attr('src');
+    await browser.close();
+
+    return {
+      thumbnailUrl: String(image),
+      title,
+      description,
+      sopticleUrl: url,
+    };
   }
 }
