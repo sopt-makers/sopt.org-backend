@@ -4,7 +4,6 @@ import { HttpService } from '@nestjs/axios';
 import * as cheerio from 'cheerio';
 import * as puppeteer from 'puppeteer';
 import * as _ from 'lodash';
-import * as fs from 'fs';
 
 import { CreateScraperResponseDto } from './dto/create-scraper-response.dto';
 import { ScrapSopticleDto } from '../sopticle/dtos/scrap-sopticle.dto';
@@ -17,6 +16,7 @@ export class ScraperService {
     sopticleUrl,
   }: ScrapSopticleDto): Promise<CreateScraperResponseDto> {
     if (this.checkNaverBlog(sopticleUrl)) {
+      console.log('Naver Blog Scrape Init');
       return this.scrapeNaverBlog(sopticleUrl);
     }
 
