@@ -24,4 +24,5 @@ COPY --from=build /app/dist ./dist
 
 EXPOSE 3000
 
+CMD ["node", "node_modules/puppeteer/install.js"]
 CMD ["yarn", "run", "start"]
