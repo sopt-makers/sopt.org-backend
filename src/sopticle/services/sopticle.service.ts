@@ -201,9 +201,6 @@ export class SopticleService {
   async createSopticle(
     dto: CreateSopticleDto,
   ): Promise<CreateSopticleResponseDto> {
-    console.log(JSON.stringify(dto));
-    console.log(dto.link);
-
     const hasSopticleUrl = await this.sopticleRepository.findOne({
       where: {
         sopticleUrl: dto.link,
