@@ -10,6 +10,7 @@ RUN yarn install
 
 COPY . .
 
+RUN node node_modules/puppeteer/install.js
 RUN yarn build
 
 # Stage 2: Create the production image
@@ -24,5 +25,4 @@ COPY --from=build /app/dist ./dist
 
 EXPOSE 3000
 
-CMD ["node", "node_modules/puppeteer/install.js"]
 CMD ["yarn", "run", "start"]
