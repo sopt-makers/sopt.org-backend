@@ -24,4 +24,4 @@ COPY --from=build /app/dist ./dist
 
 EXPOSE 3000
 
-CMD yarn add puppeteer && yarn run start
+CMD yarn run start
