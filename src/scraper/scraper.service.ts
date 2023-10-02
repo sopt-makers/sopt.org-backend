@@ -100,7 +100,7 @@ export class ScraperService {
   ): Promise<CreateScraperResponseDto> {
     const browser = await puppeteer.launch({
       headless: 'new',
-      executablePath: '/usr/bin/google-chrome',
+      executablePath: '/usr/bin/chromium-browser',
       args: [
         '--disable-gpu',
         '--disable-dev-shm-usage',
