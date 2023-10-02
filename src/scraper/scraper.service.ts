@@ -101,13 +101,7 @@ export class ScraperService {
     const browser = await puppeteer.launch({
       headless: 'new',
       executablePath: '/usr/bin/chromium-browser',
-      args: [
-        '--disable-gpu',
-        '--disable-dev-shm-usage',
-        '--disable-setuid-sandbox',
-        '--no-sandbox',
-        '--no-zygote',
-      ],
+      ignoreDefaultArgs: ['--disable-extensions'],
     });
     const page = await browser.newPage();
 
