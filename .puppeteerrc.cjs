@@ -3,6 +3,6 @@
  */
 module.exports = {
     // Changes the cache location for Puppeteer.
-    cacheDirectory: "~/.cache/puppeteer",
+    cacheDirectory: "/home/ubuntu/.cache/puppeteer",
     skipDownload: true
 };
