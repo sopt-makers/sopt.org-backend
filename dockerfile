@@ -24,5 +24,4 @@ COPY --from=build /app/dist ./dist
 
 EXPOSE 3000
 
-# Install Puppeteer Chrome Driver then Init Server
-CMD node ./node_modules/puppeteer/install.mjs && yarn run start
+CMD ["yarn", "run", "start"]
