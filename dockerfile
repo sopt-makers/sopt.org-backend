@@ -22,6 +22,8 @@ COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/yarn.lock ./yarn.lock
 COPY --from=build /app/dist ./dist
 
+# Install Puppeteer Chromium
+RUN node ./node_modules/puppeteer/install.js
 EXPOSE 3000
 
 CMD yarn run start

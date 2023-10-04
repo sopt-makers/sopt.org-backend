@@ -100,8 +100,7 @@ export class ScraperService {
   ): Promise<CreateScraperResponseDto> {
     const browser = await puppeteer.launch({
       headless: 'new',
-      executablePath: '/usr/bin/chromium-browser',
-      ignoreDefaultArgs: ['--disable-extensions'],
+      args: ['--no-sandbox'],
     });
     const page = await browser.newPage();
 
