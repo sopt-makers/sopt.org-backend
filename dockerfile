@@ -22,9 +22,7 @@ COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/yarn.lock ./yarn.lock
 COPY --from=build /app/dist ./dist
 
-# Install Puppeteer Chromium
-RUN node ./node_modules/puppeteer/install.mjs
-
 EXPOSE 3000
 
-CMD yarn run start
+# Install Puppeteer Chrome Driver then Init Server
+CMD node ./node_modules/puppeteer/install.mjs && yarn run start
