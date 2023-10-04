@@ -66,7 +66,7 @@ import { ClearCacheModule } from './clear-cache/clear-cache.module';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {
-    console.log('check');
+    console.log('Updating Fine');
     consumer.apply(AppLoggerMiddleware).forRoutes('*');
   }
 }
