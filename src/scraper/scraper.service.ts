@@ -100,7 +100,8 @@ export class ScraperService {
   ): Promise<CreateScraperResponseDto> {
     const browser = await puppeteer.launch({
       headless: 'new',
-      args: ['--no-sandbox'],
+      args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-gpu'],
+      ignoreDefaultArgs: ['--disable-extensions'],
     });
     const page = await browser.newPage();
 
