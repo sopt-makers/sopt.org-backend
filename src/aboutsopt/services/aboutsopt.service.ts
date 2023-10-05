@@ -52,7 +52,7 @@ export class AboutSoptService {
 
     const members = await this.memberService.findAll({ generation });
     const projects = await this.projectService.findByGeneration(generation);
-    const studyCount = await this.studyService.getStudyCount();
+    const studyCount = await this.studyService.getStudyCount(generation);
 
     return {
       aboutSopt: aboutSopt,
