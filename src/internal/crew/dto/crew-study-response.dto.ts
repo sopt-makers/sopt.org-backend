@@ -34,6 +34,7 @@ export interface CrewMeetingDto {
   note: string;
   isMentorNeeded: false;
   canJoinOnlyActiveGeneration: false;
+  createdGeneration: number;
   targetActiveGeneration: number | null;
   joinableParts: MeetingJoinablePart[];
   appliedInfo: [
