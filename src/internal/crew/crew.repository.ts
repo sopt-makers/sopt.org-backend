@@ -17,21 +17,31 @@ export class CrewRepository {
     this.URL = this.configService.get('CREW_API_URL') as string;
   }
 
-  async findAll({
-    page = 1,
-    limit = 12,
-  }: {
-    page: number;
-    limit: number;
-  }): Promise<CrewMeetingResponseDto> {
+  async findAll(
+    {
+      page = 1,
+      limit = 12,
+    }: {
+      page: number;
+      limit: number;
+    },
+    generation?: number,
+  ): Promise<CrewMeetingResponseDto> {
+    let activeGeneration = true;
+    let generationParam = '';
+    if (generation) {
+      generationParam = `&createdGenerations=${generation}`;
+      activeGeneration = false;
+    }
+
     return await lastValueFrom(
       this.httpService
         .get<CrewMeetingResponseDto>(
           `${
             this.URL
-          }/meeting?isOnlyActiveGeneration=${true}&page=${page}&take=${limit}&category=${encodeURI(
+          }/meeting?isOnlyActiveGeneration=${activeGeneration}&page=${page}&take=${limit}&category=${encodeURI(
             '스터디',
-          )}`,
+          ).concat(generationParam)}`,
         )
         .pipe(
           map((res) => res.data),

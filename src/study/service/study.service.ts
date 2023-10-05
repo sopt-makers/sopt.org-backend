@@ -18,7 +18,7 @@ export class StudyService {
   /**
    * 공홈 AboutTab에서 StudyCount를 집계할때 사용됩니다.
    */
-  async getStudyCount(): Promise<number | null> {
-    return await this.crewService.getStudyCount();
+  async getStudyCount(generation?: number): Promise<number | null> {
+    return await this.crewService.getStudyCount(generation);
   }
 }
