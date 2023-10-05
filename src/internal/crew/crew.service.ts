@@ -30,12 +30,15 @@ export class CrewService {
     );
   }
 
-  async getStudyCount(): Promise<number | null> {
+  async getStudyCount(generation?: number): Promise<number | null> {
     try {
-      const findStudyResponse = await this.crewRepository.findAll({
-        page: 1,
-        limit: 1,
-      });
+      const findStudyResponse = await this.crewRepository.findAll(
+        {
+          page: 1,
+          limit: 1,
+        },
+        generation,
+      );
       return findStudyResponse.data.meta.itemCount;
     } catch (error) {
       return null;
