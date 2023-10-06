@@ -14,6 +14,8 @@ export const typeORMFactory = {
     password: configService.get('DB_PASSWORD'),
     database: configService.get('DB_DATABASE'),
     entities: [__dirname + '/../**/*.entity{.ts,.js}'],
+    migrations: ['migrations/*.ts'],
+    migrationsTableName: 'migration_history',
     logging: configService.get('NODE_ENV') === 'development',
     synchronize: false,
   }),
