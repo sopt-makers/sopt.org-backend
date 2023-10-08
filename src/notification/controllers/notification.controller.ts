@@ -3,7 +3,6 @@ import {
   Controller,
   Get,
   Post,
-  Put,
   Query,
   UsePipes,
   ValidationPipe,
@@ -28,15 +27,14 @@ export class NotificationController {
   async registerNotification(
     @Body() dto: RegisterNotificationDto,
   ): Promise<RegisterNotificationResponseDto | null> {
-    return null;
+    return await this.notificationService.registerNotification(dto);
   }
 
   @Get('list')
   @GetNotificationEmailListDocs()
   async getNotificationEmailList(
-    @Query('generation') id: number,
+    @Query('generation') generation: number,
   ): Promise<GetNotificationListResponseDto> {
-    return new GetNotificationListResponseDto();
-    // return this.aboutSoptService.getAboutSopt(id);
+    return await this.notificationService.getNotificationEmailList(generation);
   }
 }

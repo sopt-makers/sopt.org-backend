@@ -8,7 +8,7 @@ import {
 } from '@nestjs/swagger';
 
 import { RegisterNotificationResponseDto } from '../../src/notification/dtos/register-notification-response.dto';
-import {GetNotificationListResponseDto} from "../../src/notification/dtos/notification-list-response.dto";
+import { GetNotificationListResponseDto } from '../../src/notification/dtos/notification-list-response.dto';
 
 export function RegisterNotificationDocs() {
   return applyDecorators(
