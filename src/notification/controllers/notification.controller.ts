@@ -2,27 +2,21 @@ import {
   Body,
   Controller,
   Get,
-  Param,
   Post,
   Put,
   Query,
-  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 
 import { NotificationService } from '../services/notification.service';
-import { AboutSoptResponseDto } from '../dtos/aboutsopt-response.dto';
-import { AboutSoptUpdateDto } from '../dtos/aboutsopt-update.dto';
+import { GetNotificationListResponseDto } from '../dtos/notification-list-response.dto';
+import { RegisterNotificationDto } from '../dtos/register-notification.dto';
 import {
-  GetAboutSoptDocs,
-  GetAdminAboutSoptDocs,
-  UpdateAboutSoptDocs,
-  PublishAboutSoptDocs,
-  GetPublishedAboutSoptIdsDocs,
-} from '../../../docs/aboutsopt/aboutSopt.swagger';
-import { AuthGuard } from '../../auth/auth.guard';
-import { GetAboutSoptResponseDto } from '../dtos/get-about-sopt-response.dto';
+  GetNotificationEmailListDocs,
+  RegisterNotificationDocs,
+} from '../../../docs/notification/notification.swagger';
+import { RegisterNotificationResponseDto } from '../dtos/register-notification-response.dto';
 
 @UsePipes(new ValidationPipe({ transform: true }))
 @Controller('notification')
@@ -30,20 +24,19 @@ export class NotificationController {
   constructor(private readonly notificationService: NotificationService) {}
 
   @Post('register')
-  @UseGuards(AuthGuard)
-  @PublishAboutSoptDocs()
-  async publishAboutSopt(
-    @Param('id') id: number,
-  ): Promise<AboutSoptResponseDto | null> {
+  @RegisterNotificationDocs()
+  async registerNotification(
+    @Body() dto: RegisterNotificationDto,
+  ): Promise<RegisterNotificationResponseDto | null> {
     return null;
   }
 
-  @Get('')
-  @GetAboutSoptDocs()
-  async getAboutSopt(
-    @Query('generation') id?: number,
-  ): Promise<GetAboutSoptResponseDto> {
-    return new GetAboutSoptResponseDto();
+  @Get('list')
+  @GetNotificationEmailListDocs()
+  async getNotificationEmailList(
+    @Query('generation') id: number,
+  ): Promise<GetNotificationListResponseDto> {
+    return new GetNotificationListResponseDto();
     // return this.aboutSoptService.getAboutSopt(id);
   }
 }

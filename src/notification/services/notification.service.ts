@@ -1,14 +1,11 @@
 import {
   BadRequestException,
   Injectable,
-  NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { Notification } from '../entities/notification.entity';
-import { AboutSoptUpdateDto } from '../dtos/aboutsopt-update.dto';
-import { GetAboutSoptResponseDto } from '../dtos/get-about-sopt-response.dto';
 
 @Injectable()
 export class NotificationService {
@@ -112,7 +109,7 @@ export class NotificationService {
   //
   // async updateAboutSopt(
   //   id: number,
-  //   aboutSoptUpdateDto: AboutSoptUpdateDto,
+  //   aboutSoptUpdateDto: RegisterNotificationDto,
   // ): Promise<AboutSopt> {
   //   const aboutSopt = await this.aboutSoptRepository.findOne({
   //     where: { id },
@@ -136,7 +133,7 @@ export class NotificationService {
   //
   // private overwriteValidate(
   //   aboutSopt: AboutSopt,
-  //   aboutSoptUpdateDto: AboutSoptUpdateDto,
+  //   aboutSoptUpdateDto: RegisterNotificationDto,
   // ): void {
   //   const coreValueIds = aboutSopt.coreValues.map((coreValue) => coreValue.id);
   //   aboutSoptUpdateDto.coreValues.forEach((coreValueDto) => {
