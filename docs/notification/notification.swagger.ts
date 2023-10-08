@@ -5,6 +5,7 @@ import {
   ApiOperation,
   ApiTags,
   ApiQuery,
+  ApiCreatedResponse,
 } from '@nestjs/swagger';
 
 import { RegisterNotificationResponseDto } from '../../src/notification/dtos/register-notification-response.dto';
@@ -16,7 +17,7 @@ export function RegisterNotificationDocs() {
     ApiOperation({
       summary: 'Register Notification Email',
     }),
-    ApiOkResponse({ type: RegisterNotificationResponseDto }),
+    ApiCreatedResponse({ type: RegisterNotificationResponseDto }),
     ApiBadRequestResponse({
       description:
         "같은 기수에 이미 등록된 이메일인 경우 : 'Already Registered Email'",
