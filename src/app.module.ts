@@ -29,6 +29,7 @@ import { InternalServiceModule } from './internal/internalService.module';
 import { ScraperModule } from './scraper/scraper.module';
 import { AppLoggerMiddleware } from './common/middlewares/request-logger.middleware';
 import { ClearCacheModule } from './clear-cache/clear-cache.module';
+import { NotificationModule } from './notification/notification.module';
 
 @Module({
   imports: [
@@ -54,6 +55,7 @@ import { ClearCacheModule } from './clear-cache/clear-cache.module';
     InternalServiceModule,
     ScraperModule,
     ClearCacheModule,
+    NotificationModule,
   ],
   controllers: [AppController],
   providers: [
