@@ -16,6 +16,7 @@ export interface EnvConfig {
   BUCKET_NAME: string;
   CREW_API_URL: string;
   OFFICIAL_API_KEY: string;
+  LOCAL: boolean;
 }
 
 export const envValidationSchema = Joi.object({
@@ -38,4 +39,5 @@ export const envValidationSchema = Joi.object({
   OFFICIAL_API_KEY: Joi.string()
     .required()
     .description('공홈 API를 사용하는 클라이언트에게 제공해주는 KEY 값'),
+  LOCAL: Joi.boolean().required(),
 });
