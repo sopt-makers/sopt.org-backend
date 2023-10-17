@@ -7,10 +7,16 @@ import * as _ from 'lodash';
 
 import { CreateScraperResponseDto } from './dto/create-scraper-response.dto';
 import { ScrapSopticleDto } from '../sopticle/dtos/scrap-sopticle.dto';
+import { PuppeteerLaunchOptions } from 'puppeteer';
+import { ConfigService } from '@nestjs/config';
+import { EnvConfig } from '../configs/env.config';
 
 @Injectable()
 export class ScraperService {
-  constructor(private readonly httpService: HttpService) {}
+  constructor(
+    private readonly httpService: HttpService,
+    private readonly configService: ConfigService<EnvConfig>,
+  ) {}
 
   async scrap({
     sopticleUrl,
@@ -98,10 +104,20 @@ export class ScraperService {
   private async scrapeNaverBlog(
     url: string,
   ): Promise<CreateScraperResponseDto> {
-    const browser = await puppeteer.launch({
+    const puppeteerOption: PuppeteerLaunchOptions = {
       headless: 'new',
-      args: ['--no-sandbox', '--disable-setuid-sandbox'],
-    });
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+      ],
+    };
+
+    if (!this.configService.get('LOCAL')) {
+      puppeteerOption.executablePath = '/usr/bin/chromium-browser';
+    }
+
+    const browser = await puppeteer.launch(puppeteerOption);
     const page = await browser.newPage();
 
     await page.goto(url);

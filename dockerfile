@@ -15,6 +15,8 @@ RUN yarn build
 # Stage 2: Create the production image
 FROM node:16-alpine AS production
 
+RUN apk add --no-cache udev ttf-freefont chromium
+
 WORKDIR /app
 
 COPY --from=build /app/package.json ./package.json
