@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class ReviewTableModification implements MigrationInterface {
-  name = 'ReviewTableModification';
+export class ReviewModification1696575391219 implements MigrationInterface {
+  name = 'ReviewModification1696575391219';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     const reviewTable = await queryRunner.getTable('Review');
@@ -14,7 +14,7 @@ export class ReviewTableModification implements MigrationInterface {
     await queryRunner.renameColumn(reviewTable, 'semester', 'generation');
     await queryRunner.renameColumn(reviewTable, 'link', 'url');
     await queryRunner.query(
-      `ALTER TABLE "Review" ADD "description" character varying(600) NOT NULL`,
+      `ALTER TABLE "Review" ADD "description" character varying(600) NOT NULL DEFAULT ''`,
     );
     await queryRunner.query(
       `ALTER TABLE "Review" ADD "authorProfileImageUrl" character varying(500)`,

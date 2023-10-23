@@ -40,14 +40,22 @@ export class ReviewsService {
     );
   }
 
-  getRandomReviewByPart(): Promise<Review[]> {
+  async getRandomReviewByPart(): Promise<Review[]> {
     const parts: Part[] = Object.values(Part);
-    return Promise.all(
+    return (await Promise.all(
       parts
         .map((part: Part) => this.findRandomReview(part))
         .filter((review: Promise<Review | null>) => review !== null),
-    ) as Promise<Review[]>;
+    )) as Review[];
   }
+
+  async reviewEntityMigration(): Promise<string> {
+    const allReviews = await this.reviewsRepository.find();
+    console.log(allReviews.length);
+
+    return '';
+  }
+
   private async findRandomReview(part: Part): Promise<Review | null> {
     return this.reviewsRepository
       .createQueryBuilder('Review')
