@@ -79,11 +79,12 @@ export class ReviewsService {
           if (!updateReview) break;
           promiseList.push(async () => {
             const updateEntity: QueryDeepPartialEntity<Review> = {};
-            if (!updateReview.description) {
+            if (!updateReview.description || !updateReview.thumbnailUrl) {
               const scrapResult = await this.scrapperService.scrap({
                 articleUrl: updateReview.url,
               });
               updateEntity.description = scrapResult.description;
+              updateEntity.thumbnailUrl = scrapResult.thumbnailUrl;
               return scrapResult; // Todo. 지워야함
             }
             if (!updateReview.authorProfileImageUrl) {
