@@ -129,11 +129,24 @@ export class ScraperService {
     const content = await frame.content();
     const $ = cheerio.load(content);
 
-    const title = $('span[class="se-fs- se-ff-"]').text();
+    const originTitle = $('span[class="se-fs- se-ff-"]').text();
     const mainDiv = $('div[class="se-main-container"]');
     const description = mainDiv.find('p').text().slice(0, 300);
     const image = mainDiv.find('img').first().attr('src');
     await browser.close();
+
+    if (!description) {
+      throw new InternalServerErrorException(
+        '페이지 정책에 의해 설명을 가져올 수 없습니다.',
+      );
+    }
+    const title = originTitle ?? this.generateTitle(description);
+
+    if (!title) {
+      throw new InternalServerErrorException(
+        '페이지 정책에 의해 제목을 가져올 수 없습니다.',
+      );
+    }
 
     return {
       thumbnailUrl: String(image),
@@ -141,5 +154,12 @@ export class ScraperService {
       description,
       sopticleUrl: url,
     };
+  }
+
+  private generateTitle(description: string): string {
+    if (description.length >= 150) {
+      return description.slice(0, 150);
+    }
+    return description;
   }
 }
