@@ -102,7 +102,7 @@ export class SopticleService {
         description: sopticle.description as string,
         author: sopticle.authorName,
         authorProfileImageUrl: sopticle.authorProfileImageUrl,
-        sopticleUrl: sopticle.sopticleUrl,
+        url: sopticle.sopticleUrl,
         uploadedAt: sopticle.createdAt,
         likeCount: sopticle.likeCount,
         liked: isLiked,

@@ -56,7 +56,7 @@ export class SopticleResponseDto {
     type: String,
     description: '솝티클 리다이렉트 주소',
   })
-  readonly sopticleUrl: string;
+  readonly url: string;
 
   @ApiProperty({
     type: Date,

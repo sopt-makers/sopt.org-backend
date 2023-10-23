@@ -22,14 +22,28 @@ export class ReviewsResponseDto {
     nullable: false,
     description: '작성자',
   })
-  reviewer: string;
+  author: string;
+
+  @ApiProperty({
+    type: String,
+    nullable: true,
+    description: '작성자 프로필 이미지',
+  })
+  readonly authorProfileImageUrl: string | null;
 
   @ApiProperty({
     type: Number,
     nullable: false,
     description: '활동 기수',
   })
-  semester: number;
+  generation: number;
+
+  @ApiProperty({
+    type: String,
+    nullable: false,
+    description: '활동후기 설명',
+  })
+  readonly description: string;
 
   @ApiProperty({
     type: String,
@@ -51,19 +65,19 @@ export class ReviewsResponseDto {
     nullable: true,
     description: '활동 리뷰 타이틀',
   })
-  thumbnail: string | null;
+  thumbnailUrl: string | null;
 
   @ApiProperty({
     type: String,
-    nullable: false,
+    nullable: true,
     description: '후기 작성 플랫폼',
   })
-  platform: string;
+  platform: string | null;
 
   @ApiProperty({
     type: String,
     nullable: false,
     description: 'Redirect Link',
   })
-  link: string;
+  url: string;
 }
