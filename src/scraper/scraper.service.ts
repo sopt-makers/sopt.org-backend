@@ -140,7 +140,7 @@ export class ScraperService {
         '페이지 정책에 의해 설명을 가져올 수 없습니다.',
       );
     }
-    const title = originTitle ?? this.generateTitle(description);
+    const title = !originTitle ? this.generateTitle(description) : originTitle;
 
     if (!title) {
       throw new InternalServerErrorException(
@@ -158,7 +158,7 @@ export class ScraperService {
 
   private generateTitle(description: string): string {
     if (description.length >= 150) {
-      return description.slice(0, 150);
+      return description.slice(0, 100);
     }
     return description;
   }
