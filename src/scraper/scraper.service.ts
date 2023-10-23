@@ -6,10 +6,10 @@ import * as puppeteer from 'puppeteer';
 import * as _ from 'lodash';
 
 import { CreateScraperResponseDto } from './dto/create-scraper-response.dto';
-import { ScrapSopticleDto } from '../sopticle/dtos/scrap-sopticle.dto';
 import { PuppeteerLaunchOptions } from 'puppeteer';
 import { ConfigService } from '@nestjs/config';
 import { EnvConfig } from '../configs/env.config';
+import { ScrapArticleDto } from './dto/scrap-article.dto';
 
 @Injectable()
 export class ScraperService {
@@ -19,26 +19,25 @@ export class ScraperService {
   ) {}
 
   async scrap({
-    sopticleUrl,
-  }: ScrapSopticleDto): Promise<CreateScraperResponseDto> {
-    if (this.checkNaverBlog(sopticleUrl)) {
-      console.log('Naver Blog Scrape Init');
-      return this.scrapeNaverBlog(sopticleUrl);
+    articleUrl,
+  }: ScrapArticleDto): Promise<CreateScraperResponseDto> {
+    if (this.checkNaverBlog(articleUrl)) {
+      return this.scrapeNaverBlog(articleUrl);
     }
 
-    const html = await this.getHtmlData(sopticleUrl);
+    const html = await this.getHtmlData(articleUrl);
 
     const $ = cheerio.load(html);
-    const title = this.getTitle($, sopticleUrl);
+    const title = this.getTitle($, articleUrl);
 
-    const thumbnailUrl = this.getImage($, sopticleUrl);
+    const thumbnailUrl = this.getImage($, articleUrl);
 
-    const description = this.getDescription($, sopticleUrl);
+    const description = this.getDescription($, articleUrl);
     return {
       thumbnailUrl,
       title,
       description,
-      sopticleUrl,
+      articleUrl,
     };
   }
 
@@ -90,7 +89,7 @@ export class ScraperService {
           catchError((err) => {
             throw new InternalServerErrorException(
               'Cheerio Service GetHtml Error',
-              err.message,
+              err.message + ' URL: ' + url,
             );
           }),
         ),
@@ -124,7 +123,9 @@ export class ScraperService {
     const frame = page.frames().find((frame) => frame.name() === 'mainFrame');
 
     if (!frame) {
-      throw new InternalServerErrorException('Naver Blog Scraping Error Occur');
+      throw new InternalServerErrorException(
+        'Naver Blog Scraping Error With URL: ' + url,
+      );
     }
     const content = await frame.content();
     const $ = cheerio.load(content);
@@ -152,7 +153,7 @@ export class ScraperService {
       thumbnailUrl: String(image),
       title,
       description,
-      sopticleUrl: url,
+      articleUrl: url,
     };
   }
 

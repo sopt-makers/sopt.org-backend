@@ -6,12 +6,16 @@ import { ReviewsResponseDto } from '../dtos/reviews-response.dto';
 import { ReviewsRequestDto } from '../dtos/reviews-request.dto';
 import { PaginateResponseDto } from '../../utils/paginate-response.dto';
 import { Part } from '../../common/type';
+import { ScraperService } from '../../scraper/scraper.service';
+import { CreateScraperResponseDto } from '../../scraper/dto/create-scraper-response.dto';
+import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
 @Injectable()
 export class ReviewsService {
   constructor(
     @InjectRepository(Review)
-    private reviewsRepository: Repository<Review>,
+    private readonly reviewsRepository: Repository<Review>,
+    private readonly scrapperService: ScraperService,
   ) {}
   async getReviews(
     reviewsRequestDto: ReviewsRequestDto,
@@ -50,10 +54,65 @@ export class ReviewsService {
   }
 
   async reviewEntityMigration(): Promise<string> {
-    const allReviews = await this.reviewsRepository.find();
-    console.log(allReviews.length);
+    try {
+      const allReviews = await this.reviewsRepository.find();
+      // const githubBlog = allReviews.find(
+      //   (review) => review.platform === '깃헙블로그',
+      // );
+      // console.log(githubBlog);
 
-    return '';
+      // 깃헙블로그 하나는 수작업으로 처리해야함...
+      const reviews = allReviews.filter(
+        (review) =>
+          review.platform !== '깃헙블로그' &&
+          review.id !== 65 &&
+          review.id !== 85,
+      );
+
+      const promiseJobLength = 10;
+      const promiseResult = [];
+
+      for (let i = 0; i < reviews.length; i += promiseJobLength) {
+        const promiseList: any[] = [];
+        for (let j = 0; j < promiseJobLength; j++) {
+          const updateReview = reviews[j + i];
+          if (!updateReview) break;
+          promiseList.push(async () => {
+            const updateEntity: QueryDeepPartialEntity<Review> = {};
+            if (!updateReview.description) {
+              const scrapResult = await this.scrapperService.scrap({
+                articleUrl: updateReview.url,
+              });
+              updateEntity.description = scrapResult.description;
+              return scrapResult; // Todo. 지워야함
+            }
+            if (!updateReview.authorProfileImageUrl) {
+              // Todo. Find Review Author Profile Image with Name
+              // updateEntity.authorProfileImageUrl = ;
+            }
+
+            // await this.reviewsRepository.update(updateReview.id, updateEntity);
+          });
+        }
+        const result: CreateScraperResponseDto[] = await Promise.all(
+          promiseList.map((promise) => {
+            return promise();
+          }),
+        );
+
+        promiseResult.push(
+          ...result.map((scrapResult) => {
+            return scrapResult.articleUrl;
+          }),
+        );
+      }
+      console.log(promiseResult.length);
+
+      return 'Success';
+    } catch (err) {
+      console.error(err);
+      return 'Fail';
+    }
   }
 
   private async findRandomReview(part: Part): Promise<Review | null> {
@@ -62,5 +121,21 @@ export class ReviewsService {
       .where('Review.part = :part', { part: part })
       .orderBy('RANDOM()')
       .getOne();
+  }
+
+  private async updateReview(review: Review) {
+    const updateEntity: QueryDeepPartialEntity<Review> = {};
+    if (!review.description) {
+      const scrapResult = await this.scrapperService.scrap({
+        articleUrl: review.url,
+      });
+      updateEntity.description = scrapResult.description;
+    }
+    if (!review.authorProfileImageUrl) {
+      // Todo. Find Review Author Profile Image with Name
+      // updateEntity.authorProfileImageUrl = ;
+    }
+
+    // await this.reviewsRepository.update(updateReview.id, updateEntity);
   }
 }
