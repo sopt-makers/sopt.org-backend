@@ -102,7 +102,7 @@ export class SopticleService {
         description: sopticle.description as string,
         author: sopticle.authorName,
         authorProfileImageUrl: sopticle.authorProfileImageUrl,
-        sopticleUrl: sopticle.sopticleUrl,
+        url: sopticle.sopticleUrl,
         uploadedAt: sopticle.createdAt,
         likeCount: sopticle.likeCount,
         liked: isLiked,
@@ -195,7 +195,7 @@ export class SopticleService {
   async scrapSopticle(
     dto: ScrapSopticleDto,
   ): Promise<CreateScraperResponseDto> {
-    return await this.scrapperService.scrap(dto);
+    return await this.scrapperService.scrap({ articleUrl: dto.sopticleUrl });
   }
 
   async createSopticle(
@@ -212,7 +212,7 @@ export class SopticleService {
     }
 
     const scrapResult = await this.scrapperService.scrap({
-      sopticleUrl: dto.link,
+      articleUrl: dto.link,
     });
 
     const sopticle = await this.sopticleRepository.save(
@@ -226,7 +226,7 @@ export class SopticleService {
         authorId: dto.authors[0].id,
         authorName: dto.authors[0].name,
         authorProfileImageUrl: dto.authors[0].profileImage,
-        sopticleUrl: scrapResult.sopticleUrl,
+        sopticleUrl: scrapResult.articleUrl,
       }),
     );
 

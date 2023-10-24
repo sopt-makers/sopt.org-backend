@@ -16,7 +16,7 @@ export class MemberService {
     filter: part,
     generation,
   }: MemberRequestDto): Promise<MemberListResponseDto> {
-    return await this.playgroundService.getAllMembers({
+    return await this.playgroundService.getAllMembersWithPart({
       filter: part,
       generation,
     });

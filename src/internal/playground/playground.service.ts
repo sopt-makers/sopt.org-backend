@@ -132,18 +132,26 @@ export class PlaygroundService {
     }
 
     response.members.forEach((member) => {
-      let role = member.memberRole;
+      const role = member.memberRole;
       member.memberRole = Role[role as keyof typeof Role];
     });
     return this.getProjectDetailResponseDto(response);
   }
 
-  async getAllMembers({
+  async getAllMembersWithPart({
     filter: part,
     generation,
   }: MemberRequestDto): Promise<MemberListResponseDto> {
     return await this.playgroundRepository.getAllMembers({
       filter: part,
+      generation,
+    });
+  }
+
+  async getAllMembers({
+    generation,
+  }: MemberRequestDto): Promise<MemberListResponseDto> {
+    return await this.playgroundRepository.getAllMembers({
       generation,
     });
   }

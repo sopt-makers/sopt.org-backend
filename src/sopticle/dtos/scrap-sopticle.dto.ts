@@ -33,7 +33,7 @@ export class ScrapSopticleDto {
   @ApiProperty({
     type: String,
     required: true,
-    description: '솝티클 주소 입니다. Notion 플랫폼을 제외하고 가능합니다.',
+    description: '아티클 주소 입니다. Notion 플랫폼을 제외하고 가능합니다.',
   })
   @IsUrl()
   @IsString()
