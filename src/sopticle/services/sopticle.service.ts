@@ -41,7 +41,7 @@ export class SopticleService {
     dto: GetSopticleListRequestDto,
     sessionId: string,
   ): Promise<PaginateResponseDto<SopticleResponseDto>> {
-    const { part } = dto;
+    const { part, generation } = dto;
     const sopticleQueryBuilder = await this.sopticleRepository
       .createQueryBuilder('Sopticle')
       .take(dto.getLimit())
@@ -50,6 +50,11 @@ export class SopticleService {
 
     if (part) {
       sopticleQueryBuilder.where('Sopticle.part = :part', { part });
+    }
+    if (generation) {
+      sopticleQueryBuilder.andWhere('Sopticle.generation = :generation', {
+        generation,
+      });
     }
 
     const [sopticles, sopticleCount] =

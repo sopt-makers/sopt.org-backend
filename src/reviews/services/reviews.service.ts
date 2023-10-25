@@ -32,6 +32,12 @@ export class ReviewsService {
         part: reviewsRequestDto.part,
       });
     }
+    if (reviewsRequestDto.generation) {
+      reviewQueryBuilder.andWhere('Review.generation= :generation', {
+        generation: reviewsRequestDto.generation,
+      });
+    }
+
     reviewQueryBuilder.take(reviewsRequestDto.getLimit());
     reviewQueryBuilder.skip(reviewsRequestDto.getOffset());
     reviewQueryBuilder.orderBy('generation', 'DESC');
