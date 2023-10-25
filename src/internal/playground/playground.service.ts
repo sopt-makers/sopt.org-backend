@@ -12,6 +12,8 @@ import { Member } from './dto/member';
 import { Link } from './dto/link';
 import { MemberRequestDto } from 'src/members/dtos/member-request.dto';
 import { MemberListResponseDto } from 'src/members/dtos/member-response.dto';
+import { GetProjectsRequestDto } from '../../projects/dtos/get-projects-request.dto';
+import { elementAt } from 'rxjs';
 
 @Injectable()
 export class PlaygroundService {
@@ -48,8 +50,12 @@ export class PlaygroundService {
     };
   }
 
-  async getAllProjects(project?: string): Promise<ProjectsResponseDto[]> {
+  async getAllProjects(
+    dto?: GetProjectsRequestDto,
+  ): Promise<ProjectsResponseDto[]> {
     const res: ProjectsResponseDto[] = [];
+    const project = dto?.filter;
+    const platform = dto?.platform;
 
     const response = await this.playgroundRepository.getAllProjects();
     // 중복제거 로직 : 추후 제거 예정
@@ -71,6 +77,9 @@ export class PlaygroundService {
 
     if (project) {
       return res.filter((element) => element.category.project == project);
+    }
+    if (platform) {
+      return res.filter((element) => element.serviceType.includes(platform));
     }
     return res;
   }

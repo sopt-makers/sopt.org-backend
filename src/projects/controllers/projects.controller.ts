@@ -8,6 +8,8 @@ import { ProjectDetailResponseDto } from 'src/projects/dtos/project-detail-respo
 import { ProjectService } from 'src/projects/services/project.service';
 import { compareProjects } from 'src/utils/compare';
 import { ProjectsResponseDto } from '../dtos/projects-response.dto';
+import { GetSopticleListRequestDto } from '../../sopticle/dtos/get-sopticle-list-request.dto';
+import { GetProjectsRequestDto } from '../dtos/get-projects-request.dto';
 
 @ApiTags('Project')
 @Controller('projects')
@@ -17,9 +19,9 @@ export class ProjectsController {
   @Get('')
   @GetProjectsDocs()
   async getProjects(
-    @Query('filter') filter: string,
+    @Query() getProjectsRequestDto: GetProjectsRequestDto,
   ): Promise<ProjectsResponseDto[]> {
-    const projects = await this.projectsService.findAll(filter);
+    const projects = await this.projectsService.findAll(getProjectsRequestDto);
     projects.sort(compareProjects);
 
     return projects;
