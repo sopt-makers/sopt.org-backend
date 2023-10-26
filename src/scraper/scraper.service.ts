@@ -133,7 +133,18 @@ export class ScraperService {
     const originTitle = $('span[class="se-fs- se-ff-"]').text();
     const mainDiv = $('div[class="se-main-container"]');
     const description = mainDiv.find('p').text().slice(0, 300);
-    const image = mainDiv.find('img').first().attr('src');
+    const imageLinkList: string[] = [];
+    mainDiv.find('img').each((_, element) => {
+      const imgSrc = $(element).attr('src');
+      imageLinkList.push(String(imgSrc));
+    });
+    const uploadedImage = imageLinkList.find(
+      (image) => image.includes('postfiles.pstatic.net'), // 해당 이미지 링크의 경우, 문제가 발생하지 않음
+    );
+    const image = uploadedImage
+      ? this.naverBlogImageClarification(uploadedImage)
+      : imageLinkList[0];
+
     await browser.close();
 
     if (!description) {
@@ -162,5 +173,19 @@ export class ScraperService {
       return description.slice(0, 100);
     }
     return description;
+  }
+
+  /*
+  네이버 블로그 이미지를 스크래핑 할 때 매우 저화질로 가져오는 경우가 있어,
+  수작업으로 고화질 이미지로 변경해주는 작업
+   */
+  private naverBlogImageClarification(link: string): string {
+    const lowPixelType = 'w80_blur';
+    const highPixelType = 'w966';
+    if (link.includes('w80_blur')) {
+      return link.replace(lowPixelType, highPixelType);
+    } else {
+      return link;
+    }
   }
 }
