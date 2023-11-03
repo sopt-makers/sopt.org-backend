@@ -75,6 +75,20 @@ export class ProjectsResponseDto {
   thumbnailImage: string | null;
 
   @ApiProperty({
+    type: Boolean,
+    required: true,
+    description: '서비스 이용 가능 여부',
+  })
+  isAvailable: boolean;
+
+  @ApiProperty({
+    type: Boolean,
+    required: true,
+    description: '창업중인지 여부',
+  })
+  isFounding: boolean;
+
+  @ApiProperty({
     type: [Link],
     required: true,
     description: '프로젝트 링크',

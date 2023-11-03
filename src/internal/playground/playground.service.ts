@@ -13,7 +13,6 @@ import { Link } from './dto/link';
 import { MemberRequestDto } from 'src/members/dtos/member-request.dto';
 import { MemberListResponseDto } from 'src/members/dtos/member-response.dto';
 import { GetProjectsRequestDto } from '../../projects/dtos/get-projects-request.dto';
-import { elementAt } from 'rxjs';
 
 @Injectable()
 export class PlaygroundService {
@@ -46,6 +45,8 @@ export class PlaygroundService {
       detail: response.detail,
       logoImage: response.logoImage,
       thumbnailImage: response.thumbnailImage,
+      isAvailable: response.isAvailable,
+      isFounding: response.isFounding,
       link: links,
     };
   }
@@ -58,6 +59,7 @@ export class PlaygroundService {
     const platform = dto?.platform;
 
     const response = await this.playgroundRepository.getAllProjects();
+
     // 중복제거 로직 : 추후 제거 예정
     const uniqueResponse: PlaygroundProjectResponseDto[] = dropDuplication(
       response,
