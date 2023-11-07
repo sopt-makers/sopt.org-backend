@@ -54,7 +54,7 @@ export class PlaygroundService {
   async getAllProjects(
     dto?: GetProjectsRequestDto,
   ): Promise<ProjectsResponseDto[]> {
-    const res: ProjectsResponseDto[] = [];
+    let res: ProjectsResponseDto[] = [];
     const project = dto?.filter;
     const platform = dto?.platform;
 
@@ -78,10 +78,10 @@ export class PlaygroundService {
     }
 
     if (project) {
-      return res.filter((element) => element.category.project == project);
+      res = res.filter((element) => element.category.project == project);
     }
     if (platform) {
-      return res.filter((element) => element.serviceType.includes(platform));
+      res = res.filter((element) => element.serviceType.includes(platform));
     }
     return res;
   }
