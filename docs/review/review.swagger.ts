@@ -1,8 +1,10 @@
 import { applyDecorators } from '@nestjs/common';
 import {
+  ApiCreatedResponse,
   ApiExtraModels,
   ApiOkResponse,
   ApiOperation,
+  ApiResponse,
   getSchemaPath,
 } from '@nestjs/swagger';
 import { PaginateResponseDto } from '../../src/utils/paginate-response.dto';
@@ -40,5 +42,15 @@ export function GetRandomReviewByPart() {
         '만약 특정 파트에 리뷰가 없다면 그 파트의 데이터는 나오지 않습니다.',
     }),
     ApiOkResponse({ type: [ReviewsResponseDto] }),
+  );
+}
+
+export function ReviewEntityMigration() {
+  return applyDecorators(
+    ApiOperation({
+      summary: 'Review Entity 변경에 따른 내부 DB 값 Update 작업 (임시)',
+      description: 'Description, AuthorProfileUrl 추가',
+    }),
+    ApiResponse({ status: 201, description: 'Success' }),
   );
 }

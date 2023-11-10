@@ -14,5 +14,7 @@ export class PlaygroundProjectResponseDto {
   detail: string;
   logoImage: string;
   thumbnailImage: string;
+  isAvailable: boolean;
+  isFounding: boolean;
   links: PlaygroundLink[];
 }

@@ -12,6 +12,7 @@ import { Member } from './dto/member';
 import { Link } from './dto/link';
 import { MemberRequestDto } from 'src/members/dtos/member-request.dto';
 import { MemberListResponseDto } from 'src/members/dtos/member-response.dto';
+import { GetProjectsRequestDto } from '../../projects/dtos/get-projects-request.dto';
 
 @Injectable()
 export class PlaygroundService {
@@ -44,14 +45,21 @@ export class PlaygroundService {
       detail: response.detail,
       logoImage: response.logoImage,
       thumbnailImage: response.thumbnailImage,
+      isAvailable: response.isAvailable,
+      isFounding: response.isFounding,
       link: links,
     };
   }
 
-  async getAllProjects(project?: string): Promise<ProjectsResponseDto[]> {
-    const res: ProjectsResponseDto[] = [];
+  async getAllProjects(
+    dto?: GetProjectsRequestDto,
+  ): Promise<ProjectsResponseDto[]> {
+    let res: ProjectsResponseDto[] = [];
+    const project = dto?.filter;
+    const platform = dto?.platform;
 
     const response = await this.playgroundRepository.getAllProjects();
+
     // 중복제거 로직 : 추후 제거 예정
     const uniqueResponse: PlaygroundProjectResponseDto[] = dropDuplication(
       response,
@@ -70,7 +78,10 @@ export class PlaygroundService {
     }
 
     if (project) {
-      return res.filter((element) => element.category.project == project);
+      res = res.filter((element) => element.category.project == project);
+    }
+    if (platform) {
+      res = res.filter((element) => element.serviceType.includes(platform));
     }
     return res;
   }
@@ -132,18 +143,26 @@ export class PlaygroundService {
     }
 
     response.members.forEach((member) => {
-      let role = member.memberRole;
+      const role = member.memberRole;
       member.memberRole = Role[role as keyof typeof Role];
     });
     return this.getProjectDetailResponseDto(response);
   }
 
-  async getAllMembers({
+  async getAllMembersWithPart({
     filter: part,
     generation,
   }: MemberRequestDto): Promise<MemberListResponseDto> {
     return await this.playgroundRepository.getAllMembers({
       filter: part,
+      generation,
+    });
+  }
+
+  async getAllMembers({
+    generation,
+  }: MemberRequestDto): Promise<MemberListResponseDto> {
+    return await this.playgroundRepository.getAllMembers({
       generation,
     });
   }

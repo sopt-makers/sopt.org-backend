@@ -41,7 +41,7 @@ export class SopticleService {
     dto: GetSopticleListRequestDto,
     sessionId: string,
   ): Promise<PaginateResponseDto<SopticleResponseDto>> {
-    const { part } = dto;
+    const { part, generation } = dto;
     const sopticleQueryBuilder = await this.sopticleRepository
       .createQueryBuilder('Sopticle')
       .take(dto.getLimit())
@@ -50,6 +50,11 @@ export class SopticleService {
 
     if (part) {
       sopticleQueryBuilder.where('Sopticle.part = :part', { part });
+    }
+    if (generation) {
+      sopticleQueryBuilder.andWhere('Sopticle.generation = :generation', {
+        generation,
+      });
     }
 
     const [sopticles, sopticleCount] =
@@ -102,7 +107,7 @@ export class SopticleService {
         description: sopticle.description as string,
         author: sopticle.authorName,
         authorProfileImageUrl: sopticle.authorProfileImageUrl,
-        sopticleUrl: sopticle.sopticleUrl,
+        url: sopticle.sopticleUrl,
         uploadedAt: sopticle.createdAt,
         likeCount: sopticle.likeCount,
         liked: isLiked,
@@ -195,7 +200,7 @@ export class SopticleService {
   async scrapSopticle(
     dto: ScrapSopticleDto,
   ): Promise<CreateScraperResponseDto> {
-    return await this.scrapperService.scrap(dto);
+    return await this.scrapperService.scrap({ articleUrl: dto.sopticleUrl });
   }
 
   async createSopticle(
@@ -212,7 +217,7 @@ export class SopticleService {
     }
 
     const scrapResult = await this.scrapperService.scrap({
-      sopticleUrl: dto.link,
+      articleUrl: dto.link,
     });
 
     const sopticle = await this.sopticleRepository.save(
@@ -226,7 +231,7 @@ export class SopticleService {
         authorId: dto.authors[0].id,
         authorName: dto.authors[0].name,
         authorProfileImageUrl: dto.authors[0].profileImage,
-        sopticleUrl: scrapResult.sopticleUrl,
+        sopticleUrl: scrapResult.articleUrl,
       }),
     );
 

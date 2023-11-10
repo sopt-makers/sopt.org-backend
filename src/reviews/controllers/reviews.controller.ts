@@ -1,6 +1,7 @@
 import {
   Controller,
   Get,
+  Post,
   Query,
   UsePipes,
   ValidationPipe,
@@ -10,12 +11,15 @@ import { ReviewsService } from '../services/reviews.service';
 import {
   GetRandomReviewByPart,
   GetReviewsDocs,
+  ReviewEntityMigration,
 } from '../../../docs/review/review.swagger';
 import { PaginateResponseDto } from '../../utils/paginate-response.dto';
 import { ReviewsResponseDto } from '../dtos/reviews-response.dto';
 import { ReviewsRequestDto } from '../dtos/reviews-request.dto';
+import { ApiTags } from '@nestjs/swagger';
 
 @UsePipes(new ValidationPipe({ transform: true }))
+@ApiTags('Reviews')
 @Controller('reviews')
 export class ReviewsController {
   constructor(private readonly reviewsService: ReviewsService) {}
@@ -25,12 +29,18 @@ export class ReviewsController {
   async getReviews(
     @Query() reviewsRequestDto: ReviewsRequestDto,
   ): Promise<PaginateResponseDto<ReviewsResponseDto>> {
-    return this.reviewsService.getReviews(reviewsRequestDto);
+    return await this.reviewsService.getReviews(reviewsRequestDto);
   }
 
   @Get('/random')
   @GetRandomReviewByPart()
-  GetRandomReviewByPart(): Promise<ReviewsResponseDto[]> {
-    return this.reviewsService.getRandomReviewByPart();
+  async GetRandomReviewByPart(): Promise<ReviewsResponseDto[]> {
+    return await this.reviewsService.getRandomReviewByPart();
+  }
+
+  @Post('/entity/migration')
+  @ReviewEntityMigration()
+  async ReviewEntityMigration(): Promise<string> {
+    return await this.reviewsService.reviewEntityMigration();
   }
 }

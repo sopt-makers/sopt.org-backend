@@ -2,14 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { ProjectDetailResponseDto } from 'src/projects/dtos/project-detail-response.dto';
 import { ProjectsResponseDto } from '../dtos/projects-response.dto';
 import { PlaygroundService } from 'src/internal/playground/playground.service';
+import { GetProjectsRequestDto } from '../dtos/get-projects-request.dto';
 
 @Injectable()
 export class ProjectService {
   constructor(private readonly playgroundService: PlaygroundService) {}
 
-  async findAll(project?: string): Promise<ProjectsResponseDto[]> {
-    const projects = await this.playgroundService.getAllProjects(project);
-    return projects;
+  async findAll(dto?: GetProjectsRequestDto): Promise<ProjectsResponseDto[]> {
+    return await this.playgroundService.getAllProjects(dto);
   }
 
   async findOne(projectId: number): Promise<ProjectDetailResponseDto> {
