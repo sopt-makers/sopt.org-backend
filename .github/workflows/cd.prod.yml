@@ -65,6 +65,6 @@ jobs:
           sudo docker stop sopt.org-backend
           sudo docker rm sopt.org-backend
           sudo docker rm -f $(docker ps -qa)
+          sudo docker image prune -a -f
           sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_PROD_IMAGE }}:latest
           sudo docker run --name sopt.org-backend --env-file .env -d -p 3000:3000 -t ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_PROD_IMAGE }}:latest
-          sudo docker image prune -f
