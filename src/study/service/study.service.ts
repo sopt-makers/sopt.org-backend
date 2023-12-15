@@ -8,7 +8,7 @@ export class StudyService {
   constructor(private readonly crewService: CrewService) {}
 
   @Cacheable({
-    ttl: 7 * 24 * 60 * 60,
+    ttl: 24 * 60 * 60,
     validate: (value: any) => !(value instanceof Error),
   })
   async getStudies(): Promise<StudyResponseDto[]> {
