@@ -17,9 +17,6 @@ FROM node:16-alpine AS production
 
 RUN apk add --no-cache udev ttf-freefont chromium
 
-# Install Redis
-RUN apk add --no-cache redis-server
-
 WORKDIR /app
 
 COPY --from=build /app/package.json ./package.json

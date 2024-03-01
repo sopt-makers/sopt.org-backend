@@ -31,7 +31,6 @@ import { AppLoggerMiddleware } from './common/middlewares/request-logger.middlew
 import { ClearCacheModule } from './clear-cache/clear-cache.module';
 import { NotificationModule } from './notification/notification.module';
 import { VisitorModule } from './visitor/visitor.module';
-import { RedisModule } from './redis/redis.module';
 
 @Module({
   imports: [
@@ -59,7 +58,6 @@ import { RedisModule } from './redis/redis.module';
     ClearCacheModule,
     NotificationModule,
     VisitorModule,
-    RedisModule,
   ],
   controllers: [AppController],
   providers: [

@@ -17,8 +17,6 @@ export interface EnvConfig {
   CREW_API_URL: string;
   OFFICIAL_API_KEY: string;
   LOCAL: boolean;
-  REDIS_HOST: string;
-  REDIS_PORT: string;
 }
 
 export const envValidationSchema = Joi.object({
@@ -42,6 +40,4 @@ export const envValidationSchema = Joi.object({
     .required()
     .description('공홈 API를 사용하는 클라이언트에게 제공해주는 KEY 값'),
   LOCAL: Joi.boolean().required(),
-  REDIS_HOST: Joi.string().required(),
-  REDIS_PORT: Joi.string().required(),
 });
