@@ -105,4 +105,27 @@ export class CacheModule implements OnModuleInit {
       };
     };
   }
+
+  async del(key: string) {
+    await this.cacheManager.del(key);
+  }
+
+  async getMultipleKeysPrefix(prefix: string) {
+    return ((await this.cacheManager.store) as any).keys(prefix + '*');
+  }
+
+  async deleteMultipleKeysPrefix(prefix: string) {
+    const keys = await this.getMultipleKeysPrefix(prefix);
+    const promiseList: any[] = [];
+    for (const key of keys) {
+      promiseList.push(async () => {
+        await this.del(key);
+      });
+    }
+    await Promise.all(
+      promiseList.map((promise) => {
+        return promise();
+      }),
+    );
+  }
 }
