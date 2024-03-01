@@ -5,24 +5,32 @@ import {
   Get,
   UsePipes,
   ValidationPipe,
+  Req,
 } from '@nestjs/common';
-import { ClearCacheDocs } from '../../../docs/clear-cache/clear-cache.swagger';
 import {
   GetTodayVisitorResponseDto,
   VisitorCountUpResponseDto,
 } from '../dtos/visitor-response.dto';
+import {
+  GetTodayVisitorDocs,
+  VisitorCountUpDocs,
+} from '../../../docs/visitor/visitor.swagger';
+import { Request } from 'express';
 
 @UsePipes(new ValidationPipe({ transform: true }))
 @Controller('visitor')
 export class VisitorController {
   constructor(private readonly visitorService: VisitorService) {}
   @Post()
-  @ClearCacheDocs()
-  async visitorCountUp(): Promise<VisitorCountUpResponseDto> {
-    return this.visitorService.visitorCountUp();
+  @VisitorCountUpDocs()
+  async visitorCountUp(
+    @Req() req: Request,
+  ): Promise<VisitorCountUpResponseDto> {
+    return this.visitorService.visitorCountUp(req);
   }
 
   @Get()
+  @GetTodayVisitorDocs()
   async getTodayVisitor(): Promise<GetTodayVisitorResponseDto> {
     return this.visitorService.getTodayVisitor();
   }
