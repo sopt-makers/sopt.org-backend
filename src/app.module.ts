@@ -31,6 +31,7 @@ import { AppLoggerMiddleware } from './common/middlewares/request-logger.middlew
 import { ClearCacheModule } from './clear-cache/clear-cache.module';
 import { NotificationModule } from './notification/notification.module';
 import { VisitorModule } from './visitor/visitor.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { VisitorModule } from './visitor/visitor.module';
       isGlobal: true,
     }),
     TypeOrmModule.forRootAsync(typeORMFactory),
+    ScheduleModule.forRoot(),
     PartnersModule,
     LogosModule,
     CooperationProjectsModule,
