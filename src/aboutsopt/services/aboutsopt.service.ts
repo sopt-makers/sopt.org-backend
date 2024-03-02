@@ -48,7 +48,9 @@ export class AboutSoptService {
       );
     }
 
-    const generation = id ? id : aboutSopt.id;
+    // TODO. 현재 34기 데이터가 모이지 않은 관계로 추후 돌려놓아야 함
+    // const generation = id ? id : aboutSopt.id;
+    const generation = 33;
 
     const members = await this.memberService.findAll({ generation });
     const projects = await this.projectService.findByGeneration(generation);
