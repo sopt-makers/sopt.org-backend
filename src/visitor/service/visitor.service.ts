@@ -5,6 +5,7 @@ import {
 } from '../dtos/visitor-response.dto';
 import { Request } from 'express';
 import { Cache } from 'cache-manager';
+import { Cron, CronExpression } from '@nestjs/schedule';
 
 @Injectable()
 export class VisitorService {
@@ -20,7 +21,7 @@ export class VisitorService {
       const userAgent = req.get('user-agent');
       const uniqueUserInfo = `visitor-${userAgent}${ip}`;
 
-      await this.cacheManager.set(uniqueUserInfo, 'visited');
+      await this.cacheManager.set(uniqueUserInfo, 'visited', 24 * 60 * 60);
 
       result.Status = 'Success';
     } catch (err) {
@@ -47,5 +48,34 @@ export class VisitorService {
     }
 
     return result;
+  }
+
+  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT, {
+    name: 'visitor-reset',
+    timeZone: 'Asia/Seoul',
+  })
+  async visitorReset() {
+    try {
+      const allKeys = await ((await this.cacheManager.store) as any).keys();
+      const allVisitors = allKeys.filter((key: string) =>
+        key.includes('visitor-'),
+      );
+
+      const promiseList: any[] = [];
+      for (const key of allVisitors) {
+        promiseList.push(async () => {
+          await this.cacheManager.del(key);
+        });
+      }
+      await Promise.all(
+        promiseList.map((promise) => {
+          return promise();
+        }),
+      );
+
+      console.log('Visitor Reset CronJob Complete');
+    } catch (err) {
+      console.log(err);
+    }
   }
 }
