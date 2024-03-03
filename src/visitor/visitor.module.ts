@@ -5,7 +5,11 @@ import { VisitorService } from './service/visitor.service';
 import { CacheModule as NestCacheModule } from '@nestjs/common/cache/cache.module';
 
 @Module({
-  imports: [NestCacheModule.register()],
+  imports: [
+    NestCacheModule.register({
+      max: 10000,
+    }),
+  ],
   providers: [VisitorService],
   controllers: [VisitorController],
   exports: [VisitorService],
