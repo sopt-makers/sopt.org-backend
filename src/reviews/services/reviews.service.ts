@@ -3,7 +3,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Review } from 'src/reviews/entities/reviews.entity';
 import { Repository } from 'typeorm';
 import { ReviewsResponseDto } from '../dtos/reviews-response.dto';
-import { ReviewsRequestDto } from '../dtos/reviews-request.dto';
+import {
+  PutReviewsRequestDto,
+  ReviewsRequestDto,
+} from '../dtos/reviews-request.dto';
 import { PaginateResponseDto } from '../../utils/paginate-response.dto';
 import { Part } from '../../common/type';
 import { ScraperService } from '../../scraper/scraper.service';
@@ -52,6 +55,39 @@ export class ReviewsService {
       reviewsRequestDto.getLimit(),
       reviewsRequestDto.pageNo,
     );
+  }
+
+  async putReviews(dto: PutReviewsRequestDto[]): Promise<Review[]> {
+    const promiseList: any[] = [];
+    const result: Review[] = [];
+    for (const review of dto) {
+      promiseList.push(async () => {
+        const scrapResult = await this.scrapperService.scrap({
+          articleUrl: review.url,
+        });
+
+        const reviewEntity = await this.reviewsRepository.save(
+          Review.from({
+            title: scrapResult.title,
+            description: scrapResult.description,
+            thumbnailUrl: scrapResult.thumbnailUrl,
+            generation: review.generation,
+            url: review.url,
+            part: review.part,
+            platform: review.platform,
+            author: review.author,
+            subject: review.subject,
+          }),
+        );
+        result.push(reviewEntity);
+      });
+    }
+    await Promise.all(
+      promiseList.map((promise) => {
+        return promise();
+      }),
+    );
+    return result;
   }
 
   async getRandomReviewByPart(): Promise<Review[]> {
