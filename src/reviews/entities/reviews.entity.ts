@@ -1,5 +1,6 @@
 import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 import { Part } from '../../common/type';
+import { Sopticle } from '../../sopticle/entities/sopticle.entity';
 
 @Index('review_pk', ['id'], { unique: true })
 @Entity('Review', { schema: 'public' })
@@ -36,4 +37,39 @@ export class Review {
 
   @Column('varchar', { name: 'url', nullable: false, length: 500 })
   url: string;
+
+  static from(params: {
+    title: string;
+    author: string;
+    part: Part;
+    generation: number;
+    subject: string;
+    thumbnailUrl: string;
+    platform: string;
+    url: string;
+    description: string;
+  }) {
+    const review = new Review();
+    const {
+      title,
+      author,
+      generation,
+      part,
+      subject,
+      thumbnailUrl,
+      platform,
+      url,
+      description,
+    } = params;
+    review.title = title;
+    review.author = author;
+    review.generation = generation;
+    review.part = part;
+    review.subject = subject;
+    review.thumbnailUrl = thumbnailUrl;
+    review.platform = platform;
+    review.url = url;
+    review.description = description;
+    return review;
+  }
 }

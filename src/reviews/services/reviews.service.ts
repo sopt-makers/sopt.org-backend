@@ -59,18 +59,27 @@ export class ReviewsService {
 
   async putReviews(dto: PutReviewsRequestDto[]): Promise<Review[]> {
     const promiseList: any[] = [];
-    const result: Review[];
+    const result: Review[] = [];
     for (const review of dto) {
       promiseList.push(async () => {
         const scrapResult = await this.scrapperService.scrap({
-          articleUrl: review,
+          articleUrl: review.url,
         });
-        const reviewEntity: Review = {
-          title: scrapResult.title,
-        };
 
-
-        result.push(scrapResult.)
+        const reviewEntity = await this.reviewsRepository.save(
+          Review.from({
+            title: scrapResult.title,
+            description: scrapResult.description,
+            thumbnailUrl: scrapResult.thumbnailUrl,
+            generation: review.generation,
+            url: review.url,
+            part: review.part,
+            platform: review.platform,
+            author: review.author,
+            subject: review.subject,
+          }),
+        );
+        result.push(reviewEntity);
       });
     }
     await Promise.all(
@@ -78,7 +87,7 @@ export class ReviewsService {
         return promise();
       }),
     );
-
+    return result;
   }
 
   async getRandomReviewByPart(): Promise<Review[]> {
