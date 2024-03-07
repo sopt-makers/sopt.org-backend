@@ -60,7 +60,13 @@ export class ReviewsService {
   async putReviews(dto: PutReviewsRequestDto[]): Promise<Review[]> {
     const promiseList: any[] = [];
     const result: Review[] = [];
+    const allReviews = await this.reviewsRepository.find();
+    const allReviewUrls = allReviews.map((data) => {
+      return data.url;
+    });
+
     for (const review of dto) {
+      if (allReviewUrls.includes(review.url)) continue;
       promiseList.push(async () => {
         const scrapResult = await this.scrapperService.scrap({
           articleUrl: review.url,
