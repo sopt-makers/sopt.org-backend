@@ -1,5 +1,6 @@
 import { applyDecorators } from '@nestjs/common';
 import {
+  ApiBody,
   ApiCreatedResponse,
   ApiExtraModels,
   ApiOkResponse,
@@ -9,6 +10,8 @@ import {
 } from '@nestjs/swagger';
 import { PaginateResponseDto } from '../../src/utils/paginate-response.dto';
 import { ReviewsResponseDto } from '../../src/reviews/dtos/reviews-response.dto';
+import { CreateSopticleDto } from '../../src/sopticle/dtos/create-sopticle.dto';
+import { PutReviewsRequestDto } from '../../src/reviews/dtos/reviews-request.dto';
 
 export function GetReviewsDocs() {
   return applyDecorators(
@@ -31,6 +34,18 @@ export function GetReviewsDocs() {
         ],
       },
     }),
+  );
+}
+
+export function PutReviewsDocs() {
+  return applyDecorators(
+    ApiOperation({
+      summary: '여러 활동 후기 넣기',
+    }),
+    ApiBody({
+      type: [PutReviewsRequestDto],
+    }),
+    ApiCreatedResponse({ type: [ReviewsResponseDto] }),
   );
 }
 
