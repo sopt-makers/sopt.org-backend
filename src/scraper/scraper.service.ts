@@ -110,6 +110,7 @@ export class ScraperService {
         '--disable-setuid-sandbox',
         '--disable-dev-shm-usage',
       ],
+      timeout: 0,
     };
 
     if (!this.configService.get('LOCAL')) {
