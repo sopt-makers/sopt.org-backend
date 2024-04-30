@@ -11,3 +11,9 @@ export function dropDuplication<T, O extends keyof T>(array: T[], property: O) {
   }
   return uniqueArray;
 }
+
+export function paginateArray<T>(items: T[], page: number, limit: number): T[] {
+  const offset = (page - 1) * limit;
+
+  return items.slice(offset, offset + limit);
+}

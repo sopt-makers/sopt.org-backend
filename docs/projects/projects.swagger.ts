@@ -1,9 +1,11 @@
 import { applyDecorators } from '@nestjs/common';
 import {
+  ApiExtraModels,
   ApiOkResponse,
   ApiOperation,
   ApiParam,
   ApiQuery,
+  getSchemaPath,
 } from '@nestjs/swagger';
 import { ProjectType } from 'src/projects/dtos/category';
 import { ProjectDetailResponseDto } from 'src/projects/dtos/project-detail-response.dto';
@@ -11,12 +13,14 @@ import {
   ProjectsResponseDto,
   ServiceType,
 } from '../../src/projects/dtos/projects-response.dto';
+import { PaginateResponseDto } from '../../src/utils/paginate-response.dto';
 
 export function GetProjectsDocs() {
   return applyDecorators(
     ApiOperation({
       summary: '프로젝트 정보 전부 가져오기',
     }),
+    ApiExtraModels(PaginateResponseDto, ProjectsResponseDto),
     ApiQuery({
       name: 'filter',
       type: String,
@@ -31,7 +35,21 @@ export function GetProjectsDocs() {
       description: '웹/앱 필터링',
       enum: ServiceType,
     }),
-    ApiOkResponse({ type: [ProjectsResponseDto] }),
+    ApiOkResponse({
+      schema: {
+        allOf: [
+          { $ref: getSchemaPath(PaginateResponseDto) },
+          {
+            properties: {
+              data: {
+                type: 'array',
+                items: { $ref: getSchemaPath(ProjectsResponseDto) },
+              },
+            },
+          },
+        ],
+      },
+    }),
   );
 }
 
