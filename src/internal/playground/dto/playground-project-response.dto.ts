@@ -18,3 +18,9 @@ export class PlaygroundProjectResponseDto {
   isFounding: boolean;
   links: PlaygroundLink[];
 }
+
+export class PlaygroundProjectAxiosResponseDto {
+  projectList: PlaygroundProjectResponseDto[];
+  hasNext: boolean;
+  totalCount: number;
+}
