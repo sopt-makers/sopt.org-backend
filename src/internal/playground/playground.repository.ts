@@ -8,7 +8,10 @@ import { ConfigService } from '@nestjs/config';
 import { catchError, lastValueFrom, map, of } from 'rxjs';
 import { EnvConfig } from '../../configs/env.config';
 import { GetPlaygroundUserInfoResponseDto } from './dto/get-playground-user-info-response.dto';
-import { PlaygroundProjectResponseDto } from './dto/playground-project-response.dto';
+import {
+  PlaygroundProjectAxiosResponseDto,
+  PlaygroundProjectResponseDto,
+} from './dto/playground-project-response.dto';
 import { PlaygroundProjectDetailResponseDto } from './dto/playground-project-detail-response.dto';
 import { MemberListResponseDto } from 'src/members/dtos/member-response.dto';
 import { MemberRequestDto } from 'src/members/dtos/member-request.dto';
@@ -54,27 +57,41 @@ export class PlaygroundRepository {
     validate: (value: any) => !(value instanceof Error),
   })
   async getAllProjects(): Promise<PlaygroundProjectResponseDto[]> {
-    return await lastValueFrom(
-      await this.httpService
-        .get<PlaygroundProjectResponseDto[]>(
-          `${this.API_URL}/internal/api/v1/projects`,
-          {
-            headers: {
-              Authorization: this.jwtToken,
+    // TODO. 이거 무조오오오오오오오오건 수정해야한다...!!!!!!!!!!!!!!!!!!
+    const limit = 20;
+    let cursor = 0;
+    let totalCount = 10;
+    const response: PlaygroundProjectResponseDto[] = [];
+    for (let i = 0; i < totalCount + 1; i = i + limit) {
+      const projectData = await lastValueFrom(
+        await this.httpService
+          .get<PlaygroundProjectAxiosResponseDto>(
+            `${this.API_URL}/api/v1/projects`,
+            {
+              headers: {
+                Authorization: this.jwtToken,
+              },
+              params: {
+                limit,
+                cursor,
+              },
             },
-          },
-        )
-        .pipe(
-          map((res) => res.data),
-          catchError((error) => {
-            console.error('project api error', error);
-            throw new HttpException(
-              'Projcet API ' + error.response.data.error,
-              error.response.data.status,
-            );
-          }),
-        ),
-    );
+          )
+          .pipe(
+            map((res) => res.data),
+            catchError((error) => {
+              throw new InternalServerErrorException('Projcet API ' + error);
+            }),
+          ),
+      );
+      if (projectData.projectList.length === 0) break;
+      totalCount = projectData.totalCount;
+      response.push(...projectData.projectList);
+      const lastDataIdx = projectData.projectList.length - 1;
+      cursor = projectData.projectList[lastDataIdx].id;
+      if (!projectData.hasNext) break;
+    }
+    return response;
   }
 
   async getProjectDetail(
@@ -93,10 +110,7 @@ export class PlaygroundRepository {
         .pipe(
           map((res) => res.data),
           catchError((error) => {
-            throw new HttpException(
-              'API ' + error.response.data.error,
-              error.response.data.status,
-            );
+            throw new InternalServerErrorException('API ' + error);
           }),
         ),
     );
