@@ -59,10 +59,10 @@ export class PlaygroundRepository {
   async getAllProjects(): Promise<PlaygroundProjectResponseDto[]> {
     // TODO. 이거 무조오오오오오오오오건 수정해야한다...!!!!!!!!!!!!!!!!!!
     const limit = 20;
-    let hasNext = true;
     let cursor = 0;
+    let totalCount = 10;
     const response: PlaygroundProjectResponseDto[] = [];
-    while (hasNext) {
+    for (let i = 0; i < totalCount + 1; i = i + limit) {
       const projectData = await lastValueFrom(
         await this.httpService
           .get<PlaygroundProjectAxiosResponseDto>(
@@ -85,10 +85,11 @@ export class PlaygroundRepository {
           ),
       );
       if (projectData.projectList.length === 0) break;
+      totalCount = projectData.totalCount;
       response.push(...projectData.projectList);
-      hasNext = projectData.hasNext;
       const lastDataIdx = projectData.projectList.length - 1;
       cursor = projectData.projectList[lastDataIdx].id;
+      if (!projectData.hasNext) break;
     }
     return response;
   }
