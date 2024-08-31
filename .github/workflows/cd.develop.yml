@@ -26,13 +26,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+
       - name: Push Image to AWS ECR Public Repo
         id: ecr-image-push
         run: |
           aws ecr-public get-login-password --region ${{ secrets.AWS_PUBLIC_REPO_REGION }} | docker login --username AWS --password-stdin public.ecr.aws/${{ secrets.AWS_ACCOUNT_ID }}
-          docker build -t ${{ secrets.ECR_REPOSITORY }}:latest .
-          docker tag ${{ secrets.ECR_REPOSITORY }}:latest public.ecr.aws/${{ secrets.AWS_ACCOUNT_ID }}/${{ secrets.ECR_REPOSITORY }}:latest
-          docker push public.ecr.aws/${{ secrets.AWS_ACCOUNT_ID }}/${{ secrets.ECR_REPOSITORY }}:latest
+          docker build -t ${{ secrets.DEV_ECR_REPO }}:latest .
+          docker tag ${{ secrets.DEV_ECR_REPO }}:latest public.ecr.aws/${{ secrets.AWS_ACCOUNT_ID }}/${{ secrets.DEV_ECR_REPO }}:latest
+          docker push public.ecr.aws/${{ secrets.AWS_ACCOUNT_ID }}/${{ secrets.DEV_ECR_REPO }}:latest
 
   deploy:
     needs: build
@@ -49,6 +55,6 @@ jobs:
           sudo docker rm dev-server
           sudo docker rm -f $(docker ps -qa)
           sudo docker image prune -a -f
-          sudo docker pull public.ecr.aws/${{ secrets.AWS_ACCOUNT_ID }}/${{ secrets.ECR_REPOSITORY }}:latest
-          sudo docker run --name dev-server --env-file .env -d -p 3000:3000 -t public.ecr.aws/${{ secrets.AWS_ACCOUNT_ID }}/${{ secrets.ECR_REPOSITORY }}:latest
+          sudo docker pull public.ecr.aws/${{ secrets.AWS_ACCOUNT_ID }}/${{ secrets.DEV_ECR_REPO }}:latest
+          sudo docker run --name dev-server --env-file .env -d -p 3000:3000 -t public.ecr.aws/${{ secrets.AWS_ACCOUNT_ID }}/${{ secrets.DEV_ECR_REPO }}:latest
           
