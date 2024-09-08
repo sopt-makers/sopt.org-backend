@@ -1,5 +1,5 @@
 # Stage 1: Build the application
-FROM node:16-alpine AS build
+FROM node:22-alpine AS build
 
 WORKDIR /app
 
@@ -13,7 +13,7 @@ COPY . .
 RUN yarn build
 
 # Stage 2: Create the production image
-FROM node:16-alpine AS production
+FROM node:22-alpine AS production
 
 RUN apk add --no-cache udev ttf-freefont chromium
 
