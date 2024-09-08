@@ -18,8 +18,12 @@ export class VisitorService {
     const result: VisitorCountUpResponseDto = { Status: 'fail' };
     try {
       const ip = req.ip;
+      const realIp = req.headers['x-real-ip'] as string;
+      const forwardedFor = req.headers['x-forwarded-for'] as string;
+
+      const clientIp = realIp || forwardedFor || ip;
       const userAgent = req.get('user-agent');
-      const uniqueUserInfo = `visitor-${userAgent}${ip}`;
+      const uniqueUserInfo = `visitor-${userAgent}${clientIp}`;
 
       await this.cacheManager.set(uniqueUserInfo, 'visited', 24 * 60 * 60);
 
