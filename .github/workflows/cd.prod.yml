@@ -58,4 +58,4 @@ jobs:
           sudo docker rm -f $(docker ps -qa)
           sudo docker image prune -a -f
           sudo docker pull public.ecr.aws/${{ secrets.AWS_ACCOUNT_ID }}/${{ secrets.PROD_ECR_REPO }}:latest
-          sudo docker run --name sopt.org.backend --env-file .env -d -p 3000:3000 -t public.ecr.aws/${{ secrets.AWS_ACCOUNT_ID }}/${{ secrets.PROD_ECR_REPO }}:latest
+          sudo docker run --name sopt.org-backend --env-file .env -d -p 3000:3000 -t public.ecr.aws/${{ secrets.AWS_ACCOUNT_ID }}/${{ secrets.PROD_ECR_REPO }}:latest
