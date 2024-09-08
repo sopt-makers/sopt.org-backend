@@ -41,6 +41,7 @@ export class VisitorService {
       const allVisitors = allKeys.filter((key: string) =>
         key.includes('visitor-'),
       );
+      console.log(allVisitors);
 
       result.Count = allVisitors.length;
     } catch (err) {
